@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>nLLMService BSP 整合 & SELinux 完整技術報告</title>
+<style>
+/* ── Reset & Base ── */
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'Segoe UI','Noto Sans TC',sans-serif;
+  background:#0f172a;color:#e2e8f0;line-height:1.7;
+}
+a{color:#7dd3fc;text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* ── Top Nav ── */
+.top-nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(15,23,42,.92);backdrop-filter:blur(10px);
+  border-bottom:1px solid #1e293b;padding:10px 0;
+  display:flex;justify-content:center;flex-wrap:wrap;gap:6px 16px;
+}
+.top-nav a{
+  font-size:.82rem;color:#94a3b8;padding:4px 10px;border-radius:6px;
+  transition:all .2s;white-space:nowrap;
+}
+.top-nav a:hover,.top-nav a:focus{color:#22d3ee;background:#1e293b;text-decoration:none}
+
+/* ── Container ── */
+.container{max-width:1100px;margin:0 auto;padding:20px 24px 60px}
+
+/* ── Title Section ── */
+.title-section{text-align:center;padding:50px 20px 30px}
+.title-section h1{
+  font-size:2.2rem;font-weight:800;
+  background:linear-gradient(135deg,#22d3ee,#7dd3fc,#f472b6);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.title-section .subtitle{color:#94a3b8;margin-top:8px;font-size:1rem}
+.title-section .status-badge{
+  display:inline-block;margin-top:14px;padding:6px 18px;
+  border-radius:20px;font-size:.85rem;font-weight:600;
+  background:rgba(34,211,238,.15);color:#22d3ee;border:1px solid rgba(34,211,238,.3);
+}
+
+/* ── Sections ── */
+.content-section{margin-top:36px}
+.content-section h2{
+  font-size:1.35rem;font-weight:700;color:#f8fafc;
+  border-left:4px solid #22d3ee;padding-left:14px;margin-bottom:16px;
+}
+.content-section h2 .icon{margin-right:8px}
+
+/* ── Cards ── */
+.card{
+  background:#1e293b;border:1px solid #334155;border-radius:12px;
+  padding:24px 28px;margin-bottom:18px;
+}
+.card h3{font-size:1.1rem;color:#7dd3fc;margin-bottom:12px;font-weight:600}
+.card h4{font-size:.95rem;color:#f472b6;margin:14px 0 8px;font-weight:600}
+.card p,.card li{color:#cbd5e1;font-size:.92rem}
+.card ul,.card ol{padding-left:22px;margin:8px 0}
+.card li{margin-bottom:4px}
+
+/* ── Tables ── */
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.88rem}
+th{background:#334155;color:#e2e8f0;padding:10px 14px;text-align:left;font-weight:600;border:1px solid #475569}
+td{padding:9px 14px;border:1px solid #334155;color:#cbd5e1}
+tr:nth-child(even) td{background:rgba(51,65,85,.3)}
+
+/* ── Code ── */
+pre{
+  background:#0f172a;border:1px solid #334155;border-radius:8px;
+  padding:16px 20px;overflow-x:auto;margin:10px 0;font-size:.84rem;
+  line-height:1.6;
+}
+code{font-family:'Cascadia Code','Fira Code','Consolas',monospace;color:#7dd3fc}
+pre code{color:#e2e8f0}
+.hl-comment{color:#64748b}
+.hl-keyword{color:#f472b6}
+.hl-string{color:#22d3ee}
+.hl-type{color:#fbbf24}
+
+/* ── Tree View ── */
+.tree{
+  background:#0f172a;border:1px solid #334155;border-radius:8px;
+  padding:18px 22px;overflow-x:auto;margin:10px 0;
+  font-family:'Cascadia Code','Fira Code','Consolas',monospace;
+  font-size:.82rem;line-height:1.65;color:#94a3b8;white-space:pre;
+}
+.tree .new{color:#34d399;font-weight:600}
+.tree .mod{color:#fbbf24;font-weight:600}
+.tree .file{color:#e2e8f0}
+.tree .desc{color:#64748b}
+.tree .key{color:#f472b6;font-weight:700}
+
+/* ── Callout / Note Box ── */
+.note-box{
+  border-radius:8px;padding:14px 18px;margin:14px 0;font-size:.88rem;
+}
+.note-box.warning{background:rgba(251,191,36,.1);border-left:4px solid #fbbf24;color:#fde68a}
+.note-box.important{background:rgba(244,114,182,.1);border-left:4px solid #f472b6;color:#fda4af}
+.note-box.success{background:rgba(52,211,153,.1);border-left:4px solid #34d399;color:#6ee7b7}
+.note-box.info{background:rgba(125,211,252,.1);border-left:4px solid #7dd3fc;color:#bae6fd}
+.note-box strong{display:block;margin-bottom:4px}
+
+/* ── Badges ── */
+.badge{
+  display:inline-block;padding:2px 10px;border-radius:10px;
+  font-size:.75rem;font-weight:600;margin-right:6px;
+}
+.badge.cyan{background:rgba(34,211,238,.15);color:#22d3ee;border:1px solid rgba(34,211,238,.3)}
+.badge.pink{background:rgba(244,114,182,.15);color:#f472b6;border:1px solid rgba(244,114,182,.3)}
+.badge.green{background:rgba(52,211,153,.15);color:#34d399;border:1px solid rgba(52,211,153,.3)}
+.badge.yellow{background:rgba(251,191,36,.15);color:#fbbf24;border:1px solid rgba(251,191,36,.3)}
+
+/* ── Two Column ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:768px){.two-col{grid-template-columns:1fr}}
+
+/* ── Mermaid ── */
+.mermaid{background:#1e293b;border-radius:8px;padding:20px;margin:12px 0;text-align:center}
+
+/* ── Flow Steps ── */
+.step{display:flex;align-items:flex-start;margin:10px 0}
+.step-num{
+  flex-shrink:0;width:32px;height:32px;border-radius:50%;
+  background:linear-gradient(135deg,#22d3ee,#7dd3fc);color:#0f172a;
+  font-weight:800;font-size:.85rem;display:flex;align-items:center;justify-content:center;
+  margin-right:14px;margin-top:2px;
+}
+.step-content{flex:1}
+.step-content strong{color:#f8fafc}
+</style>
+</head>
+<body>
+
+<!-- ── Top Navigation ── -->
+<nav class="top-nav">
+  <a href="#sec-bg">一、背景</a>
+  <a href="#sec-arch">二、改動架構</a>
+  <a href="#sec-selinux">三、SELinux 三階段</a>
+  <a href="#sec-findings">四、技術發現</a>
+  <a href="#sec-build">五、Build 流程</a>
+  <a href="#sec-model">六、模型與 OTA</a>
+  <a href="#sec-warn">七、注意事項</a>
+</nav>
+
+<div class="container">
+
+<!-- ══════ Title ══════ -->
+<section class="title-section">
+  <h1>nLLMService BSP 整合 & SELinux</h1>
+  <p class="subtitle">從 Domain 隔離到 Compat Mapping — 完整技術報告</p>
+  <span class="status-badge">✅ Enforcing 模式驗證通過 — 2026-03-30</span>
+</section>
+
+
+<!-- ══════ 一、背景 ══════ -->
+<section id="sec-bg" class="content-section">
+  <h2><span class="icon">📋</span>一、專案背景</h2>
+
+  <div class="card">
+    <h3>nLLMService 簡介</h3>
+    <p><strong style="color:#f8fafc">nLLMService</strong>（<code>com.ntx.llmservice</code>）是 Netronix 的 on-device LLM 推論服務，部署於 <strong style="color:#22d3ee">MediaTek MT8126+ SoC</strong> 設備，使用 NPU/APU 硬體加速執行 Qwen 2.5 / Llama 3.2 模型推論。</p>
+    <ul>
+      <li>必須以 <strong>System Privileged App</strong> 部署（Linker Namespace 限制）</li>
+      <li>透過 JNI 呼叫 MTK LLM SDK（<code>libmtk_llm.so</code> → <code>libneuron_runtime.so</code>）</li>
+      <li>開發專案：<code>AIDemoTest1</code>，乾淨版本：<code>nLLMService</code></li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>BSP 環境（Split Build）</h3>
+    <table>
+      <tr><th>樹</th><th>路徑</th><th>Android 版本</th><th>SELinux 版本號</th></tr>
+      <tr><td><span class="badge cyan">MSSI (SYS)</span></td><td><code>android16_mtk_system_b0mp5_aiv</code></td><td>16</td><td><code>202504</code></td></tr>
+      <tr><td><span class="badge pink">VND</span></td><td><code>android16_mtk_vendor_v0mp5_aiv</code></td><td>—</td><td><code>202404</code></td></tr>
+    </table>
+    <div class="note-box important">
+      <strong>⚠️ 版本號不一致（202504 vs 202404）是導致 SELinux 問題的核心根因。</strong>
+      Vendor CIL 使用 <code>_202404</code> 後綴，但 System 的 compat 映射文件不含自定義 type。
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════ 二、改動架構 ══════ -->
+<section id="sec-arch" class="content-section">
+  <h2><span class="icon">🏗️</span>二、完整改動架構</h2>
+
+  <div class="card">
+    <h3><span class="badge cyan">SYS</span> MSSI BSP</h3>
+    <div class="tree"><span class="file">android16_mtk_system_b0mp5_aiv (SYS)</span>
+│
+├── vendor/mediatek/proprietary/packages/apps/
+│   └── nLLMService/                                         <span class="new">[NEW ── 整個目錄]</span>
+│       ├── <span class="file">Android.mk</span>                                       <span class="desc">← BUILD_PREBUILT (PRESIGNED)</span>
+│       ├── <span class="file">Android.bp</span>                                       <span class="desc">← 12 個 cc_prebuilt_library_shared</span>
+│       ├── <span class="file">nLlmService.apk</span>                                  <span class="desc">← 無 .so 的 release APK</span>
+│       ├── <span class="file">lib/arm64-v8a/</span>                                   <span class="desc">(9 個 JNI .so)</span>
+│       ├── <span class="file">apu_libs/</span>                                        <span class="desc">(3 個 APU 系統庫)</span>
+│       ├── <span class="file">llm_models/qwen_0.5b/</span>                            <span class="desc">(模型 749 MB)</span>
+│       ├── <span class="file">init.nllmservice.rc</span>                              <span class="desc">← APU 節點 chmod 0666</span>
+│       └── <span class="file">privapp-permissions-nLLMService.xml</span>              <span class="desc">← FOREGROUND_SERVICE_SPECIAL_USE</span>
+│
+├── device/mediatek/system/common/
+│   └── <span class="file">device.mk</span>                                           <span class="mod">[MOD]</span>
+│       ├── PRODUCT_PACKAGES += nLLMService                  <span class="desc">← APK</span>
+│       ├── PRODUCT_PACKAGES += 9 個 JNI _llm 模組           <span class="desc">← cc_prebuilt_library_shared</span>
+│       ├── PRODUCT_PACKAGES += 3 個 APU _for_sys 模組       <span class="desc">← APU 系統庫</span>
+│       └── PRODUCT_COPY_FILES → init.rc / permissions / 模型
+│
+├── device/mediatek/sepolicy/base/
+│   ├── public/<span class="file">llm_service_app.te</span>                            <span class="new">[NEW]</span> <span class="desc">type + appdomain</span>
+│   ├── private/<span class="file">llm_service_app.te</span>                           <span class="new">[NEW]</span> <span class="desc">mlstrustedsubject</span>
+│   ├── private/<span class="file">file.te</span>                                      <span class="mod">[MOD]</span> <span class="desc">llm_service_app_data_file</span>
+│   ├── private/<span class="file">seapp_contexts</span>                               <span class="mod">[MOD]</span> <span class="desc">seinfo=ntx_app 綁定</span>
+│   └── vendor/<span class="file">llm_service_app.te</span>                            <span class="new">[NEW]</span> <span class="desc">APU allow + mlstrustedobject</span>
+│
+└── system/sepolicy/
+    ├── private/<span class="file">mac_permissions.xml</span>                          <span class="mod">[MOD]</span> <span class="desc">Netronix 憑證</span>
+    ├── private/compat/202404/<span class="file">202404.cil</span>                     <span class="mod">[MOD]</span> <span class="key">🔑 版本映射</span>
+    └── prebuilts/api/202404/private/<span class="file">mac_permissions.xml</span>     <span class="mod">[MOD]</span> <span class="desc">prebuilts 同步</span></div>
+  </div>
+
+  <div class="card">
+    <h3><span class="badge pink">VND</span> Vendor BSP — SELinux 部分與 SYS 對稱</h3>
+    <div class="tree"><span class="file">android16_mtk_vendor_v0mp5_aiv (VND)</span>
+│
+├── device/mediatek/sepolicy/base/
+│   ├── public/<span class="file">llm_service_app.te</span>                            <span class="new">[NEW]</span>
+│   ├── private/<span class="file">llm_service_app.te</span>                           <span class="new">[NEW]</span>
+│   ├── private/<span class="file">file.te</span>                                      <span class="mod">[MOD]</span>
+│   ├── private/<span class="file">seapp_contexts</span>                               <span class="mod">[MOD]</span>
+│   └── vendor/<span class="file">llm_service_app.te</span>                            <span class="new">[NEW]</span>
+│
+└── system/sepolicy/
+    ├── private/<span class="file">mac_permissions.xml</span>                          <span class="mod">[MOD]</span>
+    ├── private/compat/202404/<span class="file">202404.cil</span>                     <span class="mod">[MOD]</span>
+    └── prebuilts/api/202404/private/<span class="file">mac_permissions.xml</span>     <span class="mod">[MOD]</span></div>
+  </div>
+
+  <div class="card">
+    <h3>📊 改動統計</h3>
+    <table>
+      <tr><th></th><th>SYS</th><th>VND</th><th>合計</th></tr>
+      <tr><td>新增檔案</td><td>27</td><td>3</td><td><strong>30</strong></td></tr>
+      <tr><td>修改檔案</td><td>5</td><td>5</td><td><strong>10</strong></td></tr>
+      <tr><td><strong>合計</strong></td><td><strong>32</strong></td><td><strong>8</strong></td><td><strong>40</strong></td></tr>
+    </table>
+  </div>
+</section>
+
+
+<!-- ══════ 三、SELinux 三階段 ══════ -->
+<section id="sec-selinux" class="content-section">
+  <h2><span class="icon">🔐</span>三、SELinux 解決過程（三階段）</h2>
+
+  <div class="card">
+    <h3>階段 1：Domain 隔離</h3>
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <strong>問題</strong>
+        <p><code>untrusted_app</code> 的 neverallow 阻擋硬體存取。無法直接擴充 <code>untrusted_app</code> 權限。</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <strong>解法：建立專屬 Domain</strong>
+        <p>建立 <code>llm_service_app</code> 獨立 domain，透過憑證綁定：</p>
+<pre><code><span class="hl-comment">// 關鍵鏈路</span>
+Netronix 簽名憑證 → <span class="hl-type">mac_permissions.xml</span> (seinfo=ntx_app)
+    → <span class="hl-type">seapp_contexts</span> (seinfo=ntx_app → domain=llm_service_app)
+        → App 啟動時 Zygote 分配 <span class="hl-keyword">llm_service_app</span> domain</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>階段 2：硬體存取 + MLS</h3>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <strong>問題：MLS 約束</strong>
+        <p>Multi-Level Security 阻擋跨安全等級的硬體存取。</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <strong>解法</strong>
+        <ul>
+          <li><code>llm_service_app</code> 加 <code>mlstrustedsubject</code>（允許跨 MLS 存取）</li>
+          <li><code>apusys_device</code> 加 <code>mlstrustedobject</code>（允許被跨 MLS 存取）</li>
+          <li>使用 <code>llm_service_app_data_file</code> 避免 <code>app_data_file</code> 的 neverallow 衝突</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>階段 3：Compat Mapping <span class="badge pink">🔑 最終突破口</span></h3>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-content">
+        <strong>問題：規則被靜默丟棄</strong>
+        <p>階段 1-2 的規則全部正確，但 APU 存取仍然 <strong style="color:#f472b6">DENIED</strong>。</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="step-content">
+        <strong>根因：Split Build 版本不一致</strong>
+        <p>Vendor CIL 引用 <code>llm_service_app_202404</code>，但 compat 靜態文件不含此映射 → 規則被靜默丟棄。</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">7</div>
+      <div class="step-content">
+        <strong>解法：注入 Compat CIL 映射</strong>
+        <p>在 <code>system/sepolicy/private/compat/202404/202404.cil</code> 追加：</p>
+<pre><code><span class="hl-comment">;; Custom type mapping for nLLMService</span>
+(<span class="hl-keyword">typeattribute</span> <span class="hl-type">llm_service_app_202404</span>)
+(<span class="hl-keyword">expandtypeattribute</span> (<span class="hl-type">llm_service_app_202404</span>) <span class="hl-string">true</span>)
+(<span class="hl-keyword">typeattributeset</span> <span class="hl-type">llm_service_app_202404</span> (<span class="hl-type">llm_service_app</span>))
+
+<span class="hl-comment">;; Custom data type mapping</span>
+(<span class="hl-keyword">typeattribute</span> <span class="hl-type">llm_service_app_data_file_202404</span>)
+(<span class="hl-keyword">expandtypeattribute</span> (<span class="hl-type">llm_service_app_data_file_202404</span>) <span class="hl-string">true</span>)
+(<span class="hl-keyword">typeattributeset</span> <span class="hl-type">llm_service_app_data_file_202404</span> (<span class="hl-type">llm_service_app_data_file</span>))</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>✅ 最終驗證結果</h3>
+<pre><code>u:r:<span class="hl-keyword">llm_service_app</span>:s0:c512,c768  com.ntx.llmservice
+getenforce = <span class="hl-string">Enforcing</span></code></pre>
+    <div class="note-box success">
+      <strong>🎉 完全成功！</strong>
+      nLLMService 成功在 Enforcing 模式下以自定義 <code>llm_service_app</code> domain 運行。
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════ 四、技術發現 ══════ -->
+<section id="sec-findings" class="content-section">
+  <h2><span class="icon">🔬</span>四、關鍵技術發現</h2>
+
+  <div class="card">
+    <h3>A. Compat CIL 分區過濾機制</h3>
+    <p>同一個源文件 <code>202404.cil</code> 被不同 tag 過濾後產生不同輸出：</p>
+    <table>
+      <tr><th>Tag</th><th>輸出位置</th><th>結果</th></tr>
+      <tr><td><code>{.plat_private}</code></td><td><code>/system/etc/selinux/mapping/202404.cil</code></td><td><span class="badge green">✅ 包含</span></td></tr>
+      <tr><td><code>{.system_ext_private}</code></td><td><code>/system_ext/etc/selinux/mapping/202404.cil</code></td><td><span class="badge yellow">❌ 不包含</span></td></tr>
+    </table>
+    <div class="note-box info">
+      <strong>ℹ️ 為什麼仍然生效？</strong>
+      映射走 <code>plat_private</code> 路徑。init 載入所有分區的 mapping 時會合併，只要任一 mapping 包含即可。
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>B. <code>expandtypeattribute</code> 驗證陷阱</h3>
+    <p><code>sepolicy-analyze attribute llm_service_app_202404</code> 永遠顯示 "<strong style="color:#f472b6">not defined</strong>" — 這是<strong>正常的</strong>！</p>
+    <div class="two-col">
+      <div class="note-box warning">
+        <strong>❌ 錯誤驗證方式</strong>
+        <code>sepolicy-analyze attribute xxx_202404</code><br>
+        → AOSP 的 <code>expandtypeattribute true</code> 會在編譯時展開並移除所有 <code>_202404</code> attribute。連 <code>untrusted_app_202404</code> 也查不到。
+      </div>
+      <div class="note-box success">
+        <strong>✅ 正確驗證方式</strong>
+        1. <code>adb shell "grep llm_service /system/etc/selinux/mapping/202404.cil"</code><br>
+        2. <code>adb shell "ps -eZ | grep llmservice"</code><br>
+        3. <code>adb shell getenforce</code><br>
+        4. <code>adb shell dmesg | grep "avc.*llm_service"</code>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>C. SELinux 預編譯快取</h3>
+    <p>修改 policy 後若行為不變，可能是舊快取：</p>
+<pre><code>adb root
+adb shell rm -rf /data/misc/apexdata/com.android.permission/*
+adb shell rm -rf /metadata/sepolicy/*
+adb reboot</code></pre>
+  </div>
+</section>
+
+
+<!-- ══════ 五、Build 流程 ══════ -->
+<section id="sec-build" class="content-section">
+  <h2><span class="icon">🔧</span>五、Build 流程</h2>
+
+  <div class="card">
+    <h3>完整重建指令（含 Log 記錄）</h3>
+<pre><code>(
+set -e
+echo <span class="hl-string">"========== START: $(date) =========="</span>
+
+echo <span class="hl-string">"[1/4] 清 MSSI sepolicy 快取..."</span>
+rm -rf /media/dennis/SSD/android16_mtk_system_b0mp5_aiv/out_sys/soong/.intermediates/system/sepolicy/
+
+echo <span class="hl-string">"[2/4] 重建 MSSI..."</span>
+buildAndroidImage -t mssi
+
+echo <span class="hl-string">"[3/4] 清 VND sepolicy + merge 快取..."</span>
+rm -rf /media/dennis/SSD/android16_mtk_vendor_v0mp5_aiv/out/soong/.intermediates/system/sepolicy/
+rm -rf /media/dennis/SSD/android16_mtk_vendor_v0mp5_aiv/out/target/product/EA0T4A_A00/merged/
+rm -rf /media/dennis/SSD/android16_mtk_vendor_v0mp5_aiv/out/target/product/EA0T4A_A00/vendor/etc/selinux/
+
+echo <span class="hl-string">"[4/4] 重建 VND..."</span>
+buildAndroidImage -t vnd
+
+echo <span class="hl-string">"========== ALL DONE =========="</span>
+) 2>&amp;1 | ts '%Y-%m-%d %H:%M:%.S' | tee build_log.txt</code></pre>
+  </div>
+
+  <div class="card">
+    <h3>Build 後驗證</h3>
+    <p>檢查 MSSI 輸出的 plat mapping 是否包含映射：</p>
+<pre><code>grep llm_service_app \
+  out_sys/target/product/mssi_aiv_.../system/etc/selinux/mapping/202404.cil
+<span class="hl-comment"># 預期: 6 行 llm_service_app 相關映射</span></code></pre>
+  </div>
+</section>
+
+
+<!-- ══════ 六、模型與 OTA ══════ -->
+<section id="sec-model" class="content-section">
+  <h2><span class="icon">📦</span>六、模型空間與 OTA 策略</h2>
+
+  <div class="card">
+    <h3>模型空間佔用</h3>
+    <table>
+      <tr><th>模型</th><th>部署大小</th><th>prompt.dla</th><th>gen.dla</th><th>embedding</th></tr>
+      <tr><td>Qwen 0.5B</td><td><strong style="color:#22d3ee">749 MB</strong></td><td>243M</td><td>242M</td><td>260M</td></tr>
+      <tr><td>Qwen 1.5B</td><td><strong style="color:#22d3ee">1.9 GB</strong></td><td>748M</td><td>747M</td><td>446M</td></tr>
+      <tr><td>Llama 1B</td><td><strong style="color:#22d3ee">1.7 GB</strong></td><td>598M</td><td>596M</td><td>502M</td></tr>
+      <tr><td>Llama 3B</td><td><strong style="color:#22d3ee">3.8 GB</strong></td><td>1.6G</td><td>1.6G</td><td>752M</td></tr>
+    </table>
+    <div class="note-box warning">
+      <strong>⚠️ DLA 無法壓縮</strong>
+      DLA 是 NPU 預編譯的二進位，update.zip 裡的模型幾乎是原始大小。
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>OTA 解耦策略比較</h3>
+    <table>
+      <tr><th></th><th>獨立分區 ⭐</th><th>/data 預載</th><th>混合方案</th><th>Delta OTA</th></tr>
+      <tr><td>OTA 大小減少</td><td><span class="badge green">完全排除</span></td><td><span class="badge green">完全排除</span></td><td><span class="badge yellow">部分</span></td><td><span class="badge yellow">視情況</span></td></tr>
+      <tr><td>Factory Reset</td><td><span class="badge green">安全</span></td><td><span class="badge pink">丟失</span></td><td><span class="badge yellow">部分</span></td><td><span class="badge green">安全</span></td></tr>
+      <tr><td>實作複雜度</td><td>高</td><td>低</td><td>中</td><td>無</td></tr>
+      <tr><td>獨立更新模型</td><td><span class="badge green">✅</span></td><td><span class="badge green">✅</span></td><td><span class="badge green">✅</span></td><td><span class="badge pink">❌</span></td></tr>
+    </table>
+    <p style="margin-top:10px;color:#94a3b8"><strong>建議</strong>：開發期用 Delta OTA，量產考慮獨立分區或混合方案。</p>
+  </div>
+</section>
+
+
+<!-- ══════ 七、注意事項 ══════ -->
+<section id="sec-warn" class="content-section">
+  <h2><span class="icon">⚠️</span>七、未來必看注意事項</h2>
+
+  <div class="card">
+    <table>
+      <tr><th>#</th><th>事項</th><th>影響</th></tr>
+      <tr><td><span class="badge yellow">1</span></td><td>AOSP 升級時 <code>compat/202404/202404.cil</code> 會被覆蓋</td><td>需重新加入映射</td></tr>
+      <tr><td><span class="badge yellow">2</span></td><td>兩邊 BSP 的 SELinux 檔案必須同步</td><td>忘記同步 → build 失敗或 denial</td></tr>
+      <tr><td><span class="badge pink">3</span></td><td>新增自定義 public type 需一併加 compat mapping</td><td>否則 vendor allow 規則被靜默丟棄</td></tr>
+      <tr><td><span class="badge yellow">4</span></td><td><code>sepolicy-analyze attribute xxx_202404</code> 永遠 "not defined"</td><td><code>expandtypeattribute</code> 正常行為</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>📝 新增自定義 Type 的 SOP</h3>
+    <p>未來新增其他 Netronix 自定義 type 時，必須同步執行：</p>
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content"><strong>宣告 Type</strong> — <code>public/xxx.te</code> + <code>private/xxx.te</code> + <code>vendor/xxx.te</code></div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content"><strong>綁定 Domain</strong> — <code>mac_permissions.xml</code> + <code>seapp_contexts</code></div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content"><strong>加入 Compat Mapping</strong> — <code>compat/202404/202404.cil</code> 追加 3 行 CIL</div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content"><strong>雙 BSP 同步</strong> — MSSI 和 VND 的所有檔案保持一致</div>
+    </div>
+  </div>
+</section>
+
+</div><!-- .container -->
+</body>
+</html>
