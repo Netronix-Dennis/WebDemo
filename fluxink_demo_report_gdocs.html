@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>FluxInk HWR Engine 5.0 Demo App</title>
+<style>
+    body {
+        font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+        line-height: 1.6;
+        color: #e0e0e0;
+        background-color: #121212;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 40px;
+    }
+    a { color: #8ab4f8; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    h1 {
+        font-size: 24pt;
+        color: #ffffff;
+        border-bottom: 2px solid #555555;
+        padding-bottom: 10px;
+    }
+    h2 {
+        font-size: 18pt;
+        color: #8ab4f8;
+        margin-top: 24pt;
+        border-bottom: 1px solid #444444;
+        padding-bottom: 5px;
+    }
+    h3 {
+        font-size: 14pt;
+        color: #e8eaed;
+        margin-top: 16pt;
+    }
+    h4 {
+        font-size: 12pt;
+        color: #ffffff;
+        margin-top: 14pt;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 12pt;
+        margin-bottom: 12pt;
+        page-break-inside: avoid;
+    }
+    th, td {
+        border: 1px solid #444444;
+        padding: 8px 12px;
+        text-align: left;
+        color: #e0e0e0;
+    }
+    th {
+        background-color: #333333;
+        font-weight: bold;
+        color: #ffffff;
+    }
+    tr:nth-child(even) {
+        background-color: #1f1f1f;
+    }
+    tr:nth-child(odd) {
+        background-color: #121212;
+    }
+    code {
+        font-family: "Courier New", Courier, monospace;
+        background-color: #2b2b2b;
+        padding: 2px 4px;
+        border-radius: 4px;
+        font-size: 10.5pt;
+        color: #ff8ab4;
+    }
+    pre {
+        background-color: #1e1e1e;
+        padding: 12px;
+        border-radius: 4px;
+        border: 1px solid #444444;
+        overflow-x: auto;
+        font-family: "Courier New", Courier, monospace;
+        font-size: 10pt;
+        color: #d4d4d4;
+    }
+    blockquote {
+        margin: 10pt 0;
+        padding: 10px 20px;
+        background-color: #1e2836;
+        border-left: 4px solid #4285f4;
+        color: #8ab4f8;
+        font-style: normal;
+    }
+    .warning-block {
+        background-color: #422a00;
+        border-left: 4px solid #f29900;
+        color: #fce8b2;
+    }
+    .tip-block {
+        background-color: #132a1c;
+        border-left: 4px solid #34a853;
+        color: #81c995;
+    }
+    img, iframe {
+        max-width: 100%;
+        margin: 10px 0;
+        border-radius: 8px;
+        border: 1px solid #444;
+    }
+</style>
+</head>
+<body>
+
+<h1>FluxInk HWR Engine 5.0 Demo App — 完整技術分析報告</h1>
+
+<blockquote>
+    <strong>版本資訊</strong><br>
+    • Engine: <code>V5.3.0.c423d99c8.20250522_140118</code><br>
+    • App: <code>V5.3.1.208.Tb87338306.20250603</code><br>
+    • Architecture: <code>Multi-v8a:release</code><br>
+    • APK 來源: <code>api调用示例</code> (88MB 精簡版)
+</blockquote>
+
+<h2>一、Demo App UI 總覽</h2>
+
+<h3>1.1 主畫面佈局</h3>
+<img src="file:///home/dennis/.gemini/antigravity/brain/da334939-76af-43b4-a932-7b70b98e6541/Screenshot_20260414_113038.png" alt="主畫面佈局">
+<pre>
+┌─────────────────────────────────────────────────┐
+│  [辨識類型▼] [觸發模式▼] [模型/語言▼] 📁 ⚙ ☑Stylus-only │
+├─────────────────────────────────────────────────┤
+│  Result: (辨識結果顯示區)                           │
+├─────────────────────────────────────────────────┤
+│  Word candidate (候選字區 — Math/Chem 模式才有)      │
+├─────────────────────────────────────────────────┤
+│  ↩ Undo  ↪ Redo  🔄 Lasso(套索)  🗑 Delete  ⚙Settings │
+│                                   ☑ Keep tracks  │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│              手 寫 書 寫 區 域                      │
+│                                                 │
+└─────────────────────────────────────────────────┘
+</pre>
+
+<h3>1.2 三個核心下拉選單</h3>
+<table>
+    <tr><th>選單</th><th>位置</th><th>功能</th></tr>
+    <tr><td><strong>辨識類型</strong> (Recognition Type)</td><td>左上第一個</td><td>切換 Text / Math / Shape / Gesture / Chem / Hybrid</td></tr>
+    <tr><td><strong>觸發模式</strong> (Trigger Mode)</td><td>左上第二個</td><td>切換 On-the-fly / On request</td></tr>
+    <tr><td><strong>模型/語言</strong> (Model/Language)</td><td>左上第三個</td><td>根據辨識類型不同，顯示不同的模型清單</td></tr>
+</table>
+
+<h2>二、辨識類型 — 6 大類</h2>
+
+<h3>2.1 總覽</h3>
+<img src="file:///home/dennis/.gemini/antigravity/brain/da334939-76af-43b4-a932-7b70b98e6541/Screenshot_20260414_113103.png" alt="總覽">
+<table>
+    <tr><th>#</th><th>辨識類型</th><th>Demo 選項名</th><th>Type ID</th><th>引擎類型</th><th>描述</th></tr>
+    <tr><td>1</td><td>文字辨識</td><td><strong>Text</strong></td><td><code>TYPE_WRITING_RECOGNIZE = 0</code></td><td>SJK</td><td>手寫文字轉電腦文字</td></tr>
+    <tr><td>2</td><td>數學辨識</td><td><strong>Math</strong></td><td><code>TYPE_MATH_RECOGNIZE = 1</code></td><td>SJK</td><td>手寫公式辨識，輸出 LaTeX</td></tr>
+    <tr><td>3</td><td>形狀辨識</td><td><strong>Shape</strong></td><td><code>TYPE_SHAPE_RECOGNIZE = 2</code></td><td>ONNX</td><td>手寫圖形轉標準幾何形狀</td></tr>
+    <tr><td>4</td><td>手勢辨識</td><td><strong>Gesture</strong></td><td><code>TYPE_GESTURE_RECOGNIZE = 3</code></td><td>ONNX</td><td>辨識編輯手勢（刪除、插入等）</td></tr>
+    <tr><td>5</td><td>化學辨識</td><td><strong>Chem</strong></td><td><code>TYPE_CHEMICAL_RECOGNIZE = 4</code></td><td>SJK</td><td>化學方程式辨識（本質是 Math 子集）</td></tr>
+    <tr><td>6</td><td>混合辨識</td><td><strong>Hybrid Writing Recognition</strong></td><td><code>TYPE_DIAGRAM_RECOGNIZE = 5</code></td><td>SJK</td><td>圖文混合：文字+公式+圖形同時辨識</td></tr>
+</table>
+
+<blockquote class="tip-block">
+    <strong>NOTE:</strong><br>
+    另外還有不在主選單中的類型：疊寫 (TYPE_SUPERIMPOSED)、豎寫 (TYPE_MULTIDIRECTIONAL)、多語混合、Mixture、NAI、Notation 等。
+</blockquote>
+
+<h3>2.2 觸發模式 (Trigger Mode)</h3>
+<img src="file:///home/dennis/.gemini/antigravity/brain/da334939-76af-43b4-a932-7b70b98e6541/Screenshot_20260414_113112.png" alt="觸發模式">
+<table>
+    <tr><th>UI 名稱</th><th>API 常數</th><th>RecoMode 值</th><th>說明</th></tr>
+    <tr><td><strong>On-the-fly</strong></td><td><code>RecognitionMode.MODE_ICR</code></td><td>—</td><td>即時辨識 — 每寫完一筆就觸發辨識，結果即時更新</td></tr>
+    <tr><td><strong>On request</strong></td><td><code>RecognitionMode.MODE_ECR</code></td><td>—</td><td>批次辨識 — 寫完所有筆畫後，手動按按鈕觸發辨識</td></tr>
+</table>
+
+<h3>2.3 RecoMode（.conf 中的辨識模式值）</h3>
+<table>
+    <tr><th>值</th><th>含義</th><th>適用場景</th></tr>
+    <tr><td><code>0</code></td><td><strong>單筆即時</strong></td><td>一筆結束立刻辨識（Shape、Gesture 使用）</td></tr>
+    <tr><td><code>2</code></td><td><strong>多筆批次 (ECR/ICR)</strong></td><td>收集多筆後辨識（Text、Math、Diagram 使用）</td></tr>
+    <tr><td><code>10</code></td><td><strong>原始輸出</strong></td><td>不做美化/結構化，直接輸出座標+分類（raw-content 使用）</td></tr>
+</table>
+
+<h2>三、各辨識類型的模型標籤詳解</h2>
+
+<h3>3.1 Text 模式 — 語言模型</h3>
+<img src="file:///home/dennis/.gemini/antigravity/brain/da334939-76af-43b4-a932-7b70b98e6541/Screenshot_20260414_113122.png" alt="15種語言">
+<p>每個語言對應 <code>recognize/conf/&lt;locale&gt;/&lt;locale&gt;.conf</code>。</p>
+<p>Demo 中展示 <strong>15 種語言</strong>：</p>
+<table>
+    <tr><th>#</th><th>語言</th><th>Config 目錄</th><th>備註</th></tr>
+    <tr><td>1</td><td>简体中文（中国）</td><td><code>zh_CN</code></td><td>預設選中</td></tr>
+    <tr><td>2</td><td>English (United States)</td><td><code>en_US</code></td><td></td></tr>
+    <tr><td>3</td><td>العربية</td><td><code>ar</code></td><td>阿拉伯文</td></tr>
+    <tr><td>4</td><td>Português (Brasil)</td><td><code>br</code></td><td>葡萄牙文</td></tr>
+    <tr><td>5</td><td>Cymraeg</td><td><code>cy</code></td><td>威爾斯語</td></tr>
+    <tr><td>6</td><td>Deutsch</td><td><code>de</code></td><td>德文</td></tr>
+    <tr><td>7</td><td>Esperanto</td><td><code>eo</code></td><td>世界語</td></tr>
+    <tr><td>8</td><td>Español</td><td><code>es</code></td><td>西班牙文</td></tr>
+    <tr><td>9</td><td>Français</td><td><code>fr</code></td><td>法文</td></tr>
+    <tr><td>10</td><td>Frysk</td><td><code>fy</code></td><td>弗里斯蘭語</td></tr>
+    <tr><td>11</td><td>日本語</td><td><code>ja</code></td><td>日文</td></tr>
+    <tr><td>12</td><td>한국어</td><td><code>ko</code></td><td>韓文</td></tr>
+    <tr><td>13</td><td>Malti</td><td><code>mt</code></td><td>馬爾他語</td></tr>
+    <tr><td>14</td><td>Русский</td><td><code>ru</code></td><td>俄文</td></tr>
+    <tr><td>15</td><td><strong>繁體中文（台灣）</strong></td><td><code>zh_TW</code></td><td>⭐ 需向 Sunia 索取模型檔</td></tr>
+</table>
+
+<h3>3.2 Math 模式 — 12 個數學模型</h3>
+<img src="file:///home/dennis/.gemini/antigravity/brain/da334939-76af-43b4-a932-7b70b98e6541/Screenshot_20260414_130802.png" alt="Math模式">
+<p>所有模型 <code>Type: "Math"</code>，差異在 <strong>語言模型 (<code>.ldb</code>)</strong> 控制可辨識的數學符號範圍。</p>
+<table>
+    <tr><th>標籤</th><th>含義</th><th>.hdb 手寫模型</th><th>.ldb 語言模型</th><th>說明</th></tr>
+    <tr><td><strong>math_zh</strong></td><td>中文混合數學</td><td><code>math_zh.hdb</code></td><td><code>math_zh.ldb</code></td><td>中文+數學符號混寫，有詞典增強。<strong>nOCR 首選</strong></td></tr>
+    <tr><td><strong>math_generic</strong></td><td>通用數學</td><td><code>math_sunia.hdb</code></td><td><code>math_generic.ldb</code></td><td>最廣泛符號集，無詞典、無語言權重</td></tr>
+    <tr><td><strong>math_sunia</strong></td><td>Sunia 標準</td><td><code>math_sunia.hdb</code></td><td><code>math_sunia.ldb</code></td><td>Sunia 自家定義的標準數學符號集</td></tr>
+    <tr><td><strong>math_calculator</strong></td><td>計算器場景</td><td><code>math_sunia.hdb</code></td><td><code>math_calculator.ldb</code></td><td>四則運算、開方、百分比</td></tr>
+    <tr><td><strong>math_chem</strong></td><td>化學公式</td><td><code>math_sunia.hdb</code></td><td><code>math_chem.ldb</code></td><td>元素符號、下標、反應箭頭、係數平衡</td></tr>
+    <tr><td><strong>math_crohme</strong></td><td>CROHME 標準</td><td><code>math_sunia.hdb</code></td><td><code>math_crohme.ldb</code></td><td>遵循 CROHME 國際手寫數學辨識競賽標準</td></tr>
+    <tr><td><strong>math_vertical</strong></td><td>豎式計算</td><td><code>math_zh.hdb</code></td><td><code>elementary.ldb</code></td><td>小學直式加減乘除，用 layout 版面分析</td></tr>
+    <tr><td><strong>vertical_calculator</strong></td><td>豎式計算器</td><td><code>math_zh.hdb</code></td><td><code>vertical_cal...ldb</code></td><td>豎式+計算+手勢，載入 gesture.conf</td></tr>
+    <tr><td><strong>primary_school</strong></td><td>國小數學</td><td><code>math_sunia.hdb</code></td><td><code>primary_school.ldb</code></td><td>基礎四則+分數+小數+比較</td></tr>
+    <tr><td><strong>primary_school_strict</strong></td><td>國小（嚴格）</td><td><code>math_sunia.hdb</code></td><td><code>primary.strict.ldb</code></td><td>更少符號，減少誤辨識</td></tr>
+    <tr><td><strong>middle_school</strong></td><td>國中數學</td><td><code>math_sunia.hdb</code></td><td><code>middle_school.ldb</code></td><td>方程式+不等式+根號+函數</td></tr>
+    <tr><td><strong>high_school</strong></td><td>高中數學</td><td><code>math_sunia.hdb</code></td><td><code>high_school.ldb</code></td><td>三角函數+對數+指數+數列</td></tr>
+</table>
+
+<h4>Math 輸出流程 — LaTeX 管線</h4>
+<pre>
+手寫筆跡 ──→ 引擎辨識 ──→ resultPartiBean.getLabel()
+                                    │ (就是 LaTeX 字串)
+                ┌───────────────────┘
+                ├→ CommonUtils.convertMath() → MathJax 渲染 → 顯示數學式
+                ├→ mEditor.latexToMathML() → MathML 格式
+                ├→ mEditor.latexToOfficeMathML() → Office MathML (Word 格式)
+                └→ FileUtils.saveLatex() → 存成 .tex 檔案
+</pre>
+
+<blockquote class="tip-block">
+    <strong>IMPORTANT:</strong><br>
+    <strong>引擎辨識出的結果本身就是 LaTeX 格式</strong>。Demo 中看到的漂亮數學式是用 MathJax (WebView) 渲染 LaTeX 得到的。方向是：手寫 → LaTeX → 渲染，不是反過來。
+</blockquote>
+
+<h3>3.3 Shape 模式 — 2 個模型</h3>
+<img src="file:///home/dennis/.gemini/antigravity/brain/da334939-76af-43b4-a932-7b70b98e6541/Screenshot_20260414_130818.png" alt="Shape模式">
+<table>
+    <tr><th>標籤</th><th>含義</th><th>Family</th><th>RecoMode</th><th>模型</th><th>使用方式</th></tr>
+    <tr><td><strong>shape</strong></td><td>一筆成型</td><td>ONNX</td><td><code>0</code></td><td><code>shape.hdb</code></td><td>一筆畫完立刻辨識。手指抬起即觸發</td></tr>
+    <tr><td><strong>multi_shape</strong></td><td>多筆成型</td><td>ONNX</td><td><code>2</code></td><td><code>layout.hdb</code>+<code>shape.conf</code></td><td>多筆組合辨識，需切換到 <strong>On request</strong> 模式，畫完手動觸發</td></tr>
+</table>
+
+<h4>Shape 可辨識的 27+ 種圖形</h4>
+<table>
+    <tr><th>編號</th><th>圖形名稱</th><th>編號</th><th>圖形名稱</th><th>編號</th><th>圖形名稱</th></tr>
+    <tr><td>1</td><td>線段</td><td>14</td><td>弧線</td><td>26</td><td>箭頭結尾折線</td></tr>
+    <tr><td>2</td><td>圓形/橢圓</td><td>15</td><td>箭頭起始線段</td><td>27</td><td>箭頭起始折線</td></tr>
+    <tr><td>3</td><td>V 形折線</td><td>16</td><td>箭頭結尾線段</td><td>28</td><td>雙箭頭折線</td></tr>
+    <tr><td>6</td><td>矩形/斜矩形</td><td>17</td><td>雙箭頭線段</td><td>29</td><td>大括號</td></tr>
+    <tr><td>7</td><td>平行四邊形</td><td>18</td><td>箭頭起始弧線</td><td>30</td><td>圓角矩形</td></tr>
+    <tr><td>9</td><td>菱形</td><td>19</td><td>箭頭結尾弧線</td><td>31</td><td>球體</td></tr>
+    <tr><td>10</td><td>等腰三角形</td><td>20</td><td>雙箭頭弧線</td><td>32</td><td>圓錐</td></tr>
+    <tr><td>11</td><td>等邊三角形</td><td>21</td><td>愛心 ♥</td><td>33</td><td>圓柱</td></tr>
+    <tr><td>12</td><td>五角星 ★</td><td>22</td><td>雲朵 ☁</td><td>34</td><td>四角錐</td></tr>
+    <tr><td>13</td><td>正五邊形</td><td>23/24/25</td><td>其它多邊形</td><td>35</td><td>正方體</td></tr>
+</table>
+
+<h3>3.4 Gesture 模式 — 1 個模型、14 種手勢</h3>
+<img src="file:///home/dennis/.gemini/antigravity/brain/da334939-76af-43b4-a932-7b70b98e6541/Screenshot_20260414_130830.png" alt="Gesture模式">
+<p><strong>使用的模型</strong>：ONNX (<code>gesture.hdb</code> + <code>gesture.ldb</code>)，RecoMode：<code>0</code>（一筆即辨）</p>
+
+<h4>可辨識的 14 種手勢</h4>
+<p>
+    <a href="https://youtube.com/shorts/QMLwlJbzOCw?feature=share" target="_blank">🎥 點此前往瀏覽器觀看手勢操作影片</a><br>
+    <em>或直接在下方預覽：</em><br>
+    <!-- YouTube Shorts Embed -->
+    <iframe width="315" height="560" src="https://www.youtube.com/embed/QMLwlJbzOCw" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</p>
+
+<table>
+    <tr><th>ID</th><th>手勢</th><th>圖示</th><th>編輯動作</th></tr>
+    <tr><td>0</td><td>Failed to recognize</td><td>❌</td><td>辨識失敗</td></tr>
+    <tr><td>1</td><td><strong>Erase</strong></td><td>✏️</td><td>來回塗鴉劃掉文字（擦除）</td></tr>
+    <tr><td>2</td><td><strong>Lasso select</strong></td><td>🔄</td><td>畫不規則封閉圈選中內容</td></tr>
+    <tr><td>3</td><td><strong>Insert space</strong></td><td>⬜</td><td>在文字間畫垂直線，插入空格</td></tr>
+    <tr><td>4</td><td><strong>Delete space</strong></td><td>❌</td><td>合併兩段文字，刪除空格</td></tr>
+    <tr><td>5</td><td><strong>Insert text (caret above)</strong></td><td>⌃</td><td>畫 ^ 號，在上方插入文字</td></tr>
+    <tr><td>6</td><td><strong>Insert text (caret below)</strong></td><td>⌄</td><td>畫 v 號，在下方插入文字</td></tr>
+    <tr><td>7</td><td><strong>Start new line</strong></td><td>↵</td><td>向左下角折線，表示換行 (Enter)</td></tr>
+    <tr><td>8</td><td><strong>Insert tab</strong></td><td>→</td><td>向右箭頭，插入 Tab</td></tr>
+    <tr><td>9</td><td><strong>Box select</strong></td><td>☐</td><td>畫矩形框選中內容</td></tr>
+    <tr><td>10/11</td><td><strong>Lasso select (變體)</strong></td><td>🔄</td><td>套索選取變體 A/B</td></tr>
+    <tr><td>12</td><td><strong>Concentric circles</strong></td><td>⊙</td><td>同心圓特殊手勢</td></tr>
+    <tr><td>13</td><td><strong>Other</strong></td><td>—</td><td>其他未分類手勢</td></tr>
+    <tr><td>14</td><td><strong>Closed Curve</strong></td><td>◯</td><td>封閉曲線</td></tr>
+</table>
+
+<h3>3.5 Chem 模式</h3>
+<p>Chem 模式本質是 <strong>Math 模式的子集</strong>。源碼中共用同一個模組，獨立為 Chem tab 只是 UI 方便。</p>
+
+<h3>3.6 Hybrid Writing Recognition（圖文混合）— 4 個模型</h3>
+<img src="file:///home/dennis/.gemini/antigravity/brain/da334939-76af-43b4-a932-7b70b98e6541/Screenshot_20260414_130901.png" alt="Hybrid模式">
+<table>
+    <tr><th>標籤</th><th>RecoMode</th><th>子模型載入 (`Load-Confs`)</th><th>說明</th></tr>
+    <tr><td><strong>diagram-zh_CN</strong></td><td><code>2</code></td><td><code>zh_CN.conf</code> + <code>math_sunia.conf</code> + <code>shape.conf</code></td><td>中文圖文混合</td></tr>
+    <tr><td><strong>diagram-en_US</strong></td><td><code>2</code></td><td><code>en_US.conf</code> + <code>math_sunia.conf</code> + <code>shape.conf</code></td><td>英文圖文混合</td></tr>
+    <tr><td><strong>diagram-es_ES</strong></td><td><code>2</code></td><td><code>es_ES.conf</code> + <code>math_sunia.conf</code> + <code>shape.conf</code></td><td>西班牙文圖文混合</td></tr>
+    <tr><td><strong>raw-content</strong></td><td><code>10</code></td><td><code>zh_CN.conf</code> + <code>math_sunia.conf</code> + <code>shape.conf</code></td><td>原始輸出，不做結構化</td></tr>
+</table>
+
+<h4>Diagram 多引擎協作架構與流程圖生成</h4>
+<p>表明 FluxInk 可以結合文字、圖形引擎去 <strong>生成簡易流程圖</strong>，並且其多層次的結構可完美轉換轉成 JIIX 格式的證明。</p>
+<img src="file:///home/dennis/.gemini/antigravity/brain/da334939-76af-43b4-a932-7b70b98e6541/media__1776153046420.png" alt="流程圖生成展示">
+<p>🔗 <strong><a href="https://drive.google.com/file/d/1jeh6ppHz56-ZKcq44H-ODDFyfTCx5Lua/view?usp=drive_link" target="_blank">點此查看 Diagram 產生的詳細 JSON 結構 (Google Drive 文件)</a></strong></p>
+
+<h2>四、開發者/Debug 功能與可視化</h2>
+
+<h3>4.1 可視化開關（Visualization）</h3>
+<p>
+    <a href="https://youtube.com/shorts/5WIlzIRec-8?feature=share" target="_blank">🎥 點此前往瀏覽器觀看可視化框線操作影片</a><br>
+    <em>或直接在下方預覽：</em><br>
+    <iframe width="315" height="560" src="https://www.youtube.com/embed/5WIlzIRec-8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</p>
+<table>
+    <tr><th>功能</th><th>說明</th><th>對應 JIIX 層級</th></tr>
+    <tr><td><strong>Word boxes</strong></td><td>顯示每個 <strong>詞/字</strong> 的邊界框</td><td>對應 <code>words[].bounding-box</code></td></tr>
+    <tr><td><strong>Character boxes</strong></td><td>顯示每個 <strong>字元</strong> 的邊界框</td><td>對應 <code>chars[].bounding-box</code></td></tr>
+    <tr><td><strong>Text line boxes</strong></td><td>顯示 <strong>文字行</strong> 的邊界框</td><td>代表行框</td></tr>
+</table>
+
+<h3>4.2 資料操作與除錯</h3>
+<ul>
+    <li><strong>Import / Export handwriting</strong>: 可匯出 JSON / TXT 格式的座標點資料，適合做 A/B 比對分析。</li>
+    <li><strong>EntToJson</strong>: 將華為 .ent 格式轉換為 FluxInk JSON。</li>
+</ul>
+
+<h2>五、與 nOCR 整合轉換</h2>
+<blockquote class="tip-block">
+    <strong>✅ Input 完全相容</strong>：nOCR 的 <code>PointerEvent</code> 可輕易轉為 FluxInk 的 <code>RecognizePoint(x,y,t,action)</code>。<br>
+    <strong>🟡 Output 需轉換</strong>：FluxInk 輸出原生 JSON 包含 label、words、chars、bounding_box，這些資料皆齊備，能完美反向封裝成 nOCR 預期的 <code>JiixDefinitions</code>。(尤其以 Diagram JSON 結構更為明確)
+</blockquote>
+
+<p><br><br>-- 報告結束 --</p>
+</body>
+</html>
