@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>nLLMService 效能與推論品質分析報告 | Benchmark Report</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;700&display=swap');
+
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #232733;
+    --border: #2e3345;
+    --text: #e2e4eb;
+    --text-dim: #8b90a0;
+    --accent: #6c8cff;
+    --accent-dim: rgba(108,140,255,0.12);
+    --green: #4ade80;
+    --green-dim: rgba(74,222,128,0.12);
+    --amber: #fbbf24;
+    --amber-dim: rgba(251,191,36,0.12);
+    --red: #f87171;
+    --red-dim: rgba(248,113,113,0.12);
+    --cyan: #22d3ee;
+    --cyan-dim: rgba(34,211,238,0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans TC', 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    padding: 40px 20px;
+    position: relative;
+  }
+
+  body[data-lang="en"] .lang-zh { display: none !important; }
+  body[data-lang="zh"] .lang-en { display: none !important; }
+
+  .lang-toggle-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--surface2);
+    padding: 4px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    margin: 0 auto 32px auto;
+    width: fit-content;
+  }
+
+  .lang-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-dim);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 16px;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .lang-btn.active {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 0 10px rgba(108,140,255,0.2);
+  }
+
+  .container { max-width: 860px; margin: 0 auto; }
+  .header { text-align: center; margin-bottom: 40px; padding-bottom: 32px; border-bottom: 1px solid var(--border); }
+  .header h1 { font-size: 28px; font-weight: 700; background: linear-gradient(135deg, var(--accent), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+  .header .subtitle { color: var(--text-dim); font-size: 14px; }
+  .header .path { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-dim); background: var(--surface); display: inline-block; padding: 4px 12px; border-radius: 4px; margin-top: 12px; word-break: break-all; }
+
+  .section { margin-bottom: 36px; }
+  .section-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; padding-left: 12px; border-left: 3px solid var(--accent); display: flex; align-items: center; gap: 8px; }
+  .section-title .num { background: var(--accent); color: #fff; width: 24px; height: 24px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px 24px; margin-bottom: 12px; }
+  .card h4 { font-size: 14px; font-weight: 600; margin-bottom: 8px; color: var(--accent); }
+  .card p, .card li { font-size: 14px; color: var(--text-dim); }
+  .card ul { padding-left: 18px; }
+  .card li { margin-bottom: 4px; }
+
+  .kv-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 8px; }
+  .kv-table th { text-align: left; padding: 8px 12px; background: var(--surface2); color: var(--text-dim); font-weight: 600; border-bottom: 1px solid var(--border); }
+  .kv-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .kv-table tr:last-child td { border-bottom: none; }
+  .kv-table .key { font-family: 'JetBrains Mono', monospace; color: var(--cyan); white-space: nowrap; }
+
+  .code-block { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; line-height: 1.8; overflow-x: auto; margin-top: 12px; margin-bottom: 12px; color: var(--text-dim); white-space: pre-wrap; word-break: break-word; }
+  .code-block .keyword { color: var(--accent); }
+  .code-block .string { color: var(--green); }
+  .code-block .comment { color: var(--text-dim); font-style: italic; }
+
+  .badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; letter-spacing: 0.3px; }
+  .badge-green { background: var(--green-dim); color: var(--green); }
+  .badge-amber { background: var(--amber-dim); color: var(--amber); }
+  .badge-red { background: var(--red-dim); color: var(--red); }
+  .badge-cyan { background: var(--cyan-dim); color: var(--cyan); }
+
+  .lifecycle { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .lifecycle .pill { background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; padding: 6px 16px; font-size: 12px; display: flex; align-items: center; gap: 6px; }
+  .pill .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  .pill .dot-green { background: var(--green); }
+  .pill .dot-red { background: var(--red); }
+  .pill .dot-amber { background: var(--amber); }
+
+  .video-wrap { position: relative; overflow: hidden; border-radius: 8px; background: var(--surface2); border: 1px solid var(--border); }
+  .video-wrap iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+
+  .divider { border: none; border-top: 1px dashed var(--border); margin: 24px 0; }
+  .note { text-align: center; font-size: 12px; color: var(--text-dim); }
+  .stars { color: var(--amber); letter-spacing: 2px; }
+  .detail-title { color: var(--cyan); margin-bottom: 8px; font-size: 14px; font-weight: 600; }
+</style>
+</head>
+<body data-lang="zh">
+
+<div class="container">
+  
+  <div class="lang-toggle-wrapper">
+    <button class="lang-btn active" onclick="setLang('zh', event)">繁體中文</button>
+    <button class="lang-btn" onclick="setLang('en', event)">English</button>
+  </div>
+
+  <div class="header">
+    <h1>
+      <span class="lang-zh">nLLMService 效能與推論品質分析報告</span>
+      <span class="lang-en">nLLMService Performance and Quality Analysis</span>
+    </h1>
+    <div class="subtitle">MediaTek SoC NPU (Android 16, 6GB RAM)</div>
+    <div class="path">com.ntx.llmservice</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">
+      <span class="num">1</span> 
+      <span class="lang-zh">標準 Benchmark 測試數據</span>
+      <span class="lang-en">Standard Benchmark Data</span>
+    </div>
+    <div class="card">
+      <p class="lang-zh">此數據綜合了 Qwen 1.5B 與 Llama 1B 的推論表現。</p>
+      <p class="lang-en">This data synthesizes the inference performance of Qwen 1.5B and Llama 1B.</p>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;">
+        <div>
+          <h4>
+            <span class="lang-zh">【測試一】Qwen 2.5 1.5B</span>
+            <span class="lang-en">[Test 1] Qwen 2.5 1.5B</span>
+          </h4>
+          <div class="code-block">Model: Qwen 2.5 1.5B (Instruct)
+Hardware: MediaTek NPU (6GB RAM)
+Batch size: Prompt 128 / Gen 1
+Prompt length: <span class="lang-zh">~264 tokens (平均)</span><span class="lang-en">~264 tokens (Avg)</span>
+Output length: <span class="lang-zh">~61 tokens (平均)</span><span class="lang-en">~61 tokens (Avg)</span>
+
+Prefill TPS: <span class="string">~195 tok/s</span>
+Decode TPS: <span class="keyword">11.60 tok/s</span>
+Latency (Total): ~17.9s</div>
+        </div>
+        <div>
+          <h4>
+            <span class="lang-zh">【測試二】Llama 3.2 1B</span>
+            <span class="lang-en">[Test 2] Llama 3.2 1B</span>
+          </h4>
+          <div class="code-block">Model: Llama 3.2 1B (Instruct)
+Hardware: MediaTek NPU (6GB RAM)
+Batch size: Prompt 128 / Gen 1
+Prompt length: <span class="lang-zh">~267 tokens (平均)</span><span class="lang-en">~267 tokens (Avg)</span>
+Output length: <span class="lang-zh">~90 tokens (平均)</span><span class="lang-en">~90 tokens (Avg)</span>
+
+Prefill TPS: <span class="string">~203 tok/s</span>
+Decode TPS: <span class="keyword">~15.75 tok/s</span>
+Latency (Total): ~13.7s</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">
+      <span class="num">2</span> 
+      <span class="lang-zh">核心效能指標對比</span>
+      <span class="lang-en">Core Performance Metrics Comparison</span>
+    </div>
+    <div class="card" style="padding:0;overflow:hidden;">
+      <table class="kv-table">
+        <tr>
+          <th><span class="lang-zh">指標</span><span class="lang-en">Metric</span></th>
+          <th>Qwen 2.5 1.5B</th>
+          <th>Llama 3.2 1B</th>
+          <th><span class="lang-zh">比較與洞察</span><span class="lang-en">Comparison & Insights</span></th>
+        </tr>
+        <tr>
+          <td class="key"><span class="lang-zh">輸入處理 (Prefill TPS)</span><span class="lang-en">Prefill TPS</span></td>
+          <td>164 ~ 225 t/s</td>
+          <td><span class="badge badge-green">196 ~ 209 t/s</span></td>
+          <td>
+            <span class="lang-zh">兩者皆非常迅速，受 Batch 零碎程度影響較大。</span>
+            <span class="lang-en">Both are extremely fast; speed heavily depends on batch fragmentation.</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="key"><span class="lang-zh">生成速度 (Decode TPS)</span><span class="lang-en">Decode TPS</span></td>
+          <td>11.60 t/s</td>
+          <td><span class="badge badge-green">~15.75 t/s</span></td>
+          <td>
+            <span class="lang-zh">Llama 1B 因模型較小，生成速度穩定快了近 36%。</span>
+            <span class="lang-en">Due to its smaller model size, Llama 1B's generation speed is nearly 36% faster.</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="key"><span class="lang-zh">首字延遲 (TTFT)</span><span class="lang-en">TTFT</span></td>
+          <td>6.57 ~ 8.01 秒</td>
+          <td><span class="badge badge-green">5.67 ~ 5.75 秒</span></td>
+          <td>
+            <span class="lang-zh">Llama 1B 由於模型較小，載入與切換較快，明顯佔優。</span>
+            <span class="lang-en">Llama 1B has a significant advantage due to faster loading and context switching.</span>
+          </td>
+        </tr>
+        <tr>
+          <td class="key"><span class="lang-zh">Model Swap 切換時間</span><span class="lang-en">Model Swap</span></td>
+          <td>5.1 ~ 5.7 秒</td>
+          <td><span class="badge badge-green">3.6 ~ 3.7 秒</span></td>
+          <td>
+            <span class="lang-zh">Llama 1B 因權重檔案較小，在硬體中 Swap 的時間大幅縮短。</span>
+            <span class="lang-en">Llama 1B's smaller weight size significantly reduces hardware swap time.</span>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">
+      <span class="num">3</span> 
+      <span class="lang-zh">推論品質評估 (摘要測試)</span>
+      <span class="lang-en">Inference Quality Evaluation</span>
+    </div>
+
+    <!-- Qwen 1.5B Card -->
+    <div class="card">
+      <h4><span class="lang-zh">Qwen 2.5 1.5B (綜合評估)</span><span class="lang-en">Qwen 2.5 1.5B (Overall)</span></h4>
+      <div class="lifecycle">
+        <div class="pill"><span class="dot dot-green"></span> 
+          <strong><span class="lang-zh">指令遵循度</span><span class="lang-en">Instruction Following</span></strong> ─ <span class="stars">★★★★★</span>
+        </div>
+        <div class="pill"><span class="dot dot-green"></span> 
+          <strong><span class="lang-zh">資訊精準度</span><span class="lang-en">Information Accuracy</span></strong> ─ <span class="stars">★★★★★</span>
+        </div>
+        <div class="pill"><span class="dot dot-green"></span> 
+          <strong><span class="lang-zh">語句流暢度</span><span class="lang-en">Fluency</span></strong> ─ <span class="stars">★★★★★</span>
+        </div>
+      </div>
+      <p style="margin-top:12px;">
+        <strong><span class="lang-zh">結語：</span><span class="lang-en">Conclusion: </span></strong>
+        <span class="lang-zh">穩定度極佳，短文摘要表現完美，完全遵循指令且無幻覺，精準提煉事實與數據。</span>
+        <span class="lang-en">Exceptional stability. Perfect performance in summarization, strictly following instructions with zero hallucinations.</span>
+      </p>
+
+      <hr class="divider">
+
+      <div class="lang-zh">
+        <div class="detail-title">【詳細測試案例】英文科技新聞摘要 (Falcon 9)</div>
+        <p style="font-size: 13px; margin-bottom: 12px;">🔗 <a href="https://arstechnica.com/space/2026/04/a-falcon-9-upper-stage-will-strike-the-moon-in-august/?utm_source=tldrnewsletter" target="_blank" style="color: var(--accent); text-decoration: none;">新聞原文參考連結 (Source)</a></p>
+        <p><strong>Prompt 範本：</strong></p>
+        <div class="code-block"><span class="keyword">&lt;|im_start|&gt;system</span>
+You are a professional assistant. Summarize the text into a maximum of 3 concise bullet points starting with "-". Output MUST be entirely in English. Only output the bullet points.<span class="keyword">&lt;|im_end|&gt;</span>
+<span class="keyword">&lt;|im_start|&gt;user</span>
+Astronomers say the upper stage of a Falcon 9 rocket that launched in early 2025 will strike the Moon later this summer. Bill Gray, who writes the Project Pluto software, published a report on the impact expected on August 5. The upper stage is 13.8 meters tall and will strike the lunar surface intact. 
+
+Astronomers are highly confident this is the second stage of the Falcon 9 rocket that launched two lunar landers on January 15, 2025. Gray estimates the object will be traveling at 5,400 mph when it strikes near the Einstein Crater, creating a small crater but doing no damage. Unlike a previous incident involving a Chinese rocket, there is no doubt this object is the Falcon 9 upper stage because it has been tracked since launch. 
+
+While there is no risk to anything currently on the Moon, as lunar launches increase by a factor of 10 for future outposts, experts suggest companies should put these stages into disposal orbits around the Sun to avoid hitting Earth or the Moon.
+
+Summary:<span class="keyword">&lt;|im_end|&gt;</span>
+<span class="keyword">&lt;|im_start|&gt;assistant</span></div>
+        
+        <p><strong>預期輸出與實際輸出（完美符合）：</strong></p>
+        <div class="code-block" style="border-left: 3px solid var(--green);">- The upper stage of a Falcon 9 rocket is expected to strike the Moon on August 5.
+- The upper stage is 13.8 meters tall and will travel at 5,400 mph.
+- It is the second stage of the Falcon 9 rocket that launched two lunar landers on January 15, 2025.</div>
+      </div>
+
+      <div class="lang-en">
+        <div class="detail-title">[Detailed Case] Tech News Summarization (Falcon 9)</div>
+        <p style="font-size: 13px; margin-bottom: 12px;">🔗 <a href="https://arstechnica.com/space/2026/04/a-falcon-9-upper-stage-will-strike-the-moon-in-august/?utm_source=tldrnewsletter" target="_blank" style="color: var(--accent); text-decoration: none;">News Article Reference</a></p>
+        <p><strong>Prompt Template:</strong></p>
+        <div class="code-block"><span class="keyword">&lt;|im_start|&gt;system</span>
+You are a professional assistant. Summarize the text into a maximum of 3 concise bullet points starting with "-". Output MUST be entirely in English. Only output the bullet points.<span class="keyword">&lt;|im_end|&gt;</span>
+<span class="keyword">&lt;|im_start|&gt;user</span>
+Astronomers say the upper stage of a Falcon 9 rocket that launched in early 2025 will strike the Moon later this summer. Bill Gray, who writes the Project Pluto software, published a report on the impact expected on August 5. The upper stage is 13.8 meters tall and will strike the lunar surface intact. 
+
+Astronomers are highly confident this is the second stage of the Falcon 9 rocket that launched two lunar landers on January 15, 2025. Gray estimates the object will be traveling at 5,400 mph when it strikes near the Einstein Crater, creating a small crater but doing no damage. Unlike a previous incident involving a Chinese rocket, there is no doubt this object is the Falcon 9 upper stage because it has been tracked since launch. 
+
+While there is no risk to anything currently on the Moon, as lunar launches increase by a factor of 10 for future outposts, experts suggest companies should put these stages into disposal orbits around the Sun to avoid hitting Earth or the Moon.
+
+Summary:<span class="keyword">&lt;|im_end|&gt;</span>
+<span class="keyword">&lt;|im_start|&gt;assistant</span></div>
+        
+        <p><strong>Expected & Actual Output (Perfect Match):</strong></p>
+        <div class="code-block" style="border-left: 3px solid var(--green);">- The upper stage of a Falcon 9 rocket is expected to strike the Moon on August 5.
+- The upper stage is 13.8 meters tall and will travel at 5,400 mph.
+- It is the second stage of the Falcon 9 rocket that launched two lunar landers on January 15, 2025.</div>
+      </div>
+    </div>
+
+    <!-- Llama 3.2 1B Card -->
+    <div class="card">
+      <h4><span class="lang-zh">Llama 3.2 1B (綜合評估)</span><span class="lang-en">Llama 3.2 1B (Overall)</span></h4>
+      <div class="lifecycle">
+        <div class="pill"><span class="dot dot-red"></span> 
+          <strong><span class="lang-zh">指令遵循度</span><span class="lang-en">Instruction Following</span></strong> ─ <span class="stars">★★☆☆☆</span>
+        </div>
+        <div class="pill"><span class="dot dot-red"></span> 
+          <strong><span class="lang-zh">資訊精準度</span><span class="lang-en">Information Accuracy</span></strong> ─ <span class="stars">★☆☆☆☆</span>
+        </div>
+        <div class="pill"><span class="dot dot-green"></span> 
+          <strong><span class="lang-zh">語句流暢度</span><span class="lang-en">Fluency</span></strong> ─ <span class="stars">★★★★★</span>
+        </div>
+      </div>
+      <p style="margin-top:12px;">
+        <strong><span class="lang-zh">結語：</span><span class="lang-en">Conclusion: </span></strong>
+        <span class="lang-zh">效能優秀但智商堪憂，產生嚴重幻覺（如將日期 May 19-20 扭曲為 May 1-2-0，或隨意加上非預期的開場白廢話），且未能遵循格式限制指令，實用性極低。</span>
+        <span class="lang-en">Excellent hardware performance but suffers from severe hallucinations, completely missing specific dates, and failing to follow formatting constraints.</span>
+      </p>
+
+      <hr class="divider">
+
+      <div class="lang-zh">
+        <div class="detail-title">【詳細測試案例】英文科技新聞摘要 (Google Omni)</div>
+        <p style="font-size: 13px; margin-bottom: 12px;">🔗 <a href="https://www.testingcatalog.com/google-is-testing-new-omni-model-for-video-generation-ahead-of-i-o/?utm_source=tldrai" target="_blank" style="color: var(--accent); text-decoration: none;">新聞原文參考連結 (Source)</a></p>
+        <p><strong>Prompt 範本：</strong></p>
+        <div class="code-block"><span class="keyword">&lt;|begin_of_text|&gt;&lt;|start_header_id|&gt;system&lt;|end_header_id|&gt;</span>
+
+You are a professional assistant. Summarize the text into a maximum of 3 concise bullet points starting with "-". Output MUST be entirely in English. Only output the bullet points.<span class="keyword">&lt;|eot_id|&gt;&lt;|start_header_id|&gt;user&lt;|end_header_id|&gt;</span>
+
+Google appears to be preparing a new Gemini video-generation tool called Omni. A surfaced screenshot from Gemini’s video generation tab includes the line, “Start with an idea or try a template. Powered by Omni.” This appears near where "Toucan" is mentioned, an active video tool powered by Veo, spotted ahead of Google I/O 2026. 
+
+Today, Gemini’s video generation is powered by Veo 3.1, while image generation is tied to Nano Banana 2 and Pro (Gemini 3.1 Flash Image). The question is whether Omni is a new wrapper for Veo, a new Gemini video model, or an early step toward a Gemini omni-model that handles images and videos in a single system. 
+
+Google currently runs a split-model strategy; Omni could bring those tracks closer together amid competition from ByteDance’s Seedance 2.0. The likely launch window is Google I/O 2026 on May 19–20.
+
+Summary:<span class="keyword">&lt;|eot_id|&gt;&lt;|start_header_id|&gt;assistant&lt;|end_header_id|&gt;</span></div>
+        
+        <p><strong>預期輸出：</strong></p>
+        <div class="code-block" style="border-left: 3px solid var(--green);">- Google is preparing a new Gemini video-generation tool called Omni.
+- Gemini's video generation is powered by Veo 3.1.
+- The likely launch window for Omni is Google I/O 2026.</div>
+
+        <p><strong>實際輸出：</strong></p>
+        <div class="code-block" style="border-left: 3px solid var(--red);">Here are the 3 concise bullet points:
+• Google is developing a new tool called Gemini, powered by Veo, which is likely a new Gemini model.
+• Gemini's video generation is powered by Veo 3.1...
+• The Gemini tool is a new wrapper for Veo, and its launch is expected to happen in May 1-2-0.</div>
+      </div>
+
+      <div class="lang-en">
+        <div class="detail-title">[Detailed Case] Tech News Summarization (Google Omni)</div>
+        <p style="font-size: 13px; margin-bottom: 12px;">🔗 <a href="https://www.testingcatalog.com/google-is-testing-new-omni-model-for-video-generation-ahead-of-i-o/?utm_source=tldrai" target="_blank" style="color: var(--accent); text-decoration: none;">News Article Reference</a></p>
+        <p><strong>Prompt Template:</strong></p>
+        <div class="code-block"><span class="keyword">&lt;|begin_of_text|&gt;&lt;|start_header_id|&gt;system&lt;|end_header_id|&gt;</span>
+
+You are a professional assistant. Summarize the text into a maximum of 3 concise bullet points starting with "-". Output MUST be entirely in English. Only output the bullet points.<span class="keyword">&lt;|eot_id|&gt;&lt;|start_header_id|&gt;user&lt;|end_header_id|&gt;</span>
+
+Google appears to be preparing a new Gemini video-generation tool called Omni. A surfaced screenshot from Gemini’s video generation tab includes the line, “Start with an idea or try a template. Powered by Omni.” This appears near where "Toucan" is mentioned, an active video tool powered by Veo, spotted ahead of Google I/O 2026. 
+
+Today, Gemini’s video generation is powered by Veo 3.1, while image generation is tied to Nano Banana 2 and Pro (Gemini 3.1 Flash Image). The question is whether Omni is a new wrapper for Veo, a new Gemini video model, or an early step toward a Gemini omni-model that handles images and videos in a single system. 
+
+Google currently runs a split-model strategy; Omni could bring those tracks closer together amid competition from ByteDance’s Seedance 2.0. The likely launch window is Google I/O 2026 on May 19–20.
+
+Summary:<span class="keyword">&lt;|eot_id|&gt;&lt;|start_header_id|&gt;assistant&lt;|end_header_id|&gt;</span></div>
+        
+        <p><strong>Expected Output:</strong></p>
+        <div class="code-block" style="border-left: 3px solid var(--green);">- Google is preparing a new Gemini video-generation tool called Omni.
+- Gemini's video generation is powered by Veo 3.1.
+- The likely launch window for Omni is Google I/O 2026.</div>
+
+        <p><strong>Actual Output:</strong></p>
+        <div class="code-block" style="border-left: 3px solid var(--red);">Here are the 3 concise bullet points:
+• Google is developing a new tool called Gemini, powered by Veo, which is likely a new Gemini model.
+• Gemini's video generation is powered by Veo 3.1...
+• The Gemini tool is a new wrapper for Veo, and its launch is expected to happen in May 1-2-0.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">
+      <span class="num">4</span> 
+      <span class="lang-zh">綜合結論</span>
+      <span class="lang-en">Overall Conclusion</span>
+    </div>
+    <div class="card">
+      <p class="lang-zh">透過本次 Benchmark 測試，在 On-Device LLM 的模型抉擇上：</p>
+      <p class="lang-en">Through this benchmark test, regarding the model selection for On-Device LLM:</p>
+      
+      <p class="lang-zh" style="margin-top: 12px;"><strong>Qwen 1.5B</strong> 雖然在推論速度上稍遜於 Llama 1B，但其在邏輯穩定性、指令遵循能力與事實精準度上具備壓倒性優勢，能夠真正產出實用的內容，應作為首選模型。</p>
+      <p class="lang-en" style="margin-top: 12px;">Although <strong>Qwen 1.5B</strong> is slightly slower than Llama 1B in inference speed, it holds an overwhelming advantage in logical stability, instruction following, and factual accuracy. It can produce truly practical content and should be the primary choice.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">
+      <span class="num">5</span> 
+      <span class="lang-zh">實際運行 Demo 影片</span>
+      <span class="lang-en">Live Execution Demo</span>
+    </div>
+    <div class="card">
+      <p>
+        <span class="lang-zh">以下為實際在 Android 裝置上執行的速度展示（包含首字延遲與生成速度）。</span>
+        <span class="lang-en">The following video demonstrates the actual execution speed on the Android device (including TTFT and decode speed).</span>
+      </p>
+      <div class="video-wrap" style="max-width: 400px; margin: 24px auto 0 auto; border-radius: 12px; border: 1px solid var(--border); overflow: hidden; position: relative;">
+        <a href="https://youtube.com/shorts/w3jJ8sTHOSk" target="_blank" style="display: block; text-decoration: none;">
+          <img src="https://i.ytimg.com/vi/w3jJ8sTHOSk/hqdefault.jpg" alt="Live Execution Demo" style="width: 100%; display: block;">
+          <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.6); padding: 12px 24px; border-radius: 30px; color: #fff; font-weight: bold; font-size: 14px; backdrop-filter: blur(4px);">
+            ▶ 點擊觀看實測影片 (Click to Watch)
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <hr style="border: none; border-top: 1px solid var(--border); margin: 40px 0 20px 0;">
+  <div class="note">LLM Benchmark Report · nLLMService Team</div>
+
+</div>
+
+<script>
+  function setLang(lang, event) {
+    document.body.setAttribute('data-lang', lang);
+    const btns = document.querySelectorAll('.lang-btn');
+    btns.forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+  }
+</script>
+
+</body>
+</html>
