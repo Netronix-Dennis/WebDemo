@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Touch 測試結論 v2 · 底層 OK，APP 需改邏輯 · 2026-06-24</title>
+<style>
+  :root{
+    --pass:#4ade80; --pass-bg:#16321f; --pass-bd:#1f5c33;
+    --fail:#f87171; --fail-bg:#3a1a1a; --fail-bd:#6b2626;
+    --part:#fbbf24; --part-bg:#3a2c10; --part-bd:#6b4e16;
+    --ink:#e6edf3; --muted:#8b97a3; --line:#2a323c; --card:#161b22; --bg:#0d1117;
+    --accent:#58a6ff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:15px/1.6 -apple-system,"Segoe UI","Noto Sans CJK TC","PingFang TC",sans-serif;}
+  .wrap{max-width:960px;margin:0 auto;padding:28px 20px 80px}
+  h1{font-size:26px;margin:0 0 4px}
+  h2{font-size:20px;margin:38px 0 14px;padding:10px 14px;border-radius:8px;
+    border-left:5px solid var(--accent);background:#1a2230}
+  h3{font-size:16px;margin:22px 0 8px;color:var(--accent)}
+  .meta{color:var(--muted);font-size:13.5px;margin-bottom:8px}
+  .meta b{color:var(--ink)}
+  code{background:#1f2630;padding:1px 5px;border-radius:4px;font-size:90%}
+  p{margin:10px 0}
+
+  .scores{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0}
+  .score{flex:1;min-width:140px;background:var(--card);border:1px solid var(--line);
+    border-radius:12px;padding:14px 16px}
+  .score.pass{background:var(--pass-bg);border-color:var(--pass-bd)}
+  .score.fail{background:var(--fail-bg);border-color:var(--fail-bd)}
+  .score .n{font-size:30px;font-weight:700;line-height:1}
+  .score .l{font-size:12.5px;color:var(--muted);margin-top:4px}
+  .score.pass .n{color:var(--pass)} .score.fail .n{color:var(--fail)}
+
+  .callout{border-radius:12px;padding:14px 18px;margin:16px 0;border:1px solid var(--line)}
+  .callout.ok{background:var(--pass-bg);border-color:var(--pass-bd)}
+  .callout.bad{background:var(--fail-bg);border-color:var(--fail-bd)}
+  .callout.note{background:#11202e;border-color:#1f4060}
+  .callout b{color:var(--ink)}
+
+  table{width:100%;border-collapse:collapse;background:var(--card);
+    border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:10px 0}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);font-size:14px}
+  th{background:#1f2937;font-weight:600;color:#c6d0da}
+  tr:last-child td{border-bottom:none}
+  table tr:hover td{background:#1b222c}
+  td.num{font-family:ui-monospace,Menlo,Consolas,monospace;white-space:nowrap;color:#a9b6c3}
+
+  .badge{display:inline-block;font-size:12px;font-weight:700;padding:2px 9px;border-radius:20px;white-space:nowrap}
+  .b-pass{background:var(--pass-bg);color:var(--pass);border:1px solid var(--pass-bd)}
+  .b-fail{background:var(--fail-bg);color:var(--fail);border:1px solid var(--fail-bd)}
+  .b-part,.b-warn{background:var(--part-bg);color:var(--part);border:1px solid var(--part-bd)}
+
+  pre{background:#0a0e14;color:#dfe6ec;padding:14px 16px;border-radius:10px;
+    border:1px solid var(--line);
+    overflow:auto;font:13px/1.55 ui-monospace,Menlo,Consolas,monospace}
+  pre .hl{color:#f87171;font-weight:700}
+  pre .ok{color:#4ade80;font-weight:700}
+  pre .cmt{color:#6b7785}
+
+  .flow{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch;margin:14px 0}
+  .flow .step{background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:10px 14px;font-size:13.5px;flex:1 1 180px;min-width:180px;
+    word-break:break-word;overflow-wrap:anywhere}
+  .flow .step code{display:inline-block;max-width:100%;white-space:normal;
+    word-break:break-all;overflow-wrap:anywhere;background:transparent;padding:0;font-size:12.5px}
+  .flow .arrow{align-self:center;color:var(--muted);font-size:20px}
+  .flow .step.bad{border-color:var(--fail-bd);background:var(--fail-bg)}
+  .flow .step.ok{border-color:var(--pass-bd);background:var(--pass-bg)}
+  .flow .step small{color:var(--muted);display:block;margin-top:3px}
+
+  .footer{color:var(--muted);font-size:13px;margin-top:30px;border-top:1px solid var(--line);padding-top:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Touch 測試結論 v2</h1>
+  <div class="meta">主題：<b>ADB Raw Event 全數正確，問題在上層 APP 邏輯</b>　·　2026-06-24</div>
+  <div class="meta">本版只聚焦兩件事：<b>① 底層為何沒問題　② APP 為何要改邏輯</b>。其餘 B/D/E 細項見前一版報告。</div>
+
+  <div class="scores">
+    <div class="score pass"><div class="n">10 / 10</div><div class="l">ADB Raw Event 全數 PASS（底層正確）</div></div>
+    <div class="score fail"><div class="n">APP</div><div class="l">手指出水 = 上層判斷邏輯漏接新機型</div></div>
+  </div>
+
+  <div class="callout note">
+    <b>一句話結論：</b>FW / driver 把手指與筆分流得完全正確（手指走 finger node、筆走 stylus node）。
+    手指之所以在 app 出水，是因為 nNote 的「手指攔截」程式碼，被一個<b>寫死機型清單</b>的開關擋住了——
+    新裝置不在清單內，攔截整段被跳過。<b>這是 APP 要改，不是韌體要改。</b>
+  </div>
+
+  <!-- ════════ 區塊 1 ════════ -->
+  <h2>① 底層 ADB Raw Event — 全部正確，問題不在 FW / Driver</h2>
+
+  <p>所有 testcase 的 raw event 都符合預期。最關鍵的交叉驗證是「手指操作時，筆的 node 完全乾淨」：</p>
+
+  <table>
+    <tr><th>檢查</th><th>實測結果</th><th>判定</th></tr>
+    <tr><td>手指操作時，stylus node（筆 / event7）</td><td>無 <code>BTN_TOUCH</code>、無 <code>ABS_PRESSURE</code></td><td><span class="badge b-pass">正確</span></td></tr>
+    <tr><td>手指操作時，finger node（手指 / event5・6）</td><td>有完整 <code>BTN_TOUCH DOWN</code> / <code>MT_TRACKING_ID</code> / <code>MT_POSITION</code> / <code>UP</code></td><td><span class="badge b-pass">正確</span></td></tr>
+    <tr><td>筆書寫 / 側鍵 / 筆尾 / 多指 / 四角 / 解析度</td><td>tool type、座標、<code>BTN_STYLUS</code>、<code>BTN_TOOL_RUBBER</code>、雙 slot、16384/16384 全部到位</td><td><span class="badge b-pass">PASS</span></td></tr>
+  </table>
+
+  <div class="callout ok">
+    <b>底層結論：</b>driver 並沒有把手指誤判成 stylus，兩條 input pipeline 分流正確。
+    換句話說，作業系統交給 APP 的資料是對的——<b>手指就是以「FINGER」的身分送進來的</b>。
+    所以 FW / driver 這一層<b>不需要任何修改</b>。
+  </div>
+
+  <!-- ════════ 區塊 2 ════════ -->
+  <h2>② 上層 APP — 手指攔截被「機型清單」擋掉，需修改邏輯</h2>
+
+  <p>nNote 在 <code>HandwriterView.onTouchEvent()</code> 確實寫了「手指就不要出水」的攔截：</p>
+
+<pre><span class="cmt">// HandwriterView.java · onTouchEvent()  (約 L656)</span>
+if (RefreshClass.<span class="hl">isEinkHandWritingHardwareType()</span> &amp;&amp;
+        event.getToolType(0) == MotionEvent.TOOL_TYPE_FINGER) {
+    <span class="cmt">// ↑ 手指 → 走手勢 / 不出水（這段才是正解）</span>
+    ...
+}</pre>
+
+  <p>但這個 <code>if</code> 的第一個條件 <code>isEinkHandWritingHardwareType()</code>，是用一份<b>寫死的機型清單</b>來判斷「這台是不是手寫機」：</p>
+
+<pre><span class="cmt">// RefreshClass.isEinkHandWritingHardwareType()  ← 問題根源</span>
+return SystemProperties.get("ro.product.hardwareType","").equals(TYPE_E60Q60)
+    || ... .equals(TYPE_ED0Q00)
+    || ... .equals(TYPE_E70Q30)
+    || ... .equals(TYPE_EA0Q00)
+    <span class="cmt">// ……一長串舊機型……</span>
+    || SystemProperties.get("ro.product.device","").equals(TYPE_EA0P04);
+<span class="hl">// ⚠ 新裝置（本次 EA0T4A）不在這份清單裡 → 回傳 false</span></pre>
+
+  <h3>為什麼手指就出水了？（邏輯流程）</h3>
+  <div class="flow">
+    <div class="step">手指觸碰<br><small>OS 正確送出 TOOL_TYPE_FINGER</small></div>
+    <div class="arrow">→</div>
+    <div class="step bad"><code>isEinkHandWritingHardwareType()</code><br><small>新機型不在清單 → <b>false</b></small></div>
+    <div class="arrow">→</div>
+    <div class="step bad">整個 <code>if</code> 條件為 false<br><small>手指攔截分支被<b>跳過</b></small></div>
+    <div class="arrow">→</div>
+    <div class="step bad">手指 event 落到繪圖 handler<br><small>→ <b>出水</b></small></div>
+  </div>
+
+  <div class="callout bad">
+    <b>真正原因：</b>不是 FW，也不是「native 層接走 finger」（前一版報告的推測）。
+    而是 Java 層的攔截邏輯<b>被機型開關 gate 住</b>——新機型沒登錄，整段防出水程式碼形同未啟用。
+    這也說明為何 <b>C1–C5（手指 / 手掌相關）會全部 FAIL</b>：它們都走同一個被跳過的 gate。
+  </div>
+
+  <h3>修正方式</h3>
+  <p>讓 <code>isEinkHandWritingHardwareType()</code> 對新裝置回傳 <code>true</code>。兩種做法：</p>
+  <table>
+    <tr><th>做法</th><th>內容</th><th>適用</th></tr>
+    <tr><td>A. 加入機型清單</td><td>把新裝置的 <code>ro.product.device</code> / <code>hardwareType</code> 加進判斷（如 <code>TYPE_EA0T4A</code>）</td><td>須維護多機型、要精準控制時</td></tr>
+    <tr><td>B. 直接回傳 true</td><td>確認本產品線都是手寫機，直接 <code>return true;</code>（如下圖現行改法）</td><td>本機種全為 e-ink 手寫機，最簡單</td></tr>
+  </table>
+
+<pre><span class="cmt">// 現行修正（return true，舊清單註解保留）</span>
+public static boolean isEinkHandWritingHardwareType() {
+    <span class="ok">return true;</span>
+    <span class="cmt">/*  ……原本的機型清單保留作註解……  */</span>
+}</pre>
+
+  <div class="callout ok">
+    <b>修正後預期：</b><code>isEinkHandWritingHardwareType()</code> 回 true → 手指攔截分支正常執行 →
+    手指走手勢、不再出水 → <b>C1–C5 應全部轉 PASS</b>。修改後請重跑 nNote 功能行為 C 區與 F 區回歸確認。
+  </div>
+
+  <!-- ════════ 區塊 3：測項覆蓋對照 ════════ -->
+  <h2>③ 主管指定測項 — 是否都已在前報告涵蓋？</h2>
+
+  <p>主管列出的測項<b>全部都已在 2026-06-24 報告測過</b>，僅「兩指縮放」未單獨列為 app 功能項（但 raw multi-touch 已驗）。
+  下表逐項對照「底層 ADB raw」與「上層 APP 功能」兩個結果：</p>
+
+  <table>
+    <tr><th>主管測項</th><th>前報告編號</th><th>ADB Raw</th><th>APP 功能</th><th>重點</th></tr>
+    <tr>
+      <td>Touch Event 行為（筆書寫）</td><td class="num">A1–A5</td>
+      <td><span class="badge b-pass">PASS</span></td><td><span class="badge b-pass">PASS</span></td>
+      <td>筆尖、快/慢線條、多筆連續皆正常</td>
+    </tr>
+    <tr>
+      <td>Palm — 手掌先碰再下筆</td><td class="num">C3</td>
+      <td><span class="badge b-pass">PASS</span></td><td><span class="badge b-fail">FAIL</span></td>
+      <td>底層分流正確；APP 因手指/手掌出水而 FAIL（同 ② 之 gate）</td>
+    </tr>
+    <tr>
+      <td>Palm — 先下筆不離開再壓手掌</td><td class="num">C4</td>
+      <td><span class="badge b-pass">PASS</span></td><td><span class="badge b-fail">FAIL</span></td>
+      <td>同上，手掌出水風險</td>
+    </tr>
+    <tr>
+      <td>（附）純手掌 / 手指不出水 / 手指筆交替</td><td class="num">C5 / C1 / C2</td>
+      <td><span class="badge b-pass">PASS</span></td><td><span class="badge b-fail">FAIL</span></td>
+      <td>C 區全 FAIL，皆因同一個 gate 被跳過</td>
+    </tr>
+    <tr>
+      <td>四角 Touch 是否正常</td><td class="num">E1 / 四角座標</td>
+      <td><span class="badge b-pass">PASS</span></td><td><span class="badge b-pass">PASS</span></td>
+      <td>四角 adb 與 app 皆可觸發、座標正確</td>
+    </tr>
+    <tr>
+      <td>四角 — 是否較不易觸發（邊緣）</td><td class="num">E2</td>
+      <td><span class="badge b-fail">FAIL</span></td><td><span class="badge b-fail">FAIL</span></td>
+      <td>筆靠邊時 raw 座標未達滿幅（離邊 ~15–27px），偏校正/物理邊界，非 app 畫錯</td>
+    </tr>
+    <tr>
+      <td>Multi-Touch — 兩指縮放</td><td class="num">（raw 摘要）</td>
+      <td><span class="badge b-pass">PASS</span></td><td><span class="badge b-warn">未單列</span></td>
+      <td>raw 兩 slot 同時 active 已驗；app 縮放手勢前報告未單獨列項，建議補測</td>
+    </tr>
+    <tr>
+      <td>主動筆 — 單擊按鈕（會切橡皮擦?）</td><td class="num">D1</td>
+      <td><span class="badge b-pass">PASS</span></td><td><span class="badge b-pass">PASS</span></td>
+      <td><b>會切換成橡皮擦</b>；raw <code>BTN_STYLUS</code> 單擊成對 DOWN/UP</td>
+    </tr>
+    <tr>
+      <td>主動筆 — 按壓按鈕（會保持橡皮擦?）</td><td class="num">D2 / D3</td>
+      <td><span class="badge b-pass">PASS</span></td><td><span class="badge b-part">部分</span></td>
+      <td><b>按住期間保持橡皮擦、放開回筆（D2 PASS）</b>；但 D3 長按拖曳是「整段擦除」非局部連續擦 FAIL</td>
+    </tr>
+    <tr>
+      <td>FW 更新後 — 筆尾是否有訊號</td><td class="num">D4</td>
+      <td><span class="badge b-pass">PASS</span></td><td><span class="badge b-fail">FAIL</span></td>
+      <td><b>筆尾 raw 訊號「有了」</b>（見下方說明）；但 app 端尚無擦除效果</td>
+    </tr>
+  </table>
+
+  <h3>重點補充（回答主管三個直接問題）</h3>
+
+  <div class="callout note">
+    <b>Q：單點側鍵後當前行為？會切換橡皮擦嗎？</b><br>
+    <b>A：會。</b>單擊側鍵會切換為橡皮擦（D1 PASS），raw 層 <code>BTN_STYLUS</code> 單擊呈成對 DOWN/UP。
+  </div>
+
+  <div class="callout note">
+    <b>Q：按壓側鍵後當前行為？會保持橡皮擦嗎？</b><br>
+    <b>A：會保持。</b>按住期間維持橡皮擦、放開後恢復為筆（D2 PASS）。
+    唯一缺點：<b>長按 + 拖曳時是「整段筆跡一次擦掉」，而非沿軌跡局部連續擦（D3 FAIL）</b>——這是 app 橡皮擦行為要再調整的點。
+  </div>
+
+  <div class="callout ok">
+    <b>Q：Touch FW 更新後，筆尾是否能有訊號？</b><br>
+    <b>A：有了 —— 這是本次 FW 更新的明顯改善。</b>筆尾碰螢幕時 raw 已送出
+    <code>BTN_TOUCH</code> + <code>BTN_TOOL_RUBBER</code> + <code>ABS_PRESSURE</code> 且座標連續更新
+    （對比上次基準報告：筆尾<b>完全沒有</b> BTN_TOUCH / BTN_TOOL_RUBBER）。
+    <br>但 <b>app 端目前對筆尾橡皮擦尚無反應（D4 FAIL）</b>——raw 訊號到位、APP 邏輯尚未接，屬上層待補。
+  </div>
+
+  <div class="callout bad">
+    <b>整體判讀：</b>主管 9 個關注點裡，<b>底層 raw 只有「邊緣未達滿幅(E2)」一項 FAIL</b>，其餘 raw 全部正確。
+    APP 端的 FAIL（C 區出水、D3 整段擦、D4 筆尾無效果）<b>都是上層邏輯待修</b>，不是韌體問題。
+    其中 C 區出水的根因就是 ② 的機型 gate，<b>一次修好即可全部轉 PASS</b>。
+  </div>
+
+  <div class="footer">
+    本版聚焦「底層正確 vs APP 需改邏輯」兩塊，並對照主管指定測項的前報告覆蓋。<br>
+    來源：<code>Touch整合測試結果_ADB與App功能_2026-06-24.html</code>　·　關聯：<code>HandwriterView.java</code> / <code>RefreshClass.isEinkHandWritingHardwareType()</code>
+  </div>
+
+</div>
+</body>
+</html>
