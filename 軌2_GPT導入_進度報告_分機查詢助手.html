@@ -79,20 +79,30 @@ ul.clean li::before{content:"\2713";position:absolute;left:0;top:8px;color:var(-
 .lb img{max-width:96%;max-height:92%;border-radius:10px;box-shadow:0 24px 70px rgba(0,0,0,.55)}
 .lb .x{position:absolute;top:16px;right:20px;color:#fff;font-size:30px;font-weight:800;cursor:pointer;line-height:1;opacity:.8}
 @media(max-width:760px){.shots{grid-template-columns:1fr}.arrow{transform:rotate(90deg);padding:4px 0}.statrow{grid-template-columns:repeat(2,1fr)}}
+
+.pagehead{max-width:1000px;margin:0 auto;padding:30px 22px 2px}
+.pagehead h1{font-size:22px;font-weight:800;color:var(--secondary);letter-spacing:.3px;display:flex;align-items:center;gap:10px}
+.pagehead .sub{font-size:13px;color:var(--muted);margin-top:7px;line-height:1.78;max-width:880px}
+.pagehead .tagn{display:inline-block;background:#fff7ed;color:#9a3412;border:1px solid #fed7aa;border-radius:7px;padding:2px 10px;font-weight:700;font-size:12px;margin-right:6px}
+.pagehead b{color:var(--ink,#1a202c)}
+.seclabel{max-width:1000px;margin:28px auto 2px;padding:0 22px;font-size:11.5px;letter-spacing:.18em;font-weight:800;color:var(--primary-d,#0d8a6b);text-transform:uppercase}
+.wk{background:var(--panel,#fff);border:1px solid var(--line,#e2e8f0);border-radius:14px;box-shadow:var(--shadow,0 4px 24px rgba(15,40,80,.08));margin-bottom:14px;overflow:hidden}
+.wk>summary{padding:15px 20px;cursor:pointer;list-style:none;display:flex;align-items:center;gap:13px;flex-wrap:wrap}
+.wk>summary::-webkit-details-marker{display:none}
+.wk .date{font-size:17.5px;font-weight:800;color:var(--secondary,#1e3a5f);letter-spacing:.5px}
+.wk .hl{font-size:13.5px;color:var(--body,#334155)}
+.wk .stage{font-size:11px;font-weight:800;padding:3px 12px;border-radius:20px;background:var(--gbg,#d1fae5);color:var(--gtx,#047857);white-space:nowrap}
+.wk .stage.mid{background:#e2e8f0;color:#475569}
+.wk .cv{color:#94a3b8;font-size:14px;transition:.15s;margin-left:auto}
+.wk[open] .cv{transform:rotate(90deg);color:var(--primary,#10a37f)}
+.wk[open]>summary{border-bottom:1px solid var(--line,#e2e8f0);background:#fbfdfe}
+.wkb{padding:2px 20px 22px}
+.wkb>.wkcallout{background:#ecfdf5;border:1px solid #a7f3d0;border-left:4px solid var(--primary,#10a37f);color:#065f46;border-radius:11px;padding:14px 17px;font-size:13.5px;line-height:1.65;margin:14px 0 2px}
+.wkb .bh{font-size:12px;letter-spacing:.03em;color:var(--primary-d,#0d8a6b);font-weight:800;margin:14px 0 4px}
+
 </style></head>
 <body>
-<div class="topbar">
- <div class="ttl"><div class="logo"><svg viewBox="0 0 24 24" width="26" height="26" fill="#6ee7b7"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.24 1.02l-2.2 2.2z"/></svg></div>
-  <div><h1>分機查詢 AI 助手 — 專案進度報告</h1>
-  <div class="sub">Netronix · AI 推動小組 ｜ 軌2 GPT 導入 ｜ 2026-07-08</div></div></div>
- <div class="metrics">
-  <div class="metric"><div class="v g">已上線</div><div class="l">服務狀態</div></div>
-  <div class="metric"><div class="v">263</div><div class="l">筆分機資料</div></div>
-  <div class="metric"><div class="v">3</div><div class="l">家公司(含子公司)</div></div>
-  <div class="metric"><div class="v g">8/8</div><div class="l">驗收測試通過</div></div>
- </div>
-</div>
-<div class="wrap">
+<div class="pagehead"><h1>📇 分機查詢助手 · 每週進度更新</h1><div class="sub"><span class="tagn">進度日誌</span>依<b>日期</b>記錄每週進度。最新一週預設展開，其餘收合。廠務工程部 · 振曜 AI 推動小組。</div></div><div class="seclabel">每週進度（最新在上）</div><div class="wrap"><details class="wk" open><summary><span class="date">2026 / 07 / 08</span><span class="hl">上線與功能實測</span><span class="stage">階段：已上線試用</span><span class="cv">▶</span></summary><div class="wkb"><div class="bh">◆ 本期進度階段</div><div class="wkcallout">此助手已上線，供相關單位試用中。以下為目前的功能、實測與規劃說明。</div>
  <p class="intro"><span class="tagn">軌2 第二階段</span> &nbsp;本報告說明「分機查詢 AI 助手」<b>目前已實做的功能、實機示範，以及未來的自動同步規劃與實現方式</b>。<br>此助手源自廠務工程部提出之「總機分機查詢（含子公司）」需求，為軌2 GPT 導入評估清單中的落地項目之一。</p>
 
  <section>
@@ -184,9 +194,7 @@ ul.clean li::before{content:"\2713";position:absolute;left:0;top:8px;color:var(-
  </section>
 
  <div class="foot">Netronix AI 推動小組 · 分機查詢 AI 助手專案進度報告 · 2026-07-08<br>本報告內容依實機測試整理；<br>截圖為實際對話畫面。</div>
-</div>
-
-<div class="lb" id="lb"><span class="x">&times;</span><img src="" alt="放大檢視"></div>
+</div></details></div><div class="lb" id="lb"><span class="x">&times;</span><img src="" alt="放大檢視"></div>
 <script>
 (function(){
  var lb=document.getElementById('lb'),lbimg=lb.querySelector('img');

@@ -104,28 +104,30 @@ table.tt th{background:#dbe4ee;color:var(--secondary);font-weight:800;border-bot
  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.28);border-radius:50%;width:42px;height:42px;display:grid;place-items:center}
 .lb .hint{position:fixed;bottom:16px;left:0;right:0;text-align:center;color:#9fb3c8;font-size:12px}
 @media(max-width:640px){.topbar{padding:14px 16px}.wrap{padding:16px 14px 50px}.metric{min-width:64px;padding:6px 10px}}
+
+.pagehead{max-width:1000px;margin:0 auto;padding:30px 22px 2px}
+.pagehead h1{font-size:22px;font-weight:800;color:var(--secondary);letter-spacing:.3px;display:flex;align-items:center;gap:10px}
+.pagehead .sub{font-size:13px;color:var(--muted);margin-top:7px;line-height:1.78;max-width:880px}
+.pagehead .tagn{display:inline-block;background:#fff7ed;color:#9a3412;border:1px solid #fed7aa;border-radius:7px;padding:2px 10px;font-weight:700;font-size:12px;margin-right:6px}
+.pagehead b{color:var(--ink,#1a202c)}
+.seclabel{max-width:1000px;margin:28px auto 2px;padding:0 22px;font-size:11.5px;letter-spacing:.18em;font-weight:800;color:var(--primary-d,#0d8a6b);text-transform:uppercase}
+.wk{background:var(--panel,#fff);border:1px solid var(--line,#e2e8f0);border-radius:14px;box-shadow:var(--shadow,0 4px 24px rgba(15,40,80,.08));margin-bottom:14px;overflow:hidden}
+.wk>summary{padding:15px 20px;cursor:pointer;list-style:none;display:flex;align-items:center;gap:13px;flex-wrap:wrap}
+.wk>summary::-webkit-details-marker{display:none}
+.wk .date{font-size:17.5px;font-weight:800;color:var(--secondary,#1e3a5f);letter-spacing:.5px}
+.wk .hl{font-size:13.5px;color:var(--body,#334155)}
+.wk .stage{font-size:11px;font-weight:800;padding:3px 12px;border-radius:20px;background:var(--gbg,#d1fae5);color:var(--gtx,#047857);white-space:nowrap}
+.wk .stage.mid{background:#e2e8f0;color:#475569}
+.wk .cv{color:#94a3b8;font-size:14px;transition:.15s;margin-left:auto}
+.wk[open] .cv{transform:rotate(90deg);color:var(--primary,#10a37f)}
+.wk[open]>summary{border-bottom:1px solid var(--line,#e2e8f0);background:#fbfdfe}
+.wkb{padding:2px 20px 22px}
+.wkb>.wkcallout{background:#ecfdf5;border:1px solid #a7f3d0;border-left:4px solid var(--primary,#10a37f);color:#065f46;border-radius:11px;padding:14px 17px;font-size:13.5px;line-height:1.65;margin:14px 0 2px}
+.wkb .bh{font-size:12px;letter-spacing:.03em;color:var(--primary-d,#0d8a6b);font-weight:800;margin:14px 0 4px}
+
 </style></head><body>
 
-<div class="topbar">
-  <div class="ttl">
-    <div class="logo">📝</div>
-    <div><h1>會議記錄整理助手 · 進度報告</h1>
-    <div class="sub">功能實測與未來規劃　·　市場開發處　·　振曜 AI 專案小組　·　2026 年 7 月</div></div>
-  </div>
-  <div class="metrics">
-    <div class="metric"><div class="v g">✓</div><div class="l">已建置上線</div></div>
-    <div class="metric"><div class="v">4</div><div class="l">輸出格式</div></div>
-    <div class="metric"><div class="v b">10/10</div><div class="l">對話測試</div></div>
-    <div class="metric"><div class="v y">≈15h</div><div class="l">月省工時(估)</div></div>
-  </div>
-</div>
-
-<div class="wrap">
-
-  <p class="intro"><span class="tagn">進度報告</span>　本報告說明<b>會議記錄整理助手</b>目前的落地成果。它把會議的逐字稿、錄音轉文字或零散筆記，整理成結構清楚、可直接使用的會議記錄，並在客戶／專案資訊上預設去識別化。目前已在公司 ChatGPT 工作區建置上線、通過對話測試，供市場開發處試用。以下依序說明 <b>它能做什麼、實測展示，以及未來如何強化</b>。</p>
-
-  <!-- ── 核心功能 ── -->
-  <section class="sec2">
+<div class="pagehead"><h1>📝 會議記錄整理助手 · 每週進度更新</h1><div class="sub"><span class="tagn">進度日誌</span>依<b>日期</b>記錄每週進度。最新一週預設展開，其餘收合。市場開發處 · 振曜 AI 專案小組。</div></div><div class="seclabel">每週進度（最新在上）</div><div class="wrap"><details class="wk" open><summary><span class="date">2026 / 07 / 08</span><span class="hl">上線與功能實測</span><span class="stage">階段：已上線試用</span><span class="cv">▶</span></summary><div class="wkb"><div class="bh">◆ 本期進度階段</div><div class="wkcallout"><span class="tagn">進度報告</span>　本報告說明<b>會議記錄整理助手</b>目前的落地成果。它把會議的逐字稿、錄音轉文字或零散筆記，整理成結構清楚、可直接使用的會議記錄，並在客戶／專案資訊上預設去識別化。目前已在公司 ChatGPT 工作區建置上線、通過對話測試，供市場開發處試用。以下依序說明 <b>它能做什麼、實測展示，以及未來如何強化</b>。</div><section class="sec2">
     <div class="kick">Section 01</div>
     <h2>它能做什麼：核心功能</h2>
     <p class="ld">會議記錄整理助手的核心價值，是把「非結構化的口語內容」整理成「可用的文件」。它具備以下功能：</p>
@@ -141,10 +143,7 @@ table.tt th{background:#dbe4ee;color:var(--secondary);font-weight:800;border-bot
         <div class="fi"><div class="h"><span class="e">🐞</span>一鍵問題回報</div><p>使用者可回報問題，系統彙整對話送回 AI 團隊，並提供專屬上傳連結補附出問題的檔案。</p></div>
       </div>
     </div>
-  </section>
-
-  <!-- ── 實測展示 ── -->
-  <section class="sec2">
+  </section><section class="sec2">
     <div class="kick">Section 02 · Live Demo</div>
     <h2>實測展示：一段「原生語音逐字稿」進，四份會議記錄出</h2>
     <p class="ld">為忠實模擬實際情境，我們準備一份<b>完全模擬語音轉錄產生的文字檔</b>——沒有標點、沒有段落、沒有標記誰在說話，就是一整段連續的口語（含「嗯、那個、對啊」等語助詞）。以下是實際貼進 GPT 的原始輸入：</p>
@@ -191,10 +190,7 @@ table.tt th{background:#dbe4ee;color:var(--secondary);font-weight:800;border-bot
     </div>
 
     <div class="callout"><b>展示重點：</b>從一段最「難搞」的原生語音文字（無標點、無說話者、口語散亂），GPT 一次輸出四種可用格式，且對不確定處誠實標「待補」而非腦補。這正是它替市場開發處每月省下約 15 小時整理工的關鍵。<br><span style="font-size:12.5px;color:#047857">※ 本展示所有內容均為虛構示範資料，已去識別化。</span></div>
-  </section>
-
-  <!-- ── 底層設計 ── -->
-  <section class="sec2">
+  </section></div></details><details class="wk"><summary><span class="date" style="font-size:15px">關於此助手</span><span class="hl">功能說明・底層設計・能力邊界・未來規劃（不隨週更新）</span><span class="stage mid">參考</span><span class="cv">▶</span></summary><div class="wkb"><section class="sec2">
     <div class="kick">Section 03</div>
     <h2>不只是問答：底層設計</h2>
     <p class="ld">為確保可用、安全、可維運，這支助手套用了工程化的底層設計。</p>
@@ -231,10 +227,7 @@ table.tt th{background:#dbe4ee;color:var(--secondary);font-weight:800;border-bot
         </ul>
       </div>
     </details>
-  </section>
-
-  <!-- ── 能力邊界 ── -->
-  <section class="sec2">
+  </section><section class="sec2">
     <div class="kick">Section 04</div>
     <h2>已實測確認的能力邊界</h2>
     <p class="ld">誠實界定「做得到／做不到」，是決定下一步強化方向的依據。以下為實測結論：</p>
@@ -248,10 +241,7 @@ table.tt th{background:#dbe4ee;color:var(--secondary);font-weight:800;border-bot
         </tbody>
       </table>
     </div>
-  </section>
-
-  <!-- ── 未來規劃 ── -->
-  <section class="sec2">
+  </section><section class="sec2">
     <div class="kick">Section 05 · Roadmap</div>
     <h2>未來規劃與如何實現</h2>
     <p class="ld">整體策略：<b>GPT 當「門面」負責理解與產出，把 GPT 環境做不到的事（語音轉寫、寄信）交給公司後端服務補足</b>，用「GPT + 後端 API」的模式逐步強化。</p>
@@ -289,15 +279,7 @@ table.tt th{background:#dbe4ee;color:var(--secondary);font-weight:800;border-bot
     </div>
 
     <div class="callout amber"><b>一句話總結未來方向：</b>讓助手專注把「會議內容 → 可用記錄」這件事做到最好，並用公司自己的後端服務補足雲端 AI 碰不到的內網寄信與語音轉寫——安全、可控、可持續擴充。</div>
-  </section>
-
-  <div class="fnote">
-    本報告由<b>振曜 AI 專案小組</b>整理（2026 年 7 月）。實測展示（Section 02）之會議內容為<b>虛構示範資料，已去識別化</b>，僅用於呈現功能。助手之指令、知識庫與後端服務細節屬內部技術資料，不在本報告揭露範圍。功能與規劃將依試用回饋滾動調整。
-  </div>
-
-</div>
-
-<div class="lb" id="lb"><span class="x" id="lbx">×</span><img id="lbimg" src="" alt="放大檢視"><span class="hint">點擊任一處或按 × 關閉</span></div>
+  </section></div></details></div><div class="lb" id="lb"><span class="x" id="lbx">×</span><img id="lbimg" src="" alt="放大檢視"><span class="hint">點擊任一處或按 × 關閉</span></div>
 <script>
 /* 內文排版：句號「。」與分號「；」後換行（排除逐字稿、標題、表頭、標籤） */
 (function(){

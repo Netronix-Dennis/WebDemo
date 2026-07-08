@@ -95,27 +95,30 @@ table.tt th{background:#dbe4ee;color:var(--secondary);font-weight:800;border-bot
  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.28);border-radius:50%;width:42px;height:42px;display:grid;place-items:center}
 .lb .hint{position:fixed;bottom:16px;left:0;right:0;text-align:center;color:#9fb3c8;font-size:12px}
 @media(max-width:640px){.topbar{padding:14px 16px}.wrap{padding:16px 14px 50px}.metric{min-width:64px;padding:6px 10px}}
+
+.pagehead{max-width:1000px;margin:0 auto;padding:30px 22px 2px}
+.pagehead h1{font-size:22px;font-weight:800;color:var(--secondary);letter-spacing:.3px;display:flex;align-items:center;gap:10px}
+.pagehead .sub{font-size:13px;color:var(--muted);margin-top:7px;line-height:1.78;max-width:880px}
+.pagehead .tagn{display:inline-block;background:#fff7ed;color:#9a3412;border:1px solid #fed7aa;border-radius:7px;padding:2px 10px;font-weight:700;font-size:12px;margin-right:6px}
+.pagehead b{color:var(--ink,#1a202c)}
+.seclabel{max-width:1000px;margin:28px auto 2px;padding:0 22px;font-size:11.5px;letter-spacing:.18em;font-weight:800;color:var(--primary-d,#0d8a6b);text-transform:uppercase}
+.wk{background:var(--panel,#fff);border:1px solid var(--line,#e2e8f0);border-radius:14px;box-shadow:var(--shadow,0 4px 24px rgba(15,40,80,.08));margin-bottom:14px;overflow:hidden}
+.wk>summary{padding:15px 20px;cursor:pointer;list-style:none;display:flex;align-items:center;gap:13px;flex-wrap:wrap}
+.wk>summary::-webkit-details-marker{display:none}
+.wk .date{font-size:17.5px;font-weight:800;color:var(--secondary,#1e3a5f);letter-spacing:.5px}
+.wk .hl{font-size:13.5px;color:var(--body,#334155)}
+.wk .stage{font-size:11px;font-weight:800;padding:3px 12px;border-radius:20px;background:var(--gbg,#d1fae5);color:var(--gtx,#047857);white-space:nowrap}
+.wk .stage.mid{background:#e2e8f0;color:#475569}
+.wk .cv{color:#94a3b8;font-size:14px;transition:.15s;margin-left:auto}
+.wk[open] .cv{transform:rotate(90deg);color:var(--primary,#10a37f)}
+.wk[open]>summary{border-bottom:1px solid var(--line,#e2e8f0);background:#fbfdfe}
+.wkb{padding:2px 20px 22px}
+.wkb>.wkcallout{background:#ecfdf5;border:1px solid #a7f3d0;border-left:4px solid var(--primary,#10a37f);color:#065f46;border-radius:11px;padding:14px 17px;font-size:13.5px;line-height:1.65;margin:14px 0 2px}
+.wkb .bh{font-size:12px;letter-spacing:.03em;color:var(--primary-d,#0d8a6b);font-weight:800;margin:14px 0 4px}
+
 </style></head><body>
 
-<div class="topbar">
-  <div class="ttl">
-    <div class="logo">📊</div>
-    <div><h1>週報數據彙整助手 · 進度報告</h1>
-    <div class="sub">功能實測與未來規劃　·　製造處　·　振曜 AI 專案小組　·　2026 年 7 月</div></div>
-  </div>
-  <div class="metrics">
-    <div class="metric"><div class="v g">✓</div><div class="l">已建置上線</div></div>
-    <div class="metric"><div class="v b">100%</div><div class="l">彙整數字驗證</div></div>
-    <div class="metric"><div class="v">43/43</div><div class="l">圖表圖片保真</div></div>
-    <div class="metric"><div class="v y">≈48h</div><div class="l">月省工時(估)</div></div>
-  </div>
-</div>
-
-<div class="wrap">
-
-  <p class="intro"><span class="tagn">進度報告</span>　本報告說明<b>週報數據彙整助手</b>目前的落地成果。它服務製造處，把每週各班別的生產日報，自動彙整寫回一份多分頁的 SMT 工程報告；也能把生產數據整理成週報重點與趨勢圖。過去這段每週的 Excel 彙整需人工逐格搬運、耗時且易錯，現已由公司後端服務自動完成，並通過與人工版本的逐項比對。以下依序說明它能做什麼、實測展示，以及未來如何強化。</p>
-
-  <section class="sec2">
+<div class="pagehead"><h1>📈 週報數據彙整助手 · 每週進度更新</h1><div class="sub"><span class="tagn">進度日誌</span>依<b>日期</b>記錄每週進度。最新一週預設展開，其餘收合。製造處 · 振曜 AI 專案小組。</div></div><div class="seclabel">每週進度（最新在上）</div><div class="wrap"><details class="wk" open><summary><span class="date">2026 / 07 / 08</span><span class="hl">上線與功能實測</span><span class="stage">階段：已上線試用</span><span class="cv">▶</span></summary><div class="wkb"><div class="bh">◆ 本期進度階段</div><div class="wkcallout"><span class="tagn">進度報告</span>　本報告說明<b>週報數據彙整助手</b>目前的落地成果。它服務製造處，把每週各班別的生產日報，自動彙整寫回一份多分頁的 SMT 工程報告；也能把生產數據整理成週報重點與趨勢圖。過去這段每週的 Excel 彙整需人工逐格搬運、耗時且易錯，現已由公司後端服務自動完成，並通過與人工版本的逐項比對。以下依序說明它能做什麼、實測展示，以及未來如何強化。</div><section class="sec2">
     <div class="kick">Section 01</div>
     <h2>它能做什麼：核心功能</h2>
     <p class="ld">助手一進來就說明它能做的兩大類事，再引導使用者進入對應流程。</p>
@@ -127,9 +130,7 @@ table.tt th{background:#dbe4ee;color:var(--secondary);font-weight:800;border-bot
       <div class="fi"><div class="h"><span class="e">⏱️</span>非同步不卡頓</div><p>彙整在後端背景執行，助手請使用者稍後回一句「好了嗎」即取回結果，不佔用對話等待。</p></div>
       <div class="fi"><div class="h"><span class="e">🐞</span>一鍵問題回報</div><p>使用者可回報問題，系統彙整對話送回 AI 團隊，並提供專屬上傳連結補附出問題的檔案。</p></div>
     </div>
-  </section>
-
-  <section class="sec2">
+  </section><section class="sec2">
     <div class="kick">Section 02 · Live Demo</div>
     <h2>實測展示：一句話，把當週日報彙整進工程報告</h2>
     <p class="ld">以下為透過線上助手實際對話擷取的畫面（示範為內部樣本資料，網址與憑證已隱去）。點圖可放大。</p>
@@ -156,9 +157,7 @@ table.tt th{background:#dbe4ee;color:var(--secondary);font-weight:800;border-bot
         <div class="info"><div class="cap">彙整完成後，助手交付當週結果——<b>總停機、總換線的分鐘數與項數</b>，並附上更新後工程報告的下載連結。此範例的統計數字與人工彙整版本<b>完全一致</b>。</div></div>
       </div>
     </div>
-  </section>
-
-  <section class="sec2">
+  </section></div></details><details class="wk"><summary><span class="date" style="font-size:15px">關於此助手</span><span class="hl">功能說明・底層設計・能力邊界・未來規劃（不隨週更新）</span><span class="stage mid">參考</span><span class="cv">▶</span></summary><div class="wkb"><section class="sec2">
     <div class="kick">Section 03</div>
     <h2>不只是搬數字：底層設計</h2>
     <p class="ld">刻意把「確定性運算」與「語言對話」分開——搬運交給不會出錯的程式，敘事與解讀交給助手。</p>
@@ -191,9 +190,7 @@ table.tt th{background:#dbe4ee;color:var(--secondary);font-weight:800;border-bot
         </ul>
       </div>
     </details>
-  </section>
-
-  <section class="sec2">
+  </section><section class="sec2">
     <div class="kick">Section 04</div>
     <h2>已實測確認的能力邊界</h2>
     <p class="ld">誠實界定「做得到／做不到」，是決定下一步強化方向的依據。以下為實測結論：</p>
@@ -209,9 +206,7 @@ table.tt th{background:#dbe4ee;color:var(--secondary);font-weight:800;border-bot
         </tbody>
       </table>
     </div>
-  </section>
-
-  <section class="sec2">
+  </section><section class="sec2">
     <div class="kick">Section 05 · Roadmap</div>
     <h2>未來規劃與如何實現</h2>
     <p class="ld">整體策略：<b>助手當「門面」負責對話與分析，把確定性的資料搬運交給公司後端服務</b>，用「GPT ＋ 後端」的模式逐步強化。</p>
@@ -249,15 +244,7 @@ table.tt th{background:#dbe4ee;color:var(--secondary);font-weight:800;border-bot
     </div>
 
     <div class="callout amber"><b>一句話總結未來方向：</b>讓助手把「當週日報 → 更新後工程報告」這件事做到最穩、最快，並用公司自己的後端服務逐步補上分析、串接與自動觸發——確定、可控、可持續擴充。</div>
-  </section>
-
-  <div class="fnote">
-    本報告由<b>振曜 AI 專案小組</b>整理（2026 年 7 月）。實測展示（Section 02）之數據為<b>內部樣本、已去識別化</b>，畫面中的內部網址與連結憑證均已隱去，僅用於呈現功能。助手之指令、知識庫與後端服務細節屬內部技術資料，不在本報告揭露範圍。功能與規劃將依試用回饋滾動調整。
-  </div>
-
-</div>
-
-<div class="lb" id="lb"><span class="x" id="lbx">×</span><img id="lbimg" src="" alt="放大檢視"><span class="hint">點擊任一處或按 × 關閉</span></div>
+  </section></div></details></div><div class="lb" id="lb"><span class="x" id="lbx">×</span><img id="lbimg" src="" alt="放大檢視"><span class="hint">點擊任一處或按 × 關閉</span></div>
 
 <script>
 (function(){
