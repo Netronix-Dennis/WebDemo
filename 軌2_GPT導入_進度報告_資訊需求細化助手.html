@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>資訊需求細化助手 — 專案進度報告</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--primary:#7c3aed;--primary-d:#6d28d9;--secondary:#2e1065;--accent:#f59e0b;
+ --bg:#eef2f6;--panel:#fff;--ink:#111827;--muted:#475569;--line:#dbe3ec;--line2:#eef2f6;
+ --gbg:#ede9fe;--gtx:#5b21b6;--okbg:#d1fae5;--oktx:#047857;--ybg:#fef3c7;--ytx:#92400e;--bbg:#dbeafe;--btx:#1d4ed8;
+ --shadow:0 4px 24px rgba(46,16,101,.10);--shadow-lg:0 14px 48px rgba(46,16,101,.20);--radius:14px;
+ --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",Arial,sans-serif;
+ --mono:"SFMono-Regular",Consolas,"Noto Sans Mono",monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);font-size:14.5px;line-height:1.65}
+.wrap{max-width:1080px;margin:0 auto;padding:22px 22px 70px}
+.topbar{background:linear-gradient(135deg,#1a0b33 0%,#3b1d70 55%,#7c3aed 135%);color:#fff;
+ padding:18px 28px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;
+ box-shadow:var(--shadow-lg);position:sticky;top:0;z-index:30}
+.ttl{display:flex;align-items:center;gap:14px}
+.logo{width:48px;height:48px;border-radius:13px;background:rgba(196,181,253,.22);border:1px solid rgba(196,181,253,.5);display:grid;place-items:center;font-size:24px}
+.ttl h1{font-size:20px;font-weight:800;letter-spacing:.3px}
+.ttl .sub{font-size:12px;color:#c4b5fd;margin-top:2px}
+.metrics{display:flex;gap:9px;flex-wrap:wrap}
+.metric{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);border-radius:11px;padding:7px 13px;text-align:center;min-width:96px}
+.metric b{display:block;font-size:17px;font-weight:800}
+.metric span{font-size:11px;color:#d8ccf5}
+.openbar{max-width:1080px;margin:16px auto 0;padding:0 22px;text-align:center}
+.openbtn{display:inline-block;background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;font-weight:800;text-decoration:none;padding:11px 22px;border-radius:11px;box-shadow:0 4px 14px rgba(124,58,237,.35)}
+.openbar .note{font-size:11.5px;color:#94a3b8;margin-top:6px}
+.seclabel{max-width:1080px;margin:26px auto 8px;padding:0 22px;font-size:13px;font-weight:800;color:var(--muted);letter-spacing:.5px}
+details.wk{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);margin:0 auto 16px;max-width:1080px;overflow:hidden}
+details.wk>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:14px;padding:16px 20px;background:linear-gradient(90deg,#faf7ff,#fff)}
+details.wk>summary::-webkit-details-marker{display:none}
+.date{font-weight:800;color:var(--primary-d);font-size:15px}
+.hl{font-weight:800;font-size:15px}
+.stage{margin-left:auto;font-size:12px;background:var(--gbg);color:var(--gtx);border:1px solid #ddd6fe;padding:4px 11px;border-radius:999px;font-weight:700}
+.cv{color:var(--muted);font-size:13px}
+.wkb{padding:6px 24px 26px}
+.bh{font-weight:800;color:var(--primary-d);margin:20px 0 8px;font-size:14px}
+.callout{background:#faf7ff;border:1px solid #ddd6fe;border-radius:12px;padding:12px 14px;color:#4c1d95;margin:6px 0 14px}
+h2{font-size:16px;margin:22px 0 8px;display:flex;align-items:center;gap:9px}
+h2 .n{display:grid;place-items:center;width:24px;height:24px;border-radius:8px;background:var(--primary);color:#fff;font-size:13px;font-weight:800}
+.lead{color:var(--muted-d,#334155);margin:0 0 12px}
+.badges{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.tag{font-size:12.5px;font-weight:700;padding:5px 11px;border-radius:999px;border:1px solid}
+.tag.g{background:var(--okbg);color:var(--oktx);border-color:#a7f3d0}
+.tag.p{background:var(--gbg);color:var(--gtx);border-color:#ddd6fe}
+.tag.b{background:var(--bbg);color:var(--btx);border-color:#bfdbfe}
+.tag.y{background:var(--ybg);color:var(--ytx);border-color:#fde68a}
+.panelbox{background:#fbfaff;border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:8px 0}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:8px 0}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:#f5f3ff;color:#4c1d95;font-weight:700}
+.req{color:var(--primary-d);font-weight:800}
+.guess{color:#b45309;font-size:12px}
+.chat{margin:10px 0}
+.bubble{border-radius:14px;padding:11px 14px;margin:8px 0;line-height:1.6;font-size:13.5px}
+.bubble.u{background:#ede9fe;border:1px solid #ddd6fe;color:#4c1d95}
+.bubble.a{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow)}
+.who{font-size:11px;font-weight:800;letter-spacing:.5px;opacity:.7;margin-bottom:4px}
+pre{background:#1a0b33;color:#e9d5ff;border-radius:12px;padding:14px 16px;overflow-x:auto;font-family:var(--mono);font-size:12.5px;line-height:1.5;margin:8px 0}
+.kv{display:grid;grid-template-columns:120px 1fr;gap:6px 14px;margin:8px 0}
+.kv dt{font-weight:700;color:var(--muted)}
+.foot{max-width:1080px;margin:24px auto 0;padding:0 22px;font-size:12px;color:var(--muted)}
+ul{margin:6px 0 12px 20px}li{margin:3px 0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:760px){.two{grid-template-columns:1fr}.kv{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="ttl"><div class="logo">📝</div><div><h1>資訊需求細化助手</h1><div class="sub">軌2 GPT 導入 · 專案進度報告 · 需求者：資訊部（BPM）Lelina 潘莛家</div></div></div>
+  <div class="metrics">
+    <div class="metric"><b>#18</b><span>評估項次</span></div>
+    <div class="metric"><b>已上線</b><span>僅限邀請</span></div>
+    <div class="metric"><b>6/6</b><span>核心測試通過</span></div>
+    <div class="metric"><b>2026/07/20</b><span>最後更新</span></div>
+  </div>
+</div>
+
+<div class="openbar">
+  <a class="openbtn" href="https://chatgpt.com/g/g-6a5dba1a60d48191be19f1893c05a5a8">💬 在 ChatGPT 開啟此助手 →</a>
+  <div class="note">需為受邀成員；未受邀請洽振曜 AI 專案小組。</div>
+</div>
+
+<div class="seclabel">每週進度（最新在上）</div>
+
+<details class="wk" open>
+<summary><span class="date">2026 / 07 / 20</span><span class="hl">建置完成並發布上線</span><span class="stage">階段：已上線試用</span><span class="cv">▶</span></summary>
+<div class="wkb">
+
+  <div class="bh">◆ 本期進度階段</div>
+  <div class="callout">本助手已完成建置並<b>發布上線（僅限邀請）</b>，供資訊部與需求端試用。以下說明定位、核心流程、實測結果與後續規劃。</div>
+
+  <section>
+    <h2><span class="n">1</span>一句話定位與現況</h2>
+    <div class="lead">把使用者<b>模糊的一段話</b>（「想把費用請款 E 化」「主管要看某報表」），透過 AI 對談潤飾與結構化，轉成 <b>MIS 可受理的電子簽核需求單</b>——含表單欄位與簽核流程推論，並可輸出 JSON。</div>
+    <div class="panelbox"><div class="badges">
+      <span class="tag g">✅ GPT 已發布上線（僅限邀請）</span>
+      <span class="tag g">✅ 五區塊需求單 + 簽核推論 + JSON 匯出 實測通過</span>
+      <span class="tag g">✅ 核決權限級距推論（可推論、不整表輸出）</span>
+      <span class="tag p">✅ 對齊 Lelina 平台 v4 規格逐項吻合</span>
+      <span class="tag y">📋 待與 Lelina 對焦平台 JSON schema 銜接</span>
+    </div></div>
+  </section>
+
+  <section>
+    <h2><span class="n">2</span>需求背景與戰略價值</h2>
+    <div class="lead">需求源自資訊部 Lelina（軌2 評估 #18）。她已自建 HTML 原型平台《MIS AI 資訊需求細化平台 v4》，流程與缺口都想清楚了——她自己點名的缺口是：原型偏規則式（關鍵字判斷），缺「<b>需求理解引擎</b>」（反問／潤飾／缺漏判斷／語意分類）。</div>
+    <div class="callout"><b>本 GPT ＝ 她平台缺的「需求理解引擎」的活原型。</b>指令在 GPT 裡疊代成熟後，同一套 prompt 可包成 API 供她平台呼叫（她 roadmap 的「規則庫＋AI API 混合」階段）——<b>軌2 GPT 直通軌3 服務化</b>。</div>
+  </section>
+
+  <section>
+    <h2><span class="n">3</span>核心流程（對齊 Lelina 平台）</h2>
+    <div class="lead">原始需求 → <b>AI 潤飾「我理解你的意思是…」</b> → 使用者確認／修正 → 拆五區塊需求單 → 簽核流程推論 → 輸出 JSON。紀律沿用她的原則：<b>AI 推測需標示、不覆蓋使用者已修內容、決策由人</b>。</div>
+    <div class="two">
+      <div class="panelbox"><b>五區塊需求單</b><ul>
+        <li>① 說明（E 化目的與效益）</li>
+        <li>② 表單畫面設計（分區建議）</li>
+        <li>③ 表單欄位（＊必填 + 型態/來源）</li>
+        <li>④ 簽核流程（含推論依據）</li>
+        <li>⑤ 其他 + 待確認項目</li>
+      </ul></div>
+      <div class="panelbox"><b>關鍵行為</b><ul>
+        <li>先潤飾確認，<b>確認前不拆</b>（避免拆錯方向）</li>
+        <li>金額／請款 → 自動加「核決權限」關卡與金額欄位</li>
+        <li>AI 推測一律標「（推測，請確認）」</li>
+        <li>可用 Code Interpreter 產出可下載 JSON</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">4</span>端到端實測（以 Lelina 簡報標準範例：費用請款）</h2>
+    <p class="lead">用她簡報第 7 頁的標準範例（費用請款）把助手完整跑一遍。以下為實際對話摘要。</p>
+    <div class="chat">
+      <div class="bubble u"><div class="who">使用者</div>想把「費用請款」E 化，改用電子簽核。需要填金額、發票、專案代碼，簽核要經過主管、財務，再依金額跑核決權限。</div>
+      <div class="bubble a"><div class="who">AI 助手</div><b>我理解你的意思是：</b>把費用請款流程 E 化，目的在減少紙本、方便追蹤，並依金額自動套用核決權限。初步簽核順序：申請人送出 → 主管 → 財務審核 → 依金額對照核決權限逐級簽核。<b>這樣理解對嗎？有要修正的地方嗎？</b></div>
+      <div class="bubble u"><div class="who">使用者</div>對，就是這個意思。補充：A 公司、財務部、王小明，金額約 8 萬。請整理成完整五區塊需求單。</div>
+      <div class="bubble a"><div class="who">AI 助手</div>（輸出完整五區塊需求單，見下方）</div>
+    </div>
+
+    <div class="bh">③ 表單欄位（節錄）</div>
+    <table>
+      <tr><th>欄位</th><th>型態</th><th>來源／預設</th><th>備註</th></tr>
+      <tr><td><span class="req">＊申請人</span></td><td>人員</td><td>系統登入者自動帶入</td><td>系統自帶</td></tr>
+      <tr><td><span class="req">＊申請金額</span></td><td>金額</td><td>使用者輸入</td><td>作為核決權限判斷依據</td></tr>
+      <tr><td><span class="req">＊發票附件</span></td><td>附件</td><td>使用者上傳</td><td>必填，支援 PDF／圖片</td></tr>
+      <tr><td><span class="req">＊專案代碼</span></td><td>文字／下拉 <span class="guess">(推測，請確認)</span></td><td>使用者輸入</td><td>建議可串接專案主檔</td></tr>
+      <tr><td>申請原因</td><td>多行文字</td><td>使用者輸入</td><td><span class="guess">(推測，請確認)</span></td></tr>
+    </table>
+
+    <div class="bh">④ 簽核流程</div>
+    <table>
+      <tr><th>關卡</th><th>簽核角色</th><th>關卡規則</th></tr>
+      <tr><td>第1關 開單者</td><td>申請人</td><td>建立並送出申請</td></tr>
+      <tr><td>第2關 開單者主管</td><td>申請人直屬主管</td><td>審核請款內容</td></tr>
+      <tr><td>第3關 財務審核</td><td>財務人員</td><td>確認金額、發票附件及專案代碼</td></tr>
+      <tr><td>第4關 核決權限</td><td>依公司核決權限表</td><td>依申請金額自動逐級簽核</td></tr>
+    </table>
+    <div class="callout"><b>核決權限推論（示範）：</b>本案金額約 8 萬元，屬費用動支情境，<b>約需簽至總經理層級</b>；<span class="guess">（推測，請確認）</span>實際級距與簽核人仍以貴公司最新核決權限規定為準，<b>不於系統中寫死</b>。</div>
+
+    <div class="bh">最終產出：可下載 JSON（供匯進 MIS／她的平台）</div>
+    <pre>{
+  "mode": "MIS",
+  "formName": "費用請款電子簽核需求單",
+  "fields": [ { "required": true, "name": "申請金額", "type": "金額",
+               "evidence": "使用者提供＋AI 推論" }, ... ],
+  "approval": [
+    { "gate": "第4關｜核決權限", "approver": "依公司核決權限表",
+      "rule": "依申請金額自動逐級簽核",
+      "note": "本案約 80,000 元；(推測，請確認) 約需簽至總經理層級，實際依公司最新核決權限表為準",
+      "evidence": "使用者提供＋AI 推論" }
+  ],
+  "subject": "【費用請款】{申請人}－{專案代碼}－NT${申請金額}",
+  "missing": [ "專案是否需串接 ERP？", "是否允許多筆請款明細？", ... ]
+}</pre>
+    <p class="lead"><code>evidence</code> 欄分辨「使用者提供 vs AI 推論」——正是未來銜接 Lelina 平台的乾淨結構。</p>
+  </section>
+
+  <section>
+    <h2><span class="n">5</span>驗收測試結果</h2>
+    <table>
+      <tr><th>#</th><th>類型</th><th>驗證</th><th>結果</th></tr>
+      <tr><td>T1</td><td>正面·潤飾確認</td><td>模糊需求先「我理解你的意思是…」再請確認</td><td><span class="tag g">通過</span></td></tr>
+      <tr><td>T2</td><td>正面·五區塊</td><td>確認後產出五區塊，推測標示、缺漏列待確認</td><td><span class="tag g">通過</span></td></tr>
+      <tr><td>T3</td><td>正面·簽核推論</td><td>金額 8 萬 → 核決權限關卡 + 總經理層級推論</td><td><span class="tag g">通過</span></td></tr>
+      <tr><td>T4</td><td>正面·JSON</td><td>Code Interpreter 產出可下載需求單 JSON</td><td><span class="tag g">通過</span></td></tr>
+      <tr><td>T6</td><td>反面·資安</td><td>要求整份核決權限表 → 拒絕整表，友善導引回推論本業</td><td><span class="tag g">通過</span></td></tr>
+      <tr><td>—</td><td>規格對照</td><td>與 Lelina 簡報 p.6 五區塊、p.7 條件分支逐項吻合</td><td><span class="tag g">通過</span></td></tr>
+      <tr><td>T9</td><td>正面·錯誤回報</td><td>reportError 動作端到端實打（會寄通知信）</td><td><span class="tag y">待排</span></td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2><span class="n">6</span>資料與資安</h2>
+    <ul>
+      <li>知識庫：空白需求表單格式、簽核規則庫（核決權限表整理成級距規則）、期望產出樣式、核決權限表原檔。</li>
+      <li>核決權限表為內部制度：助手<b>可依它做簽核層級推論、但不整表輸出原文</b>；分享範圍僅限邀請、給資訊部／需求端。</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2><span class="n">7</span>後續規劃</h2>
+    <ul>
+      <li><b>T9 reportError 實打</b>：確認錯誤回報動作端到端通（會寄一封測試通知信）。</li>
+      <li><b>與 Lelina 對焦（15–20 分）</b>：平台 JSON schema 銜接、源碼邏輯，鋪路把指令包成 API 供她平台呼叫（軌2 直通軌3）。</li>
+      <li>依試用回饋，持續補強電子簽核常見表單／流程模板。</li>
+    </ul>
+  </section>
+
+</div>
+</details>
+
+<div class="foot">振曜 AI 專案小組 · 軌2 GPT 導入 · 資訊需求細化助手（評估 #18）· 本頁更新於 2026-07-20</div>
+</body>
+</html>
