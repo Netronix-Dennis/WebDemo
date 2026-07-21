@@ -144,14 +144,14 @@
 
     <section>
       <h2>2. 問題與優先級 <span class="n">Issues &amp; priorities</span></h2>
-      <p class="lead">兩個 P0 是 demo 阻斷項、且都是 Server 端修改；<br>P1 屬正式上線必需。</p>
+      <p class="lead">前兩個 P0 是 Server 端的 Demo 阻斷修正；<br>第三個 P0 是雙方必須在會議中定案的容量契約。<br>P1 為正式上線前必須完成的項目。</p>
       <span class="clickhint">👆 點任一列，跳出白話詳解（適合非技術與會者）</span>
       <div class="tblw"><table>
         <thead><tr><th style="width:64px">優先</th><th>問題</th><th style="width:110px">POC 影響</th></tr></thead>
         <tbody>
           <tr class="clk" onclick="openModal('m1')">
             <td><span class="tag t-p0">P0</span></td>
-            <td><b>墓碑不應回傳 content</b> - DELETE 時清空，或序列化時省略。<br>幾行程式的快速修復。<span class="more">白話詳解 ›</span></td>
+            <td><b>墓碑不應回傳 content</b> - DELETE 時清空，或序列化時省略。<br>修改範圍預期集中，但仍需回歸驗證。<span class="more">白話詳解 ›</span></td>
             <td><span class="tag t-block">阻斷</span></td>
           </tr>
           <tr class="clk" onclick="openModal('m2')">
@@ -171,7 +171,7 @@
           </tr>
           <tr class="clk" onclick="openModal('m5')">
             <td><span class="tag t-p1">P1</span></td>
-            <td><b>排序安全性</b> - 所有寫入路徑須維持 <code>updatedAt</code> 全域唯一且嚴格遞增，否則分頁邊界會漏抓或重複資料。<span class="more">白話詳解（我方可並行）›</span></td>
+            <td><b>排序／watermark 安全性</b> - Server 須保證不會因相同 <code>updatedAt</code> 撞上分頁邊界而漏資料；<br>可採嚴格遞增 timestamp、不切開 tie group，或 composite cursor。<span class="more">白話詳解（我方可並行）›</span></td>
             <td><span class="tag t-soft">正式必需</span></td>
           </tr>
           <tr class="clk" onclick="openModal('m6')">
@@ -186,7 +186,7 @@
           </tr>
           <tr class="clk" onclick="openModal('m8')">
             <td><span class="tag t-known">已知</span></td>
-            <td><b>預設 12 筆 Markdown seed 資料</b> - fresh DB 會自動 seed 12 筆非 ENT 的 Markdown notes，使首次 pull 整批失敗。<br>此為 HP 已知的測試 seed，我方已可繞過（軟刪除即可）；<br>建議 partner build 預設清除，讓 Demo 流程完整。<span class="more">白話詳解 ›</span></td>
+            <td><b>預設 12 筆 Markdown seed 資料</b> - fresh DB 會自動 seed 12 筆非 ENT 的 Markdown notes，使首次 pull 整批失敗。<br>此為 HP 已知的測試 seed；<br>軟刪除可暫時恢復同步，但無法得到乾淨 history。<br>建議 partner build 預設清除，讓 Demo 流程完整。<span class="more">白話詳解 ›</span></td>
             <td><span class="tag t-soft">建議清除</span></td>
           </tr>
         </tbody>
@@ -268,14 +268,14 @@
 
     <section>
       <h2>2. Issues &amp; Priorities</h2>
-      <p class="lead">Both P0s are demo blockers and both are Server-side changes;<br>the P1s are required for GA.</p>
+      <p class="lead">The first two P0s are Server-side Demo-blocker fixes;<br>the third P0 is the capacity contract both sides must settle in the meeting.<br>The P1s must be completed before GA.</p>
       <span class="clickhint">👆 Click any row for a plain-language explanation (for non-technical attendees)</span>
       <div class="tblw"><table>
         <thead><tr><th style="width:64px">Pri</th><th>Issue</th><th style="width:120px">POC impact</th></tr></thead>
         <tbody>
           <tr class="clk" onclick="openModal('m1')">
             <td><span class="tag t-p0">P0</span></td>
-            <td><b>Tombstones must not return content</b> - clear on DELETE or omit on serialize.<br>A few-line quick fix.<span class="more">Plain-language ›</span></td>
+            <td><b>Tombstones must not return content</b> - clear on DELETE or omit on serialize.<br>Change is expected to be localized, but still needs regression testing.<span class="more">Plain-language ›</span></td>
             <td><span class="tag t-block">Blocker</span></td>
           </tr>
           <tr class="clk" onclick="openModal('m2')">
@@ -295,7 +295,7 @@
           </tr>
           <tr class="clk" onclick="openModal('m5')">
             <td><span class="tag t-p1">P1</span></td>
-            <td><b>Ordering safety</b> - <code>updatedAt</code> must stay globally unique and strictly increasing on every write path, or paging can skip/duplicate records.<span class="more">Plain-language (NTX can start now) ›</span></td>
+            <td><b>Ordering / watermark safety</b> - the Server must ensure no record is lost when a shared <code>updatedAt</code> meets a page boundary;<br>via a strictly-increasing timestamp, a no-split tie group, or a composite cursor.<span class="more">Plain-language (NTX can start now) ›</span></td>
             <td><span class="tag t-soft">GA-critical</span></td>
           </tr>
           <tr class="clk" onclick="openModal('m6')">
@@ -310,7 +310,7 @@
           </tr>
           <tr class="clk" onclick="openModal('m8')">
             <td><span class="tag t-known">Known</span></td>
-            <td><b>Default 12 Markdown seed notes</b> - a fresh DB auto-seeds 12 non-ENT Markdown notes, so the first pull aborts entirely.<br>This is HP's known test seed and we already work around it (soft-delete);<br>recommend the partner build clears it by default for a clean demo.<span class="more">Plain-language ›</span></td>
+            <td><b>Default 12 Markdown seed notes</b> - a fresh DB auto-seeds 12 non-ENT Markdown notes, so the first pull aborts entirely.<br>This is HP's known test seed;<br>soft-delete temporarily restores sync but does not yield a clean history.<br>Recommend the partner build clears it by default for a clean demo.<span class="more">Plain-language ›</span></td>
             <td><span class="tag t-soft">clear it</span></td>
           </tr>
         </tbody>
@@ -515,13 +515,13 @@
     <div class="modal-b">
       <div data-lang="zh" class="show">
         <div class="m-sg m-analogy"><h4>白話說明</h4><p>全新的 Server 資料庫啟動時，會自動放入 12 筆 Markdown 示範筆記。<br>由於它們不是 nNote 需要的 ENT 格式，client 第一次同步會被第一筆卡住、整批失敗。<br>刪掉資料庫重啟後，這 12 筆還會再長回來。</p></div>
-        <div class="m-sg"><h4>定位：這是已知情況，不是新 bug</h4><p>這批是 HP 事先拿來當測試用的 seed 資料，HP 已知其存在。<br>我方目前<b>已可繞過</b> - 把這 12 筆軟刪除後，同步即恢復正常，已實測驗證。<br>但軟刪除只是轉成 12 筆 tombstone，<b>並非真正乾淨的 Server history</b>；<br>這些 tombstone 在 <code>since=0</code> full replay 時仍會被重送（與第一項墓碑問題相扣）。</p></div>
+        <div class="m-sg"><h4>定位：這是已知情況，不是新 bug</h4><p>這批是 HP 事先拿來當測試用的 seed 資料，HP 已知其存在。<br>我方目前<b>已可繞過</b> - 把這 12 筆軟刪除後，同步即恢復正常，已實測驗證。<br>但軟刪除只是轉成 12 筆 tombstone，<b>並非真正乾淨的 Server history</b>；<br>這些 tombstone 在 <code>since=0</code> full replay 時仍會被重送（與第一項墓碑問題相扣）。<br>在隔離測試環境中，可改以直接 DB cleanup 暫時清空；<br>但共用整合機不建議刪整個 DB，重啟會再次 seed 同一批。</p></div>
         <div class="m-sg"><h4>為什麼還是要提出</h4><p>雖然可繞過，但每次重建資料庫或在新機器佈署時都得重做一次清除。<br>為了讓後續 <b>Demo 流程完整、開箱即可用</b>，建議一併處理。</p></div>
         <div class="m-sg"><h4>建議</h4><ul><li>partner build 預設清除／停用這批 seed；<br>或改用真實的單頁 ENT fixture。</li><li>既有安裝提供一次性 cleanup 或 migration。</li></ul></div>
       </div>
       <div data-lang="en">
         <div class="m-sg m-analogy"><h4>Plain-language</h4><p>When a brand-new Server database starts, it auto-inserts 12 Markdown demo notes.<br>Because they are not the ENT format nNote needs, the first sync gets stuck on the first one and the whole batch fails.<br>Deleting the database and restarting brings the 12 back again.</p></div>
-        <div class="m-sg"><h4>Framing: known, not a new bug</h4><p>This is HP's pre-existing test seed data, and HP is already aware of it.<br>We already <b>work around it</b> - soft-deleting the 12 restores normal sync, verified in testing.<br>But soft-delete only turns them into 12 tombstones, <b>not a truly clean Server history</b>;<br>those tombstones are still resent on a <code>since=0</code> full replay (linking back to the first tombstone issue).</p></div>
+        <div class="m-sg"><h4>Framing: known, not a new bug</h4><p>This is HP's pre-existing test seed data, and HP is already aware of it.<br>We already <b>work around it</b> - soft-deleting the 12 restores normal sync, verified in testing.<br>But soft-delete only turns them into 12 tombstones, <b>not a truly clean Server history</b>;<br>those tombstones are still resent on a <code>since=0</code> full replay (linking back to the first tombstone issue).<br>In an isolated test environment you can instead wipe the DB directly;<br>but on the shared integration instance, do not delete the whole DB - it re-seeds the same batch on restart.</p></div>
         <div class="m-sg"><h4>Why raise it anyway</h4><p>The workaround must be redone every time the DB is recreated or deployed on a new machine.<br>For a <b>clean, out-of-the-box demo flow</b>, it is worth handling together.</p></div>
         <div class="m-sg"><h4>Recommendation</h4><ul><li>Have the partner build clear/disable this seed by default;<br>or replace it with a real single-page ENT fixture.</li><li>Provide a one-time cleanup or migration for existing installs.</li></ul></div>
       </div>
