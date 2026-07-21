@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" id="root">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HP 本日報告 2026-07-21</title>
+<style>
+  :root{--bg:#eef1f6;--card:#fff;--ink:#1f2733;--muted:#5b6675;--line:#e1e6ec;--head:#0b2740;
+    --accent:#1f6feb;--accent-soft:#eaf2ff;--ok:#1f9d57;--ok-soft:#e9f8ef;--warn:#c77700;--warn-soft:#fff6e6;
+    --key:#0b66c3;--key-soft:#e9f3fc;--pend:#b03a4b;--pend-soft:#fdeef0;}
+  *{box-sizing:border-box}html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);line-height:1.74;
+    font-family:"Noto Sans CJK TC","PingFang TC","Microsoft JhengHei","Segoe UI",system-ui,sans-serif;}
+  .wrap{max-width:1000px;margin:0 auto;padding:24px 22px 90px}
+  .lang-bar{position:sticky;top:0;z-index:20;display:flex;justify-content:flex-end;
+    padding:10px 0 6px;background:linear-gradient(var(--bg),var(--bg) 70%,transparent)}
+  .lang-btn{border:1px solid var(--accent);background:#fff;color:var(--accent);cursor:pointer;
+    font-size:14px;padding:7px 16px;font-weight:600}
+  .lang-btn:first-child{border-radius:8px 0 0 8px}
+  .lang-btn:last-child{border-radius:0 8px 8px 0;border-left:none}
+  .lang-btn.active{background:var(--accent);color:#fff}
+  header.top{background:linear-gradient(120deg,#0b2740,#1f6feb);color:#fff;border-radius:16px;
+    padding:26px 30px;margin-bottom:4px;box-shadow:0 6px 24px rgba(11,39,64,.18)}
+  header.top h1{margin:0 0 8px;font-size:28px}
+  header.top .meta{font-size:14.5px;opacity:.92}
+  section{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:22px 26px;margin:16px 0;box-shadow:0 1px 3px rgba(16,30,54,.05)}
+  h2{font-size:21px;color:var(--head);margin:.1em 0 .4em;padding-left:11px;border-left:5px solid var(--accent);
+    display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  h3{font-size:16px;color:#24405c;margin:1.1em 0 .35em}
+  p{margin:.5em 0}.muted{color:var(--muted)}
+  ul{margin:.4em 0 .5em 1.15em}li{margin:.4em 0}
+  .pill{font-size:12px;font-weight:700;padding:3px 11px;border-radius:999px;white-space:nowrap}
+  .pill-done{background:var(--ok-soft);color:var(--ok)}
+  .pill-go{background:var(--key-soft);color:var(--key)}
+  .pill-ask{background:var(--pend-soft);color:var(--pend)}
+  code{font-family:Consolas,"Roboto Mono",monospace;font-size:.9em;background:#eef1f5;color:#0b3d66;padding:1px 6px;border-radius:5px}
+  .callout{border:1px solid var(--line);border-left:5px solid var(--accent);background:var(--accent-soft);
+    padding:13px 17px;border-radius:9px;margin:.9em 0}
+  .callout-ask{border-left-color:var(--pend);background:var(--pend-soft)}
+  .callout-key{border-left-color:var(--key);background:var(--key-soft)}
+  .btn{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-size:14.5px;font-weight:600;
+    padding:11px 18px;border-radius:10px;border:1px solid var(--accent);color:var(--accent);background:#fff}
+  .btn:hover{background:var(--accent);color:#fff}
+  .btn.solid{background:var(--accent);color:#fff}
+  .btnrow{display:flex;flex-wrap:wrap;gap:11px;margin:.6em 0}
+  footer{text-align:center;color:var(--muted);font-size:13px;margin-top:26px}
+  [data-lang]{display:none}[data-lang].show{display:block}
+  @media print{body{background:#fff}.lang-bar{display:none}section,header.top{box-shadow:none;break-inside:avoid}
+    [data-lang]{display:none!important}[data-lang].show{display:block!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="lang-bar"><button class="lang-btn active" id="btn-zh" onclick="setLang('zh')">中文</button><button class="lang-btn" id="btn-en" onclick="setLang('en')">English</button></div>
+
+  <!-- ===== 中文 ===== -->
+  <div data-lang="zh" class="show">
+    <header class="top">
+      <h1>HP 本日報告</h1>
+      <div class="meta">2026-07-21　|　Release 更新範疇、POC 需求確認、跨平台同步　|　Netronix</div>
+    </header>
+
+    <section>
+      <h2>1. 本次 Release 更新範疇 <span class="pill pill-done">已釋出</span></h2>
+      <p>本次更新已彙整於線上 <b>Release Note</b>,重點如下:</p>
+      <ul>
+        <li><b>BSP FW</b>:提供更新前後的版本確認方式(System Update 頁的 <b>Release Date / System Version</b>,含前後對照圖)。</li>
+        <li><b>Touch FW(ILITek)</b>:完整更新 SOP、`adb` 版本查詢(<code>FW Version</code> 02→03)、以及<b>完整操作 Demo 影片</b>。</li>
+        <li><b>兩份 SOP(BSP / ILITek)</b>:雙語、含 Windows 截圖與指令;更新包已內含 <code>adb.exe</code>。</li>
+        <li><b>常見問題排查</b>:多裝置(<code>more than one device</code>)、權限不足(<code>Permission denied</code> → 先 <code>adb root</code>)等。</li>
+      </ul>
+      <div class="btnrow">
+        <a class="btn solid" href="https://netronix-dennis.github.io/WebDemo/HP_ReleaseNote_20260717.html" target="_blank" rel="noopener">📄 開啟 Release Note(完整內容)</a>
+      </div>
+    </section>
+
+    <section>
+      <h2>2. 後續持續修正項目 <span class="pill pill-go">進行中</span></h2>
+      <p>後續會依 Excel 上的 <b>Known Issue</b> 持續修正,並隨時<b>更新線上 HTML</b>(如有問題反饋會即時更新)。</p>
+      <div class="btnrow">
+        <a class="btn" href="https://docs.google.com/spreadsheets/d/1GE6DmD7WhkliivO2_N5iBsR_iyIP7YTD/edit?usp=sharing&ouid=113113930444333014662&rtpof=true&sd=true" target="_blank" rel="noopener">📊 Known Issue 清單(Excel)</a>
+      </div>
+    </section>
+
+    <section>
+      <h2>3. 請 HP 提供 / 確認 <span class="pill pill-ask">待 HP 回覆</span></h2>
+      <div class="callout callout-ask">
+        <b>(1) POC 階段需求符合度</b><br>
+        目前 POC 階段的功能,是否都已符合貴司需求?<b>UI / UX 上是否有需要補充或調整</b>的地方?請一併提供。
+      </div>
+      <div class="callout callout-ask">
+        <b>(2) Home UI 修正</b><br>
+        先前曾提到想修正 <b>Home UI</b> 的內容。能否確認<b>何時會提供對應的 UI / Figma 資訊</b>?以利我方排入開發時程。
+      </div>
+    </section>
+
+    <section>
+      <h2>4. 跨平台同步 <span class="pill pill-go">另有專篇</span></h2>
+      <p>跨平台同步的部分,我方已整理一份<b>「HP Sync Server 疑慮與建議一頁式摘要」</b>,內容涵蓋:</p>
+      <ul>
+        <li>核心問題(The core problem)</li>
+        <li>問題與優先級(Issues &amp; priorities)</li>
+        <li>最需 HP 回覆的 3 個問題(Top 3 questions)</li>
+        <li>驗收數字與範圍(Acceptance &amp; scope)</li>
+        <li>後續 Demo 銜接:Windows 端還原與開啟</li>
+      </ul>
+      <div class="btnrow">
+        <a class="btn solid" href="https://netronix-dennis.github.io/WebDemo/HP_HTML/HP_Sync_Server_%E4%B8%80%E9%A0%81%E5%BC%8F%E6%91%98%E8%A6%81.html" target="_blank" rel="noopener">🔗 開啟跨平台同步一頁式摘要</a>
+      </div>
+    </section>
+
+    <footer>Netronix × HP　-　FluxInk e-ink Note Tablet 專案　|　2026-07-21</footer>
+  </div>
+
+  <!-- ===== English ===== -->
+  <div data-lang="en">
+    <header class="top">
+      <h1>HP Daily Report</h1>
+      <div class="meta">2026-07-21　|　Release scope, POC requirement check, cross-platform sync　|　Netronix</div>
+    </header>
+
+    <section>
+      <h2>1. Scope of This Release <span class="pill pill-done">released</span></h2>
+      <p>This update is consolidated in the online <b>Release Note</b>. Highlights:</p>
+      <ul>
+        <li><b>BSP FW</b>: version verification before/after (Release Date / System Version on the System Update page, with before/after images).</li>
+        <li><b>Touch FW (ILITek)</b>: full update SOP, <code>adb</code> version check (<code>FW Version</code> 02→03), and a <b>full walkthrough demo video</b>.</li>
+        <li><b>Two SOPs (BSP / ILITek)</b>: bilingual, with Windows screenshots and commands; the package already includes <code>adb.exe</code>.</li>
+        <li><b>Troubleshooting</b>: multiple devices (<code>more than one device</code>), permission (<code>Permission denied</code> → run <code>adb root</code> first), etc.</li>
+      </ul>
+      <div class="btnrow">
+        <a class="btn solid" href="https://netronix-dennis.github.io/WebDemo/HP_ReleaseNote_20260717.html" target="_blank" rel="noopener">📄 Open the Release Note (full)</a>
+      </div>
+    </section>
+
+    <section>
+      <h2>2. Ongoing Fixes <span class="pill pill-go">in progress</span></h2>
+      <p>We will keep fixing the <b>Known Issues</b> in the Excel sheet and <b>update the online HTML</b> continuously (updated promptly as feedback comes in).</p>
+      <div class="btnrow">
+        <a class="btn" href="https://docs.google.com/spreadsheets/d/1GE6DmD7WhkliivO2_N5iBsR_iyIP7YTD/edit?usp=sharing&ouid=113113930444333014662&rtpof=true&sd=true" target="_blank" rel="noopener">📊 Known Issue list (Excel)</a>
+      </div>
+    </section>
+
+    <section>
+      <h2>3. Requests to HP <span class="pill pill-ask">awaiting HP</span></h2>
+      <div class="callout callout-ask">
+        <b>(1) POC requirement coverage</b><br>
+        Do the current POC-stage features meet your requirements? Is there anything to <b>add or adjust on UI / UX</b>? Please let us know.
+      </div>
+      <div class="callout callout-ask">
+        <b>(2) Home UI revision</b><br>
+        You previously mentioned wanting to revise the <b>Home UI</b>. Could you confirm <b>when the corresponding UI / Figma will be provided</b>, so we can schedule it?
+      </div>
+    </section>
+
+    <section>
+      <h2>4. Cross-Platform Sync <span class="pill pill-go">separate brief</span></h2>
+      <p>For cross-platform sync, we have prepared a <b>"HP Sync Server — One-Page Brief: Concerns &amp; Recommendations"</b> covering:</p>
+      <ul>
+        <li>The core problem</li>
+        <li>Issues &amp; priorities</li>
+        <li>Top 3 questions for HP</li>
+        <li>Acceptance &amp; scope</li>
+        <li>Next: Windows-side restore &amp; open for the demo</li>
+      </ul>
+      <div class="btnrow">
+        <a class="btn solid" href="https://netronix-dennis.github.io/WebDemo/HP_HTML/HP_Sync_Server_%E4%B8%80%E9%A0%81%E5%BC%8F%E6%91%98%E8%A6%81.html" target="_blank" rel="noopener">🔗 Open the cross-platform sync one-page brief</a>
+      </div>
+    </section>
+
+    <footer>Netronix × HP　-　FluxInk e-ink Note Tablet project　|　2026-07-21</footer>
+  </div>
+</div>
+<script>
+  function setLang(l){
+    document.querySelectorAll('[data-lang]').forEach(function(d){d.classList.toggle('show',d.getAttribute('data-lang')===l);});
+    document.getElementById('btn-zh').classList.toggle('active',l==='zh');
+    document.getElementById('btn-en').classList.toggle('active',l==='en');
+    document.getElementById('root').setAttribute('lang',l==='zh'?'zh-Hant':'en');
+    window.scrollTo(0,0);
+  }
+</script>
+</body>
+</html>
