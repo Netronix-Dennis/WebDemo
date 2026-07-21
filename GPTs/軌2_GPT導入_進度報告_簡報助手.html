@@ -112,7 +112,53 @@ table.tt th{background:#dbe4ee;color:var(--secondary);font-weight:800;border-bot
 <div class="wrap">
 
   <!-- ======== 最新一週：預設展開 ======== -->
-  <details class="wk" open>
+    <details class="wk" open>
+    <summary>
+      <span class="date">2026 / 07 / 22</span>
+      <span class="hl">品質修正：文字放大 · 各種電腦都打得開</span>
+      <span class="stage">階段：持續維運・品質修正</span>
+      <span class="cv">▶</span>
+    </summary>
+    <div class="wkb">
+      <div class="blk">
+        <div class="bh">◆ 本期進度階段</div>
+        <div class="callout">依使用者實際回饋，本週做了兩項品質修正並已上線驗證：<b>文字更大更好讀</b>，以及<b>讓簡報在各種電腦（含 Windows PowerPoint）都能正常開啟</b>。</div>
+      </div>
+      <div class="blk">
+        <div class="bh">◆ 版本問題與處理（本期）</div>
+        <table class="tt">
+          <thead><tr><th style="width:34%">問題</th><th style="width:15%">來源</th><th style="width:51%">狀態／處理</th></tr></thead>
+          <tbody>
+            <tr><td>簡報在部分電腦（Windows PowerPoint）打不開、顯示「內容有問題」</td><td><span class="src user">使用者回報</span></td><td><span class="tg pos">✓ 已修正</span>　找出並修正投影片中的非法版面尺寸（負數高度），讓最嚴格的 PowerPoint 也能開啟；已請回報的同仁在其 Windows 電腦實測，兩份先前打不開的簡報都能開了。</td></tr>
+            <tr><td>簡報文字有時太小、像在看視力表</td><td><span class="src user">使用者回報</span></td><td><span class="tg pos">✓ 已改善</span>　調高預設字級、內文不再被縮到過小；並在每次交付時主動提醒「可再調整字級或拆頁」。</td></tr>
+          </tbody>
+        </table>
+        <div class="callout amber"><b>放大字級同時顧到版面：</b>加大字後仍以「不重疊、不超出邊界」為前提——內容多時自動分頁或改條列、卡片與步驟說明保持精簡，實測密集頁面不會因放大而擠版。</div>
+      </div>
+    </div>
+  </details>
+
+  <details class="wk">
+    <summary>
+      <span class="date">2026 / 07 / 15</span>
+      <span class="hl">修正：移除封面固定署名</span>
+      <span class="stage">階段：品質修正</span>
+      <span class="cv">▶</span>
+    </summary>
+    <div class="wkb">
+      <div class="blk">
+        <div class="bh">◆ 版本問題與處理（本期）</div>
+        <table class="tt">
+          <thead><tr><th style="width:34%">問題</th><th style="width:15%">來源</th><th style="width:51%">狀態／處理</th></tr></thead>
+          <tbody>
+            <tr><td>封面固定出現「PROPOSED BY 軟體研發部」，不符不同部門／對外用途</td><td><span class="src user">使用者回報</span></td><td><span class="tg pos">✓ 已修正</span>　預設不再帶固定提案單位署名，只保留公司 Logo 浮水印；需要署名時再指定即可。</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </details>
+
+<details class="wk">
     <summary>
       <span class="date">2026 / 07 / 08</span>
       <span class="hl">重大改版：簡報改由「排版引擎」產出</span>
