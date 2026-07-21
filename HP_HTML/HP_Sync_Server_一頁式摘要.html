@@ -131,7 +131,7 @@
       <h2>1. 核心問題 <span class="n">The core problem</span></h2>
       <p class="lead">一句話：<br>已刪除的筆記仍在重傳完整內容，佔滿了同步流量。</p>
       <div class="headline">
-        <div class="big">Server 在筆記被刪除後，tombstone（墓碑）仍保留、並在每次同步時<b>重傳整包原始 Base64 content</b>。<br>29 筆資料中，22 筆已刪除筆記就佔了整包 response 的 <b>85.56%</b>。<br>但 client 對「刪除」其實只需要 <code>id</code>。</div>
+        <div class="big">Server 在筆記被刪除後，tombstone（墓碑）仍保留其完整內容。<br>在初次同步、manual reset 或任何從 <code>since=0</code> 開始的 full replay 中，Server 會<b>重新傳送所有歷史 tombstone 的整包原始 Base64 content</b>。<br>本次量測（<code>changes?since=0</code>）29 筆資料中，22 筆已刪除筆記就佔了整包 response 的 <b>85.56%</b>。<br>但 client 對 tombstone 只需要 <code>id</code>、<code>deleted</code>、<code>updatedAt</code> 與必要 metadata，不需要原始 content。</div>
       </div>
       <div class="stats">
         <div class="stat"><div class="n red">28.83 MiB</div><div class="l">目前 response 大小</div></div>
@@ -255,7 +255,7 @@
       <h2>1. The Core Problem</h2>
       <p class="lead">In one line:<br>deleted notes still retransmit their full content and saturate the sync stream.</p>
       <div class="headline">
-        <div class="big">After a note is deleted, the Server keeps the tombstone and <b>retransmits the full original Base64 content on every sync</b>.<br>In a 29-record dataset, 22 deleted notes make up <b>85.56%</b> of the response.<br>For a deletion the client only needs the <code>id</code>.</div>
+        <div class="big">After a note is deleted, the Server keeps the tombstone's full content.<br>During first sync, manual reset, or any full-history replay from <code>since=0</code>, the Server <b>retransmits the complete content of all historical tombstones</b>.<br>In this measurement (<code>changes?since=0</code>), 22 of 29 records are deleted notes making up <b>85.56%</b> of the response.<br>For a tombstone, the client needs only <code>id</code>, <code>deleted</code>, <code>updatedAt</code>, and required metadata - not the original content.</div>
       </div>
       <div class="stats">
         <div class="stat"><div class="n red">28.83 MiB</div><div class="l">current response size</div></div>
@@ -372,13 +372,13 @@
     </div>
     <div class="modal-b">
       <div data-lang="zh" class="show">
-        <div class="m-sg m-analogy"><h4>白話比喻</h4><p>想像你把一份 100 頁的文件丟進碎紙機（刪除）。<br>但系統每次跟你「對帳」時，還是把整份 100 頁一字不漏念一遍，只為了最後告訴你一句「這份已經丟了」。<br>你真正需要的，只是「哪一份丟了」這句話而已。</p></div>
-        <div class="m-sg"><h4>為什麼是問題</h4><p>目前 29 筆資料裡，有 22 筆是這種「已刪除卻仍念全文」的紀錄，佔了整包流量的 85.56%。<br>而且每次同步都重演一次，永遠不會自己消失。<br>在 e-ink 平板 ＋ 弱 Wi-Fi 下，這讓一次重置卡了約 6 分鐘。</p></div>
+        <div class="m-sg m-analogy"><h4>白話比喻</h4><p>想像你把一份 100 頁的文件丟進碎紙機（刪除）。<br>但每當你要求系統「從頭對一次帳」（初次同步或重置）時，它還是把整份 100 頁一字不漏念一遍，只為了最後告訴你一句「這份已經丟了」。<br>你真正需要的，只是「哪一份丟了」這句話而已。</p></div>
+        <div class="m-sg"><h4>為什麼是問題</h4><p>本次量測（<code>changes?since=0</code>）29 筆裡，有 22 筆是這種「已刪除卻仍夾帶全文」的紀錄，佔了整包流量的 85.56%。<br>每次從 <code>since=0</code> 的完整重播（初次同步、manual reset、狀態重置）都會再發生一次，不會自己消失。<br>在 e-ink 平板 ＋ 弱 Wi-Fi 下，這讓一次重置卡了約 6 分鐘。</p></div>
         <div class="m-sg"><h4>怎麼修</h4><ul><li>DELETE 時就把內容清空；<br>或保留在資料庫、但回傳時省略內容。</li><li>單這一項，就能把這批資料從 28.83 MiB 降到約 4.16 MiB（−85%）。</li></ul></div>
       </div>
       <div data-lang="en">
-        <div class="m-sg m-analogy"><h4>Plain-language analogy</h4><p>Imagine you shred a 100-page document (a delete).<br>But every time the system reconciles with you, it still reads all 100 pages aloud word-for-word, only to finish with one sentence: "this one is gone."<br>All you actually needed was that one sentence.</p></div>
-        <div class="m-sg"><h4>Why it matters</h4><p>Of the 29 records, 22 are these "deleted but still full-text" entries, making up 85.56% of the payload.<br>It repeats on every sync and never goes away on its own.<br>On an e-ink tablet over weak Wi-Fi, this stretched one reset to about 6 minutes.</p></div>
+        <div class="m-sg m-analogy"><h4>Plain-language analogy</h4><p>Imagine you shred a 100-page document (a delete).<br>But every time you ask the system to reconcile from scratch (a first sync or a reset), it still reads all 100 pages aloud word-for-word, only to finish with one sentence: "this one is gone."<br>All you actually needed was that one sentence.</p></div>
+        <div class="m-sg"><h4>Why it matters</h4><p>In this measurement (<code>changes?since=0</code>), 22 of 29 records are these "deleted but still full-text" entries, making up 85.56% of the payload.<br>It recurs on every full replay from <code>since=0</code> (first sync, manual reset, state reset) and never goes away on its own.<br>On an e-ink tablet over weak Wi-Fi, this stretched one reset to about 6 minutes.</p></div>
         <div class="m-sg"><h4>The fix</h4><ul><li>Clear the content on DELETE, or keep it in the DB but omit it in the response.</li><li>This one change alone takes this dataset from 28.83 MiB down to about 4.16 MiB (−85%).</li></ul></div>
       </div>
     </div>
@@ -458,14 +458,14 @@
       <div data-lang="zh" class="show">
         <div class="m-sg m-analogy"><h4>白話比喻</h4><p>每筆筆記有一個「流水號時間戳」，App 靠它記住「我讀到哪了」。<br>如果有兩筆的號碼剛好一樣，而分頁又剛好切在這兩筆中間，<br>App 會誤以為兩筆都讀完了，於是<b>無聲無息</b>地漏掉一筆。</p></div>
         <div class="m-sg"><h4>為什麼危險</h4><p>這種漏抓不會報錯、不會當機。<br>使用者只會發現「有一本筆記莫名不見了」，而且事後極難追查。</p></div>
-        <div class="m-sg"><h4>怎麼修（HP 二選一）</h4><ul><li>保證時間戳在<b>所有寫入路徑</b>都全域唯一、嚴格遞增（含 migration、cleanup、還原、未來多台伺服器）；</li><li>或改用「時間戳＋id」的複合游標。</li></ul></div>
-        <div class="m-sg"><h4>我方現在就能並行做的</h4><p>把水位線設計成「複合就緒」、把 cursor 當不透明字串原樣存回、套用做成冪等（重複套用無害）、只在整輪成功後才推進水位線。<br>這些<b>不需等 HP</b> 就能先做，等 HP 決定後無痛接上 - 這也是我方目前可以排進時程的工作。</p></div>
+        <div class="m-sg"><h4>怎麼修（HP 擇一）</h4><ul><li>保證時間戳在<b>所有寫入路徑</b>都全域唯一、嚴格遞增（含 migration、cleanup、還原、未來多台伺服器）；</li><li>或規定 page／snapshot boundary <b>不得切開相同時間戳的 tie group</b>（同一組整批一起送）；</li><li>或改用「時間戳＋id」的複合游標。</li></ul></div>
+        <div class="m-sg"><h4>我方現在可並行的準備</h4><p>把水位線做成「複合就緒」（不寫死單一 timestamp、預留可容納複合鍵或不透明 token）、套用做成冪等（重複套用無害）、只在整輪成功後才推進水位線 - 這幾項屬 client 內部設計，<b>可先行進行</b>。<br>但 cursor 的具體處理仍須<b>待 HP 的 cursor／分頁契約定案</b>；<br>我方先做好準備，等契約確定即可無痛接上、避免重寫。</p></div>
       </div>
       <div data-lang="en">
         <div class="m-sg m-analogy"><h4>Plain-language analogy</h4><p>Each note has a "serial-number timestamp" the app uses to remember "how far I've read."<br>If two notes happen to share the same number and a page boundary lands right between them,<br>the app assumes both were read - and <b>silently</b> drops one.</p></div>
         <div class="m-sg"><h4>Why it's dangerous</h4><p>This omission throws no error and never crashes.<br>The user just finds "a notebook mysteriously vanished," and it's extremely hard to trace afterward.</p></div>
-        <div class="m-sg"><h4>The fix (HP picks one)</h4><ul><li>Guarantee the timestamp is globally unique and strictly increasing on <b>every write path</b> (incl. migration, cleanup, restore, future multi-instance);</li><li>or switch to a "timestamp + id" composite cursor.</li></ul></div>
-        <div class="m-sg"><h4>What NTX can do now, in parallel</h4><p>Make the watermark "composite-ready," treat the cursor as an opaque string stored as-is, make apply idempotent (re-applying is harmless), and advance the watermark only after the whole cycle succeeds.<br>These need <b>no wait on HP</b> and slot in cleanly once HP decides - so they can go into our schedule right now.</p></div>
+        <div class="m-sg"><h4>The fix (HP picks one)</h4><ul><li>Guarantee the timestamp is globally unique and strictly increasing on <b>every write path</b> (incl. migration, cleanup, restore, future multi-instance);</li><li>or ensure a page/snapshot boundary <b>never splits a tie group sharing the same timestamp</b> (deliver the whole group together);</li><li>or switch to a "timestamp + id" composite cursor.</li></ul></div>
+        <div class="m-sg"><h4>What NTX can prepare now, in parallel</h4><p>Making the watermark "composite-ready" (no hard-coded single timestamp; room for a composite key or opaque token), keeping apply idempotent (re-applying is harmless), and advancing the watermark only after the whole cycle succeeds are internal client choices we can <b>start now</b>.<br>The exact cursor handling, however, <b>depends on HP's cursor/pagination contract</b>;<br>we prepare ahead so it slots in without a rewrite once that contract is set.</p></div>
       </div>
     </div>
   </div>
@@ -496,11 +496,11 @@
     </div>
     <div class="modal-b">
       <div data-lang="zh" class="show">
-        <div class="m-sg m-analogy"><h4>白話比喻</h4><p>目前 Server 對「每次同步發生了什麼」沒有留下足夠的紀錄，出事時難以回溯到底哪一步慢、哪一步錯。</p></div>
+        <div class="m-sg m-analogy"><h4>白話說明</h4><p>目前我方<b>沒有取得足以拆分 Server、網路與 Client 三段耗時</b>的診斷資訊，出事時難以判斷到底哪一步慢、哪一步錯。<br>（這不代表 Server 內部完全沒有紀錄，只是這些資訊目前未對外提供。）</p></div>
         <div class="m-sg"><h4>建議記錄</h4><ul><li>端點、狀態碼、耗時、回傳大小、筆數、存活／墓碑數、分頁與 cursor 資訊。</li><li>逾時／取消／回應過大等分類。</li><li>但<b>不記錄敏感內容</b>（API 金鑰、Base64 全文）。</li></ul></div>
       </div>
       <div data-lang="en">
-        <div class="m-sg m-analogy"><h4>Plain-language analogy</h4><p>The Server keeps too little record of "what happened on each sync," making it hard to trace which step was slow or wrong when something goes off.</p></div>
+        <div class="m-sg m-analogy"><h4>Plain-language</h4><p>Today we <b>lack the diagnostics needed to split timing across Server, network, and client</b>, so it is hard to tell which step was slow or wrong when something goes off.<br>(This does not mean the Server has no internal logging - only that such data is not currently exposed to us.)</p></div>
         <div class="m-sg"><h4>Recommended to log</h4><ul><li>Endpoint, status code, elapsed time, response bytes, record count, live/tombstone counts, page/cursor info.</li><li>Timeout / cancel / response-too-large classifications.</li><li>But <b>never log sensitive content</b> (API keys, full Base64 payloads).</li></ul></div>
       </div>
     </div>
@@ -515,13 +515,13 @@
     <div class="modal-b">
       <div data-lang="zh" class="show">
         <div class="m-sg m-analogy"><h4>白話說明</h4><p>全新的 Server 資料庫啟動時，會自動放入 12 筆 Markdown 示範筆記。<br>由於它們不是 nNote 需要的 ENT 格式，client 第一次同步會被第一筆卡住、整批失敗。<br>刪掉資料庫重啟後，這 12 筆還會再長回來。</p></div>
-        <div class="m-sg"><h4>定位：這是已知情況，不是新 bug</h4><p>這批是 HP 事先拿來當測試用的 seed 資料，HP 已知其存在。<br>我方目前<b>已可繞過</b> - 把這 12 筆軟刪除後，同步即恢復正常，已實測驗證。</p></div>
+        <div class="m-sg"><h4>定位：這是已知情況，不是新 bug</h4><p>這批是 HP 事先拿來當測試用的 seed 資料，HP 已知其存在。<br>我方目前<b>已可繞過</b> - 把這 12 筆軟刪除後，同步即恢復正常，已實測驗證。<br>但軟刪除只是轉成 12 筆 tombstone，<b>並非真正乾淨的 Server history</b>；<br>這些 tombstone 在 <code>since=0</code> full replay 時仍會被重送（與第一項墓碑問題相扣）。</p></div>
         <div class="m-sg"><h4>為什麼還是要提出</h4><p>雖然可繞過，但每次重建資料庫或在新機器佈署時都得重做一次清除。<br>為了讓後續 <b>Demo 流程完整、開箱即可用</b>，建議一併處理。</p></div>
         <div class="m-sg"><h4>建議</h4><ul><li>partner build 預設清除／停用這批 seed；<br>或改用真實的單頁 ENT fixture。</li><li>既有安裝提供一次性 cleanup 或 migration。</li></ul></div>
       </div>
       <div data-lang="en">
         <div class="m-sg m-analogy"><h4>Plain-language</h4><p>When a brand-new Server database starts, it auto-inserts 12 Markdown demo notes.<br>Because they are not the ENT format nNote needs, the first sync gets stuck on the first one and the whole batch fails.<br>Deleting the database and restarting brings the 12 back again.</p></div>
-        <div class="m-sg"><h4>Framing: known, not a new bug</h4><p>This is HP's pre-existing test seed data, and HP is already aware of it.<br>We already <b>work around it</b> - soft-deleting the 12 restores normal sync, verified in testing.</p></div>
+        <div class="m-sg"><h4>Framing: known, not a new bug</h4><p>This is HP's pre-existing test seed data, and HP is already aware of it.<br>We already <b>work around it</b> - soft-deleting the 12 restores normal sync, verified in testing.<br>But soft-delete only turns them into 12 tombstones, <b>not a truly clean Server history</b>;<br>those tombstones are still resent on a <code>since=0</code> full replay (linking back to the first tombstone issue).</p></div>
         <div class="m-sg"><h4>Why raise it anyway</h4><p>The workaround must be redone every time the DB is recreated or deployed on a new machine.<br>For a <b>clean, out-of-the-box demo flow</b>, it is worth handling together.</p></div>
         <div class="m-sg"><h4>Recommendation</h4><ul><li>Have the partner build clear/disable this seed by default;<br>or replace it with a real single-page ENT fixture.</li><li>Provide a one-time cleanup or migration for existing installs.</li></ul></div>
       </div>
