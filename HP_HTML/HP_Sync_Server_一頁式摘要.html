@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" id="root">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HP Sync Server - 疑慮與建議一頁式摘要</title>
+<style>
+  :root{--bg:#eef1f6;--card:#fff;--ink:#1f2733;--muted:#5b6675;--line:#e1e6ec;--head:#0b2740;
+    --accent:#1f6feb;--accent-soft:#eaf2ff;--ok:#1f9d57;--ok-soft:#e9f8ef;--warn:#c77700;--warn-soft:#fff6e6;
+    --key:#0b66c3;--key-soft:#e9f3fc;--pend:#b03a4b;--pend-soft:#fdeef0;}
+  *{box-sizing:border-box}html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);line-height:1.72;
+    font-family:"Noto Sans CJK TC","PingFang TC","Microsoft JhengHei","Segoe UI",system-ui,sans-serif;}
+  .wrap{max-width:1020px;margin:0 auto;padding:24px 22px 90px}
+  .lang-bar{position:sticky;top:0;z-index:20;display:flex;justify-content:flex-end;
+    padding:10px 0 6px;background:linear-gradient(var(--bg),var(--bg) 70%,transparent)}
+  .lang-btn{border:1px solid var(--accent);background:#fff;color:var(--accent);cursor:pointer;
+    font-size:14px;padding:7px 16px;font-weight:600}
+  .lang-btn:first-child{border-radius:8px 0 0 8px}
+  .lang-btn:last-child{border-radius:0 8px 8px 0;border-left:none}
+  .lang-btn.active{background:var(--accent);color:#fff}
+  header.top{background:linear-gradient(120deg,#0b2740,#1f6feb);color:#fff;border-radius:16px;
+    padding:26px 30px;margin-bottom:4px;box-shadow:0 6px 24px rgba(11,39,64,.18)}
+  header.top h1{margin:0 0 8px;font-size:26px;line-height:1.2}
+  header.top .meta{font-size:14.5px;opacity:.92}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;background:var(--card);border:1px solid var(--line);
+    border-radius:12px;padding:13px 18px;margin:16px 0}
+  .lg{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--muted)}
+  .dot{width:11px;height:11px;border-radius:3px;flex:none}
+  section{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:22px 26px;margin:16px 0;box-shadow:0 1px 3px rgba(16,30,54,.05)}
+  h2{font-size:21px;color:var(--head);margin:.1em 0 .2em;padding-left:11px;border-left:5px solid var(--accent);display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+  h2 .n{font-size:13px;color:var(--muted);font-weight:600}
+  .lead{color:var(--muted);font-size:14px;margin:.3em 0 .9em}
+  p{margin:.5em 0}.muted{color:var(--muted)}
+  ul{margin:.4em 0 .3em 1.15em}li{margin:.45em 0}
+  code{font-family:Consolas,"Roboto Mono",monospace;font-size:.88em;background:#eef1f5;color:#0b3d66;padding:1px 6px;border-radius:5px;word-break:break-word}
+  .tag{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.02em;border-radius:6px;padding:3px 9px;white-space:nowrap}
+  .t-p0{color:#fff;background:var(--pend)}
+  .t-p1{color:var(--warn);background:var(--warn-soft)}
+  .t-p2{color:var(--key);background:var(--key-soft)}
+  .t-block{color:#fff;background:var(--pend)}
+  .t-soft{color:var(--muted);background:#eef1f5}
+  .t-known{color:#475569;background:#eef2f6}
+  .t-ask{color:var(--key);background:var(--key-soft)}
+  .t-do{color:var(--ok);background:var(--ok-soft)}
+  .t-need{color:var(--pend);background:var(--pend-soft)}
+  .card{border:1px solid var(--line);border-radius:11px;padding:15px 18px;margin:12px 0;background:#fafbfd}
+  .card.ask{border-left:4px solid var(--key)}
+  .chead{display:flex;align-items:center;gap:10px;margin:0 0 6px;flex-wrap:wrap}
+  .ctitle{font-weight:700;font-size:15.5px;color:#20364e}
+  .note{color:var(--muted);font-size:13px}
+  .headline{background:linear-gradient(180deg,#fdeef0,#fff);border:1px solid var(--pend-soft);
+    border-left:5px solid var(--pend);border-radius:12px;padding:16px 20px;margin-top:6px}
+  .headline .big{font-size:16.5px;font-weight:600;color:#20364e}
+  .headline .big b{color:var(--pend)}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:14px 0 6px}
+  .stat{background:#fafbfd;border:1px solid var(--line);border-radius:11px;padding:14px 16px}
+  .stat .n{font-size:23px;font-weight:800;line-height:1.15;color:var(--head)}
+  .stat .n.red{color:var(--pend)} .stat .n.ok{color:var(--ok)}
+  .stat .l{font-size:12.5px;color:var(--muted);margin-top:3px}
+  .tblw{overflow-x:auto;border:1px solid var(--line);border-radius:10px;margin:.7em 0}
+  table{border-collapse:collapse;width:100%;min-width:560px;font-size:13.5px;background:#fff}
+  thead th{background:var(--head);color:#fff;text-align:left;padding:9px 13px;font-weight:600}
+  td{padding:9px 13px;border-bottom:1px solid var(--line);vertical-align:top}
+  tbody tr:last-child td{border-bottom:0}
+  tbody tr.clk{cursor:pointer;transition:background .12s}
+  tbody tr.clk:hover{background:var(--accent-soft)}
+  .more{display:inline-block;margin-top:5px;color:var(--accent);font-weight:700;font-size:12px}
+  tbody tr.clk:hover .more{text-decoration:underline}
+  .clickhint{display:inline-flex;align-items:center;gap:6px;background:var(--accent-soft);color:var(--accent);
+    border:1px solid #d6e4ff;border-radius:8px;padding:5px 11px;font-size:12.5px;font-weight:700;margin:.2em 0 .3em}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .col{border:1px solid var(--line);border-radius:11px;padding:16px 18px;background:#fafbfd}
+  .col.do{border-top:4px solid var(--ok)}
+  .col.need{border-top:4px solid var(--pend)}
+  .col h3{margin:.1em 0 .3em;font-size:16px;color:#20364e}
+  @media(max-width:680px){.two{grid-template-columns:1fr}}
+  footer{text-align:center;color:var(--muted);font-size:13px;margin-top:26px}
+  /* ===== modal ===== */
+  .modal-bg{position:fixed;inset:0;background:rgba(15,30,50,.55);display:none;z-index:100;overflow-y:auto;padding:30px 16px}
+  .modal-bg.open{display:block;animation:mfade .16s ease}
+  @keyframes mfade{from{opacity:0}to{opacity:1}}
+  .modal{max-width:660px;width:100%;margin:8px auto;background:var(--card);border-radius:16px;
+    box-shadow:0 22px 64px rgba(11,39,64,.4);overflow:hidden}
+  .modal-h{position:relative;padding:20px 52px 20px 24px;color:#fff;background:linear-gradient(135deg,#0b2740,#1f6feb)}
+  .modal-h.p0{background:linear-gradient(135deg,#7f1d2b,#b03a4b)}
+  .modal-h.p1{background:linear-gradient(135deg,#8a5300,#c77700)}
+  .modal-h.p2{background:linear-gradient(135deg,#0b3d66,#0b66c3)}
+  .modal-h.known{background:linear-gradient(135deg,#334155,#64748b)}
+  .modal-h .mt{font-size:12px;opacity:.85;font-weight:700;letter-spacing:.03em}
+  .modal-h h3{font-size:20px;font-weight:800;margin-top:4px;line-height:1.25}
+  .modal-x{position:absolute;top:14px;right:16px;width:32px;height:32px;border-radius:9px;border:none;cursor:pointer;
+    background:rgba(255,255,255,.2);color:#fff;font-size:20px;line-height:1;display:grid;place-items:center}
+  .modal-x:hover{background:rgba(255,255,255,.34)}
+  .modal-b{padding:18px 22px 24px}
+  .m-sg{margin-bottom:15px}.m-sg:last-child{margin-bottom:0}
+  .m-sg h4{font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--accent);font-weight:800;
+    margin-bottom:6px;border-left:3px solid var(--accent);padding-left:8px}
+  .m-sg p{font-size:14px;line-height:1.72;color:#2b3a4d}
+  .m-sg ul{margin:.2em 0 .2em 1.15em}.m-sg li{font-size:14px;margin:.4em 0;line-height:1.62}
+  .m-analogy{background:var(--accent-soft);border:1px solid #d6e4ff;border-radius:10px;padding:12px 15px}
+  .m-analogy h4{color:#0b3d66;border-left-color:#0b3d66}
+  .m-analogy p{color:#20364e}
+  [data-lang]{display:none}[data-lang].show{display:block}
+  @media print{body{background:#fff}.lang-bar,.clickhint,.more{display:none}
+    section,header.top{box-shadow:none;break-inside:avoid}.modal-bg{display:none!important}
+    [data-lang]{display:none!important}[data-lang].show{display:block!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="lang-bar"><button class="lang-btn active" id="btn-zh" onclick="setLang('zh')">中文</button><button class="lang-btn" id="btn-en" onclick="setLang('en')">English</button></div>
+
+  <!-- ================= 中文 ================= -->
+  <div data-lang="zh" class="show">
+    <header class="top">
+      <h1>HP Sync Server - 疑慮與建議一頁式摘要</h1>
+      <div class="meta">2026-07-21　|　NTX nNote Phase 6 實機測試發現　|　給 HP／Axoflow Server 團隊　|　來源：changes?since=0 實測 2026-07-17</div>
+    </header>
+
+    <div class="legend">
+      <span class="lg"><span class="dot" style="background:var(--pend)"></span>P0 · 阻斷</span>
+      <span class="lg"><span class="dot" style="background:var(--warn)"></span>P1 · 正式必需</span>
+      <span class="lg"><span class="dot" style="background:var(--key)"></span>P2 · 維運</span>
+      <span class="lg"><span class="dot" style="background:var(--ok)"></span>NTX 這端配套</span>
+      <span class="lg"><span class="dot" style="background:#94a3b8"></span>已知 · 提醒</span>
+    </div>
+
+    <section>
+      <h2>1. 核心問題 <span class="n">The core problem</span></h2>
+      <p class="lead">一句話：<br>已刪除的筆記仍在重傳完整內容，佔滿了同步流量。</p>
+      <div class="headline">
+        <div class="big">Server 在筆記被刪除後，tombstone（墓碑）仍保留、並在每次同步時<b>重傳整包原始 Base64 content</b>。<br>29 筆資料中，22 筆已刪除筆記就佔了整包 response 的 <b>85.56%</b>。<br>但 client 對「刪除」其實只需要 <code>id</code>。</div>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="n red">28.83 MiB</div><div class="l">目前 response 大小</div></div>
+        <div class="stat"><div class="n">24.67 MiB</div><div class="l">墓碑 content（可消除）</div></div>
+        <div class="stat"><div class="n ok">≈ 4.16 MiB</div><div class="l">清理後預估（−85%）</div></div>
+        <div class="stat"><div class="n">≈ 6 min</div><div class="l">弱 Wi-Fi 下 Android 下載／解析</div></div>
+      </div>
+      <p class="note">※ Server 端取得 response 僅 395 ms；<br>六分鐘為 Android 端到端下載＋解析觀察值（弱 Wi-Fi ＋ client 全量 JSON 建構），不可全歸因於 Server。<br>但墓碑 bytes 是已量化、可直接消除的主要無效 payload。</p>
+    </section>
+
+    <section>
+      <h2>2. 問題與優先級 <span class="n">Issues &amp; priorities</span></h2>
+      <p class="lead">兩個 P0 是 demo 阻斷項、且都是 Server 端修改；<br>P1 屬正式上線必需。</p>
+      <span class="clickhint">👆 點任一列，跳出白話詳解（適合非技術與會者）</span>
+      <div class="tblw"><table>
+        <thead><tr><th style="width:64px">優先</th><th>問題</th><th style="width:110px">POC 影響</th></tr></thead>
+        <tbody>
+          <tr class="clk" onclick="openModal('m1')">
+            <td><span class="tag t-p0">P0</span></td>
+            <td><b>墓碑不應回傳 content</b> - DELETE 時清空，或序列化時省略。<br>幾行程式的快速修復。<span class="more">白話詳解 ›</span></td>
+            <td><span class="tag t-block">阻斷</span></td>
+          </tr>
+          <tr class="clk" onclick="openModal('m2')">
+            <td><span class="tag t-p0">P0</span></td>
+            <td><b>既有 DB 需清理／migration</b> - 只修未來 DELETE 無法改善現有 instance 的 22 筆舊墓碑。<span class="more">白話詳解 ›</span></td>
+            <td><span class="tag t-block">阻斷</span></td>
+          </tr>
+          <tr class="clk" onclick="openModal('m3')">
+            <td><span class="tag t-p0">P0</span></td>
+            <td><b>議定單筆大小契約</b> - client 暫行 guard 為 6 MiB decoded／8 MiB encoded；<br>Server ceiling 未知、且曾存入一筆 16 MiB。<br>需對齊並定義 <code>413</code> 行為（不得部分寫入）。<span class="more">白話詳解 ›</span></td>
+            <td><span class="tag t-soft">會議定案</span></td>
+          </tr>
+          <tr class="clk" onclick="openModal('m4')">
+            <td><span class="tag t-p1">P1</span></td>
+            <td><b>changes API 加入分頁／cursor</b> - 目前單一 response 無上限；<br>需 snapshot boundary ＋ 安全跨輪 watermark。<span class="more">白話詳解 ›</span></td>
+            <td><span class="tag t-soft">正式必需</span></td>
+          </tr>
+          <tr class="clk" onclick="openModal('m5')">
+            <td><span class="tag t-p1">P1</span></td>
+            <td><b>排序安全性</b> - 所有寫入路徑須維持 <code>updatedAt</code> 全域唯一且嚴格遞增，否則分頁邊界會漏抓或重複資料。<span class="more">白話詳解（我方可並行）›</span></td>
+            <td><span class="tag t-soft">正式必需</span></td>
+          </tr>
+          <tr class="clk" onclick="openModal('m6')">
+            <td><span class="tag t-p1">P1</span></td>
+            <td><b>容量／保留政策 ＋ 測試隔離</b> - 每帳號最大筆數、墓碑保留期；<br>壓測資料須用隔離 instance（那筆 16 MiB 即污染來源）。<span class="more">白話詳解 ›</span></td>
+            <td><span class="tag t-soft">規劃</span></td>
+          </tr>
+          <tr class="clk" onclick="openModal('m7')">
+            <td><span class="tag t-p2">P2</span></td>
+            <td><b>可觀測性</b> - 記錄 endpoint、status、耗時、bytes、record／墓碑數（不含 API key 或 Base64 全文）。<span class="more">白話詳解 ›</span></td>
+            <td><span class="tag t-soft">維運</span></td>
+          </tr>
+          <tr class="clk" onclick="openModal('m8')">
+            <td><span class="tag t-known">已知</span></td>
+            <td><b>預設 12 筆 Markdown seed 資料</b> - fresh DB 會自動 seed 12 筆非 ENT 的 Markdown notes，使首次 pull 整批失敗。<br>此為 HP 已知的測試 seed，我方已可繞過（軟刪除即可）；<br>建議 partner build 預設清除，讓 Demo 流程完整。<span class="more">白話詳解 ›</span></td>
+            <td><span class="tag t-soft">建議清除</span></td>
+          </tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section>
+      <h2>3. 最需 HP 回覆的 3 個問題 <span class="n">Top 3 questions for HP</span></h2>
+      <p class="lead">原文 14 題收斂為最關鍵的三題。</p>
+      <div class="card ask"><div class="chead"><span class="tag t-ask">Q1 · 墓碑</span><span class="ctitle">DELETE 為何保留 content</span></div>
+        <p>DELETE 保留 content 是刻意的 contract，還是 soft-delete 完整 record 的副作用？<br>新墓碑能否在 DB 清空、或在序列化時省略 content？</p>
+      </div>
+      <div class="card ask"><div class="chead"><span class="tag t-ask">Q2 · 既有 DB</span><span class="ctitle">既有資料如何處理</span></div>
+        <p>既有 DB 將如何處理（migration ／ cleanup 工具 ／ 版本升級）？<br>是否會改動 <code>updatedAt</code>，並如何維持 watermark 與 <code>updatedAt &gt; since</code> 語意安全？</p>
+      </div>
+      <div class="card ask"><div class="chead"><span class="tag t-ask">Q3 · 容量</span><span class="ctitle">大小上限與交付版本</span></div>
+        <p>Server 是否保證接受所有 <code>content ≤ 8 MiB</code>？<br>現行 encoded content 與完整 request-body 的 ceiling 各為何？<br>修正將落在哪個 package 版本、預計交付日？</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>4. 驗收數字與範圍 <span class="n">Acceptance &amp; scope</span></h2>
+      <div class="two">
+        <div class="col do">
+          <div class="chead"><span class="tag t-do">P0 驗收數字</span></div>
+          <h3>改完可客觀驗證</h3>
+          <ul>
+            <li>22 筆既有墓碑 content 由 <b>24.67 MiB → 接近 0</b>；<br>整包 response 明顯低於 28.83 MiB，墓碑佔比趨近 0%。</li>
+            <li>7 筆 live content 修正後 <b>byte-identical</b> 不變。</li>
+            <li><code>id</code>、<code>deleted</code>、<code>updatedAt</code>、watermark 與同 id POST 復活語意保持不變。</li>
+            <li>超過議定 ceiling 的請求回傳穩定 <code>413</code>，且<b>不產生部分寫入</b>。</li>
+          </ul>
+        </div>
+        <div class="col need">
+          <div class="chead"><span class="tag t-need">範圍防守</span></div>
+          <h3>不要求 Server 做的事</h3>
+          <ul>
+            <li>解析或理解 ENT 內部格式、實作 NTX handwriting parser。</li>
+            <li>刪除所有 tombstone history、或改變 <code>updatedAt &gt; since</code> ／同 id POST 復活行為。</li>
+            <li>把目前 3.86 MiB 樣本、或暫行 6／8 MiB guard 當成未經共同定案的永久產品上限。</li>
+          </ul>
+          <p class="note" style="margin-top:10px"><b>NTX 這端配套：</b><br>streaming 解析（不建完整 JSON DOM）、墓碑 content 解析後即丟、可取消 HTTP、診斷數據、整批失敗不推進 watermark、分頁後逐頁套用。<br>但 client 無法消除 Server 傳送的 bytes，也無法讓未分頁 response 續傳。</p>
+        </div>
+      </div>
+    </section>
+
+    <footer>Netronix · nNote (Android)　|　來源：HP_Sync_Server_Scalability_and_Data_Contract_Concerns（.md ／ _zh-TW.md）　|　2026-07-21</footer>
+  </div>
+
+  <!-- ================= English ================= -->
+  <div data-lang="en">
+    <header class="top">
+      <h1>HP Sync Server - One-Page Brief: Concerns &amp; Recommendations</h1>
+      <div class="meta">2026-07-21　|　Findings from NTX nNote Phase 6 device testing　|　For the HP/Axoflow Server team　|　Source: changes?since=0 measured 2026-07-17</div>
+    </header>
+
+    <div class="legend">
+      <span class="lg"><span class="dot" style="background:var(--pend)"></span>P0 · Blocker</span>
+      <span class="lg"><span class="dot" style="background:var(--warn)"></span>P1 · GA-critical</span>
+      <span class="lg"><span class="dot" style="background:var(--key)"></span>P2 · Ops</span>
+      <span class="lg"><span class="dot" style="background:var(--ok)"></span>NTX client side</span>
+      <span class="lg"><span class="dot" style="background:#94a3b8"></span>Known · reminder</span>
+    </div>
+
+    <section>
+      <h2>1. The Core Problem</h2>
+      <p class="lead">In one line:<br>deleted notes still retransmit their full content and saturate the sync stream.</p>
+      <div class="headline">
+        <div class="big">After a note is deleted, the Server keeps the tombstone and <b>retransmits the full original Base64 content on every sync</b>.<br>In a 29-record dataset, 22 deleted notes make up <b>85.56%</b> of the response.<br>For a deletion the client only needs the <code>id</code>.</div>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="n red">28.83 MiB</div><div class="l">current response size</div></div>
+        <div class="stat"><div class="n">24.67 MiB</div><div class="l">tombstone content (avoidable)</div></div>
+        <div class="stat"><div class="n ok">≈ 4.16 MiB</div><div class="l">after cleanup (−85%)</div></div>
+        <div class="stat"><div class="n">≈ 6 min</div><div class="l">Android download/parse, weak Wi-Fi</div></div>
+      </div>
+      <p class="note">※ The Server-host request completes in just 395 ms.<br>The six minutes is an Android end-to-end download+parse observation (weak Wi-Fi + full JSON materialization), not all Server time.<br>But tombstone bytes are the measured, directly removable primary waste.</p>
+    </section>
+
+    <section>
+      <h2>2. Issues &amp; Priorities</h2>
+      <p class="lead">Both P0s are demo blockers and both are Server-side changes;<br>the P1s are required for GA.</p>
+      <span class="clickhint">👆 Click any row for a plain-language explanation (for non-technical attendees)</span>
+      <div class="tblw"><table>
+        <thead><tr><th style="width:64px">Pri</th><th>Issue</th><th style="width:120px">POC impact</th></tr></thead>
+        <tbody>
+          <tr class="clk" onclick="openModal('m1')">
+            <td><span class="tag t-p0">P0</span></td>
+            <td><b>Tombstones must not return content</b> - clear on DELETE or omit on serialize.<br>A few-line quick fix.<span class="more">Plain-language ›</span></td>
+            <td><span class="tag t-block">Blocker</span></td>
+          </tr>
+          <tr class="clk" onclick="openModal('m2')">
+            <td><span class="tag t-p0">P0</span></td>
+            <td><b>Existing DB needs cleanup/migration</b> - fixing only future DELETEs won't fix the 22 existing tombstones.<span class="more">Plain-language ›</span></td>
+            <td><span class="tag t-block">Blocker</span></td>
+          </tr>
+          <tr class="clk" onclick="openModal('m3')">
+            <td><span class="tag t-p0">P0</span></td>
+            <td><b>Agree an individual-size contract</b> - client provisional guards are 6 MiB decoded / 8 MiB encoded;<br>the Server ceiling is unknown and a 16 MiB record was stored.<br>Align and define <code>413</code> behavior (no partial write).<span class="more">Plain-language ›</span></td>
+            <td><span class="tag t-soft">decide in mtg</span></td>
+          </tr>
+          <tr class="clk" onclick="openModal('m4')">
+            <td><span class="tag t-p1">P1</span></td>
+            <td><b>Add pagination/cursor to changes API</b> - the single response is unbounded;<br>needs a snapshot boundary + safe cross-cycle watermark.<span class="more">Plain-language ›</span></td>
+            <td><span class="tag t-soft">GA-critical</span></td>
+          </tr>
+          <tr class="clk" onclick="openModal('m5')">
+            <td><span class="tag t-p1">P1</span></td>
+            <td><b>Ordering safety</b> - <code>updatedAt</code> must stay globally unique and strictly increasing on every write path, or paging can skip/duplicate records.<span class="more">Plain-language (NTX can start now) ›</span></td>
+            <td><span class="tag t-soft">GA-critical</span></td>
+          </tr>
+          <tr class="clk" onclick="openModal('m6')">
+            <td><span class="tag t-p1">P1</span></td>
+            <td><b>Capacity/retention policy + test isolation</b> - max notes/account, tombstone retention;<br>run stress tests on an isolated instance (the 16 MiB record is that pollution).<span class="more">Plain-language ›</span></td>
+            <td><span class="tag t-soft">planning</span></td>
+          </tr>
+          <tr class="clk" onclick="openModal('m7')">
+            <td><span class="tag t-p2">P2</span></td>
+            <td><b>Observability</b> - log endpoint, status, elapsed, bytes, record/tombstone counts (no API keys or Base64 payloads).<span class="more">Plain-language ›</span></td>
+            <td><span class="tag t-soft">ops</span></td>
+          </tr>
+          <tr class="clk" onclick="openModal('m8')">
+            <td><span class="tag t-known">Known</span></td>
+            <td><b>Default 12 Markdown seed notes</b> - a fresh DB auto-seeds 12 non-ENT Markdown notes, so the first pull aborts entirely.<br>This is HP's known test seed and we already work around it (soft-delete);<br>recommend the partner build clears it by default for a clean demo.<span class="more">Plain-language ›</span></td>
+            <td><span class="tag t-soft">clear it</span></td>
+          </tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section>
+      <h2>3. Top 3 Questions for HP</h2>
+      <p class="lead">The original 14 questions, distilled to the three that matter most.</p>
+      <div class="card ask"><div class="chead"><span class="tag t-ask">Q1 · Tombstones</span><span class="ctitle">Why is content retained on DELETE</span></div>
+        <p>Is retaining content on DELETE an intentional contract, or a side-effect of soft-deleting the whole record?<br>Can new tombstones clear content in the DB, or omit it on serialization?</p>
+      </div>
+      <div class="card ask"><div class="chead"><span class="tag t-ask">Q2 · Existing DB</span><span class="ctitle">How existing data is handled</span></div>
+        <p>How will existing DBs be handled (migration / cleanup tool / package upgrade)?<br>Will it change <code>updatedAt</code>, and how will watermark and <code>updatedAt &gt; since</code> semantics stay safe?</p>
+      </div>
+      <div class="card ask"><div class="chead"><span class="tag t-ask">Q3 · Capacity</span><span class="ctitle">Size ceilings &amp; delivery version</span></div>
+        <p>Does the Server guarantee acceptance of every <code>content ≤ 8 MiB</code>?<br>What are the current encoded-content and full request-body ceilings?<br>Which package version ships the fix, and by when?</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>4. Acceptance &amp; Scope</h2>
+      <div class="two">
+        <div class="col do">
+          <div class="chead"><span class="tag t-do">P0 acceptance</span></div>
+          <h3>Objectively verifiable</h3>
+          <ul>
+            <li>Existing tombstone content drops from <b>24.67 MiB → ≈ 0</b>;<br>the whole response falls well below 28.83 MiB and tombstone share approaches 0%.</li>
+            <li>All 7 live content values remain <b>byte-identical</b> after the fix.</li>
+            <li><code>id</code>, <code>deleted</code>, <code>updatedAt</code>, watermark, and same-id POST revival semantics remain unchanged.</li>
+            <li>Requests above the agreed ceiling return a stable <code>413</code> with <b>no partial write</b>.</li>
+          </ul>
+        </div>
+        <div class="col need">
+          <div class="chead"><span class="tag t-need">Scope guard</span></div>
+          <h3>Not requested from the Server</h3>
+          <ul>
+            <li>Parse/understand the ENT internal format, or implement an NTX handwriting parser.</li>
+            <li>Remove all tombstone history, or change <code>updatedAt &gt; since</code> / same-id POST revival behavior.</li>
+            <li>Treat the 3.86 MiB sample or provisional 6/8 MiB guards as permanent product limits before a joint decision.</li>
+          </ul>
+          <p class="note" style="margin-top:10px"><b>NTX client side:</b><br>streaming parse (no full JSON DOM), discard tombstone content after parsing, cancellable HTTP, diagnostics, atomic failure without watermark advance, page-by-page apply once paginated.<br>But the client cannot eliminate Server bytes or make an unpaginated response resumable.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer>Netronix · nNote (Android)　|　Source: HP_Sync_Server_Scalability_and_Data_Contract_Concerns (.md / _zh-TW.md)　|　2026-07-21</footer>
+  </div>
+</div>
+
+<!-- ================= 詳解 Modals ================= -->
+<div class="modal-bg" id="mbg" onclick="if(event.target===this)closeModal()">
+
+  <!-- M1 -->
+  <div class="modal" id="m1" hidden>
+    <div class="modal-h p0"><button class="modal-x" onclick="closeModal()" aria-label="close">×</button>
+      <div data-lang="zh" class="show"><div class="mt">P0 · 阻斷</div><h3>墓碑重傳整包原始內容</h3></div>
+      <div data-lang="en"><div class="mt">P0 · Blocker</div><h3>Tombstones retransmit the full content</h3></div>
+    </div>
+    <div class="modal-b">
+      <div data-lang="zh" class="show">
+        <div class="m-sg m-analogy"><h4>白話比喻</h4><p>想像你把一份 100 頁的文件丟進碎紙機（刪除）。<br>但系統每次跟你「對帳」時，還是把整份 100 頁一字不漏念一遍，只為了最後告訴你一句「這份已經丟了」。<br>你真正需要的，只是「哪一份丟了」這句話而已。</p></div>
+        <div class="m-sg"><h4>為什麼是問題</h4><p>目前 29 筆資料裡，有 22 筆是這種「已刪除卻仍念全文」的紀錄，佔了整包流量的 85.56%。<br>而且每次同步都重演一次，永遠不會自己消失。<br>在 e-ink 平板 ＋ 弱 Wi-Fi 下，這讓一次重置卡了約 6 分鐘。</p></div>
+        <div class="m-sg"><h4>怎麼修</h4><ul><li>DELETE 時就把內容清空；<br>或保留在資料庫、但回傳時省略內容。</li><li>單這一項，就能把這批資料從 28.83 MiB 降到約 4.16 MiB（−85%）。</li></ul></div>
+      </div>
+      <div data-lang="en">
+        <div class="m-sg m-analogy"><h4>Plain-language analogy</h4><p>Imagine you shred a 100-page document (a delete).<br>But every time the system reconciles with you, it still reads all 100 pages aloud word-for-word, only to finish with one sentence: "this one is gone."<br>All you actually needed was that one sentence.</p></div>
+        <div class="m-sg"><h4>Why it matters</h4><p>Of the 29 records, 22 are these "deleted but still full-text" entries, making up 85.56% of the payload.<br>It repeats on every sync and never goes away on its own.<br>On an e-ink tablet over weak Wi-Fi, this stretched one reset to about 6 minutes.</p></div>
+        <div class="m-sg"><h4>The fix</h4><ul><li>Clear the content on DELETE, or keep it in the DB but omit it in the response.</li><li>This one change alone takes this dataset from 28.83 MiB down to about 4.16 MiB (−85%).</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- M2 -->
+  <div class="modal" id="m2" hidden>
+    <div class="modal-h p0"><button class="modal-x" onclick="closeModal()" aria-label="close">×</button>
+      <div data-lang="zh" class="show"><div class="mt">P0 · 阻斷</div><h3>既有資料庫也要清理</h3></div>
+      <div data-lang="en"><div class="mt">P0 · Blocker</div><h3>Existing database also needs cleanup</h3></div>
+    </div>
+    <div class="modal-b">
+      <div data-lang="zh" class="show">
+        <div class="m-sg m-analogy"><h4>白話比喻</h4><p>就算今天起規定「以後刪除的文件不再念全文」，<br>資料庫裡「之前」已經刪除的那 22 份，全文還是躺在裡面。<br>下次對帳照樣被念出來 - 所以得另外派人去把舊紀錄的全文擦掉。</p></div>
+        <div class="m-sg"><h4>為什麼是問題</h4><p>只修「未來的刪除」不能改善「現在這台機器」。<br>現有 instance 不清，每次 <code>since=0</code> 測試還是 28.83 MiB，問題依舊。</p></div>
+        <div class="m-sg"><h4>清理時不能踩的底線</h4><ul><li>7 份還在使用的筆記內容<b>一個位元組都不能動</b>（要能驗證一字不差）。</li><li>刪除標記、時間戳、之後重新寫入可「復活」的能力都要保留。</li><li>要講清楚清理會不會改動時間戳 - 這會牽動下一項「排序安全性」。</li></ul></div>
+      </div>
+      <div data-lang="en">
+        <div class="m-sg m-analogy"><h4>Plain-language analogy</h4><p>Even if from today "future deletes no longer read the full text,"<br>the 22 documents deleted <em>earlier</em> still have their full text sitting in the database.<br>They get read aloud at the next reconcile anyway - so someone has to go wipe the old records' text.</p></div>
+        <div class="m-sg"><h4>Why it matters</h4><p>Fixing only "future deletes" does not fix "this machine today."<br>If the existing instance is not cleaned, every <code>since=0</code> test is still 28.83 MiB.</p></div>
+        <div class="m-sg"><h4>Non-negotiables during cleanup</h4><ul><li>The 7 live notes' content must stay <b>byte-identical</b> (verifiable).</li><li>Keep the delete flag, timestamp, and the ability to "revive" via a later write.</li><li>State whether cleanup changes the timestamp - it feeds the next item, "ordering safety."</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- M3 -->
+  <div class="modal" id="m3" hidden>
+    <div class="modal-h p0"><button class="modal-x" onclick="closeModal()" aria-label="close">×</button>
+      <div data-lang="zh" class="show"><div class="mt">P0 · 會議定案</div><h3>單筆大小上限沒有共識</h3></div>
+      <div data-lang="en"><div class="mt">P0 · decide in meeting</div><h3>No agreed per-note size limit</h3></div>
+    </div>
+    <div class="modal-b">
+      <div data-lang="zh" class="show">
+        <div class="m-sg m-analogy"><h4>白話比喻</h4><p>兩邊對「一份筆記最多可以多大」沒有共識。<br>就像貨運沒講清楚單件包裹的重量上限 - 結果超大包裹有時被收、有時被拒，行為不一致。</p></div>
+        <div class="m-sg"><h4>三個容易混淆的尺寸</h4><ul><li><b>原始 ZIP（decoded）</b>：筆記本身，我方門檻 6 MiB。</li><li><b>編碼後（encoded）</b>：塞進 JSON 要先 Base64，<b>體積膨脹約 33%</b>，我方門檻 8 MiB。</li><li><b>完整封包</b>：還要加標題與 metadata，所以「封包上限」一定大於「內容上限」，不能混為同一個數字。</li></ul></div>
+        <div class="m-sg"><h4>現況的矛盾</h4><p>我方 App 自訂的 6／8 MiB 只是<b>暫行值</b>；<br>Server 到底能吃多大沒人確認，測試時甚至發現它默默存下一筆 <b>16 MiB</b>（我方門檻的兩倍）。<br>代表三方（App 門檻、Server 實際上限、產品正式契約）根本沒對齊。</p></div>
+        <div class="m-sg"><h4>要 HP 給的</h4><ul><li>保證至少吃下所有「編碼後 ≤ 8 MiB」的內容。</li><li>講清楚內容與封包各自的上限。</li><li>超過上限時回穩定的 <code>413</code>，且<b>絕不寫入一半</b>。</li></ul></div>
+      </div>
+      <div data-lang="en">
+        <div class="m-sg m-analogy"><h4>Plain-language analogy</h4><p>The two sides never agreed on "how big a single note can be."<br>It's like a courier with no stated per-parcel weight limit - oversized parcels sometimes get accepted, sometimes rejected. Inconsistent.</p></div>
+        <div class="m-sg"><h4>Three easily-confused sizes</h4><ul><li><b>Raw ZIP (decoded)</b>: the note itself; our guard is 6 MiB.</li><li><b>Encoded</b>: to fit in JSON it is Base64-encoded, which <b>inflates ~33%</b>; our guard is 8 MiB.</li><li><b>Full request body</b>: plus title and metadata, so the "body ceiling" must exceed the "content ceiling" - not the same number.</li></ul></div>
+        <div class="m-sg"><h4>The contradiction today</h4><p>Our 6/8 MiB guards are only <b>provisional</b>.<br>Nobody has confirmed how big the Server accepts; testing even found it silently stored a <b>16 MiB</b> record (twice our guard).<br>So all three - app guard, real Server ceiling, product contract - are misaligned.</p></div>
+        <div class="m-sg"><h4>What we need from HP</h4><ul><li>Guarantee acceptance of every "encoded ≤ 8 MiB" content.</li><li>State the content ceiling and the full-body ceiling separately.</li><li>Return a stable <code>413</code> when over the limit, with <b>no partial write</b>.</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- M4 -->
+  <div class="modal" id="m4" hidden>
+    <div class="modal-h p1"><button class="modal-x" onclick="closeModal()" aria-label="close">×</button>
+      <div data-lang="zh" class="show"><div class="mt">P1 · 正式必需</div><h3>changes API 需要分頁</h3></div>
+      <div data-lang="en"><div class="mt">P1 · GA-critical</div><h3>The changes API needs pagination</h3></div>
+    </div>
+    <div class="modal-b">
+      <div data-lang="zh" class="show">
+        <div class="m-sg m-analogy"><h4>白話比喻</h4><p>現在的做法是「把所有東西塞進一個大箱子，一次寄來」。<br>東西少還好，多了箱子會爆；<br>而且中途掉一次，就得整箱從頭重寄。</p></div>
+        <div class="m-sg"><h4>分頁是什麼</h4><p>把大箱子拆成多個有大小上限的小箱子，每箱附一個「取件號碼」（cursor）。<br>App 只要原樣帶回號碼要下一箱，掉哪箱補哪箱，不必整批重來。</p></div>
+        <div class="m-sg"><h4>為什麼還要「固定終點」</h4><p>App 分好幾箱下載期間，Server 可能又收到新資料。<br>先框定「這一輪只寄到這裡」（snapshot boundary），新資料留到下一輪 - 才不會邊寄邊變，造成漏寄或重複。</p></div>
+        <div class="m-sg"><h4>提醒</h4><p>App 端的串流解析只能省記憶體，<br>無法解決傳輸時間、失敗重傳與續傳 - 這幾項只有 Server 分頁能真正解決。</p></div>
+      </div>
+      <div data-lang="en">
+        <div class="m-sg m-analogy"><h4>Plain-language analogy</h4><p>Today it's "put everything in one big box and ship it at once."<br>Fine with little data; with a lot, the box bursts;<br>and if the transfer drops midway, the whole box must be re-shipped from scratch.</p></div>
+        <div class="m-sg"><h4>What pagination is</h4><p>Split the big box into several size-capped smaller boxes, each with a "pickup number" (cursor).<br>The app just replays the number to get the next box; if one box drops, only that box is re-fetched.</p></div>
+        <div class="m-sg"><h4>Why a "fixed end boundary" too</h4><p>While the app downloads several boxes, the Server may receive new data.<br>Fixing "this cycle only ships up to here" (a snapshot boundary), with newer data left for the next cycle, prevents the dataset shifting mid-transfer and causing omissions or duplicates.</p></div>
+        <div class="m-sg"><h4>Note</h4><p>Client-side streaming only saves memory.<br>It cannot fix transfer time, re-send on failure, or resumability - only Server pagination can.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- M5 -->
+  <div class="modal" id="m5" hidden>
+    <div class="modal-h p1"><button class="modal-x" onclick="closeModal()" aria-label="close">×</button>
+      <div data-lang="zh" class="show"><div class="mt">P1 · 正式必需（我方可並行規劃）</div><h3>排序安全性 - 可能無聲漏資料</h3></div>
+      <div data-lang="en"><div class="mt">P1 · GA-critical (NTX can plan in parallel)</div><h3>Ordering safety - silent data loss risk</h3></div>
+    </div>
+    <div class="modal-b">
+      <div data-lang="zh" class="show">
+        <div class="m-sg m-analogy"><h4>白話比喻</h4><p>每筆筆記有一個「流水號時間戳」，App 靠它記住「我讀到哪了」。<br>如果有兩筆的號碼剛好一樣，而分頁又剛好切在這兩筆中間，<br>App 會誤以為兩筆都讀完了，於是<b>無聲無息</b>地漏掉一筆。</p></div>
+        <div class="m-sg"><h4>為什麼危險</h4><p>這種漏抓不會報錯、不會當機。<br>使用者只會發現「有一本筆記莫名不見了」，而且事後極難追查。</p></div>
+        <div class="m-sg"><h4>怎麼修（HP 二選一）</h4><ul><li>保證時間戳在<b>所有寫入路徑</b>都全域唯一、嚴格遞增（含 migration、cleanup、還原、未來多台伺服器）；</li><li>或改用「時間戳＋id」的複合游標。</li></ul></div>
+        <div class="m-sg"><h4>我方現在就能並行做的</h4><p>把水位線設計成「複合就緒」、把 cursor 當不透明字串原樣存回、套用做成冪等（重複套用無害）、只在整輪成功後才推進水位線。<br>這些<b>不需等 HP</b> 就能先做，等 HP 決定後無痛接上 - 這也是我方目前可以排進時程的工作。</p></div>
+      </div>
+      <div data-lang="en">
+        <div class="m-sg m-analogy"><h4>Plain-language analogy</h4><p>Each note has a "serial-number timestamp" the app uses to remember "how far I've read."<br>If two notes happen to share the same number and a page boundary lands right between them,<br>the app assumes both were read - and <b>silently</b> drops one.</p></div>
+        <div class="m-sg"><h4>Why it's dangerous</h4><p>This omission throws no error and never crashes.<br>The user just finds "a notebook mysteriously vanished," and it's extremely hard to trace afterward.</p></div>
+        <div class="m-sg"><h4>The fix (HP picks one)</h4><ul><li>Guarantee the timestamp is globally unique and strictly increasing on <b>every write path</b> (incl. migration, cleanup, restore, future multi-instance);</li><li>or switch to a "timestamp + id" composite cursor.</li></ul></div>
+        <div class="m-sg"><h4>What NTX can do now, in parallel</h4><p>Make the watermark "composite-ready," treat the cursor as an opaque string stored as-is, make apply idempotent (re-applying is harmless), and advance the watermark only after the whole cycle succeeds.<br>These need <b>no wait on HP</b> and slot in cleanly once HP decides - so they can go into our schedule right now.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- M6 -->
+  <div class="modal" id="m6" hidden>
+    <div class="modal-h p1"><button class="modal-x" onclick="closeModal()" aria-label="close">×</button>
+      <div data-lang="zh" class="show"><div class="mt">P1 · 規劃</div><h3>容量政策與測試資料隔離</h3></div>
+      <div data-lang="en"><div class="mt">P1 · planning</div><h3>Capacity policy &amp; test isolation</h3></div>
+    </div>
+    <div class="modal-b">
+      <div data-lang="zh" class="show">
+        <div class="m-sg m-analogy"><h4>白話比喻</h4><p>沒有人定義「一個帳號最多能放幾本筆記、刪掉的要保留多久」。<br>另外，壓力測試用的大檔案被塞進了「正式整合用」的資料庫，刪掉後殘影還留著，永久污染之後每一次測試。</p></div>
+        <div class="m-sg"><h4>要處理的</h4><ul><li>共同定義每帳號最大筆數、墓碑保留期限、是否做歷史壓縮。</li><li>壓測與異常資料測試改用<b>獨立環境</b>，或測完真正清乾淨。</li><li>若目前無法定義最大總筆數，API 就不能假設「所有筆記塞得進一個 response」（呼應分頁那一項）。</li></ul></div>
+      </div>
+      <div data-lang="en">
+        <div class="m-sg m-analogy"><h4>Plain-language analogy</h4><p>Nobody defined "max notes per account, and how long deleted ones are kept."<br>Also, a large stress-test file was pushed into the "integration" database; after deletion its ghost remained, permanently polluting every later test.</p></div>
+        <div class="m-sg"><h4>What to settle</h4><ul><li>Jointly define max notes/account, tombstone retention, and whether history is compacted.</li><li>Move stress and malformed-data tests to an <b>isolated environment</b>, or truly clean up afterward.</li><li>If no max total can be defined yet, the API must not assume "all notes fit in one response" (ties back to pagination).</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- M7 -->
+  <div class="modal" id="m7" hidden>
+    <div class="modal-h p2"><button class="modal-x" onclick="closeModal()" aria-label="close">×</button>
+      <div data-lang="zh" class="show"><div class="mt">P2 · 維運</div><h3>可觀測性（記錄同步狀況）</h3></div>
+      <div data-lang="en"><div class="mt">P2 · Ops</div><h3>Observability (log sync activity)</h3></div>
+    </div>
+    <div class="modal-b">
+      <div data-lang="zh" class="show">
+        <div class="m-sg m-analogy"><h4>白話比喻</h4><p>目前 Server 對「每次同步發生了什麼」沒有留下足夠的紀錄，出事時難以回溯到底哪一步慢、哪一步錯。</p></div>
+        <div class="m-sg"><h4>建議記錄</h4><ul><li>端點、狀態碼、耗時、回傳大小、筆數、存活／墓碑數、分頁與 cursor 資訊。</li><li>逾時／取消／回應過大等分類。</li><li>但<b>不記錄敏感內容</b>（API 金鑰、Base64 全文）。</li></ul></div>
+      </div>
+      <div data-lang="en">
+        <div class="m-sg m-analogy"><h4>Plain-language analogy</h4><p>The Server keeps too little record of "what happened on each sync," making it hard to trace which step was slow or wrong when something goes off.</p></div>
+        <div class="m-sg"><h4>Recommended to log</h4><ul><li>Endpoint, status code, elapsed time, response bytes, record count, live/tombstone counts, page/cursor info.</li><li>Timeout / cancel / response-too-large classifications.</li><li>But <b>never log sensitive content</b> (API keys, full Base64 payloads).</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- M8 -->
+  <div class="modal" id="m8" hidden>
+    <div class="modal-h known"><button class="modal-x" onclick="closeModal()" aria-label="close">×</button>
+      <div data-lang="zh" class="show"><div class="mt">已知 · 提醒（建議清除）</div><h3>預設 12 筆 Markdown seed 資料</h3></div>
+      <div data-lang="en"><div class="mt">Known · reminder (recommend clearing)</div><h3>The 12 default Markdown seed notes</h3></div>
+    </div>
+    <div class="modal-b">
+      <div data-lang="zh" class="show">
+        <div class="m-sg m-analogy"><h4>白話說明</h4><p>全新的 Server 資料庫啟動時，會自動放入 12 筆 Markdown 示範筆記。<br>由於它們不是 nNote 需要的 ENT 格式，client 第一次同步會被第一筆卡住、整批失敗。<br>刪掉資料庫重啟後，這 12 筆還會再長回來。</p></div>
+        <div class="m-sg"><h4>定位：這是已知情況，不是新 bug</h4><p>這批是 HP 事先拿來當測試用的 seed 資料，HP 已知其存在。<br>我方目前<b>已可繞過</b> - 把這 12 筆軟刪除後，同步即恢復正常，已實測驗證。</p></div>
+        <div class="m-sg"><h4>為什麼還是要提出</h4><p>雖然可繞過，但每次重建資料庫或在新機器佈署時都得重做一次清除。<br>為了讓後續 <b>Demo 流程完整、開箱即可用</b>，建議一併處理。</p></div>
+        <div class="m-sg"><h4>建議</h4><ul><li>partner build 預設清除／停用這批 seed；<br>或改用真實的單頁 ENT fixture。</li><li>既有安裝提供一次性 cleanup 或 migration。</li></ul></div>
+      </div>
+      <div data-lang="en">
+        <div class="m-sg m-analogy"><h4>Plain-language</h4><p>When a brand-new Server database starts, it auto-inserts 12 Markdown demo notes.<br>Because they are not the ENT format nNote needs, the first sync gets stuck on the first one and the whole batch fails.<br>Deleting the database and restarting brings the 12 back again.</p></div>
+        <div class="m-sg"><h4>Framing: known, not a new bug</h4><p>This is HP's pre-existing test seed data, and HP is already aware of it.<br>We already <b>work around it</b> - soft-deleting the 12 restores normal sync, verified in testing.</p></div>
+        <div class="m-sg"><h4>Why raise it anyway</h4><p>The workaround must be redone every time the DB is recreated or deployed on a new machine.<br>For a <b>clean, out-of-the-box demo flow</b>, it is worth handling together.</p></div>
+        <div class="m-sg"><h4>Recommendation</h4><ul><li>Have the partner build clear/disable this seed by default;<br>or replace it with a real single-page ENT fixture.</li><li>Provide a one-time cleanup or migration for existing installs.</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function setLang(l){
+    document.querySelectorAll('[data-lang]').forEach(function(d){d.classList.toggle('show',d.getAttribute('data-lang')===l);});
+    document.getElementById('btn-zh').classList.toggle('active',l==='zh');
+    document.getElementById('btn-en').classList.toggle('active',l==='en');
+    document.getElementById('root').setAttribute('lang',l==='zh'?'zh-Hant':'en');
+    window.scrollTo(0,0);
+  }
+  function openModal(id){
+    document.querySelectorAll('.modal').forEach(function(m){m.hidden=(m.id!==id);});
+    document.getElementById('mbg').classList.add('open');
+    document.body.style.overflow='hidden';
+  }
+  function closeModal(){
+    document.getElementById('mbg').classList.remove('open');
+    document.body.style.overflow='';
+  }
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal();});
+</script>
+</body>
+</html>
