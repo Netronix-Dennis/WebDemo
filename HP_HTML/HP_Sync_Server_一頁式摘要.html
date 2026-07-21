@@ -232,6 +232,17 @@
       </div>
     </section>
 
+    <section>
+      <h2>5. 後續 Demo 銜接：Windows 端還原與開啟 <span class="n">Next: Windows-side restore &amp; open</span></h2>
+      <p class="lead">前述修正讓「同步」可用；<br>這一段是讓「Demo 端到端跑完」還缺的最後一塊。</p>
+      <div class="frame">
+        <div class="frow"><div class="k">現況（可暫時繞過）</div><div class="v">Android nNote 端目前可透過<b>手動修正</b>先繞過 seed／格式問題，讓同步運作。<br>但這是人工暫解，不是完整流程；<br>後續 Windows App 端則需要應用程式協助。</div></div>
+        <div class="frow"><div class="k">缺口</div><div class="v">Server 並非把每本筆記存成 <code>.zip</code> 檔，而是把 <b>Base64 字串存在 SQLite 的 <code>notes</code> table</b>。<br>要得到實體筆記檔，必須透過 API 或 DB 取出 <code>content</code>，再還原成 <code>.ent</code>／<code>.zip</code>。<br>目前這個「取出＋還原成檔案」的工作，落在 Windows App 端自行處理。</div></div>
+        <div class="frow"><div class="k">請 HP 提供</div><div class="v">除了修正前述問題外，請在 Server 建置 SOP 再補一項能力：<br>當我方把 <code>.ent</code>／ZIP（Base64）上傳、同步到 Windows 端後，<b>Server（或伴隨工具）把 <code>content</code> 還原成實體檔案，落在 Windows 端一個已知路徑</b>。<br>並提供觸發方式 - 可用 <b>Windows CMD 指令</b>呼叫，或 <b>Server UI</b> 有對應操作 - 方便 Demo 現場確認「剛上傳的筆記已同步到 Windows 端」。</div></div>
+        <div class="frow"><div class="k">Demo 目標</div><div class="v">最終能 Demo：<b>從 FluxInk 應用程式直接開啟</b>還原出來的筆記，<br>完成 Android nNote → Server → Windows FluxInk 的端到端來回。<br>（驗證情境：先在本機刪除該檔，再從 Server 撈回並開啟。）</div></div>
+      </div>
+    </section>
+
     <footer>Netronix · nNote (Android)　|　來源：HP_Sync_Server_Scalability_and_Data_Contract_Concerns（.md ／ _zh-TW.md）　|　2026-07-21</footer>
   </div>
 
@@ -352,6 +363,17 @@
           </ul>
           <p class="note" style="margin-top:10px"><b>NTX client side:</b><br>streaming parse (no full JSON DOM), discard tombstone content after parsing, cancellable HTTP, diagnostics, atomic failure without watermark advance, page-by-page apply once paginated.<br>But the client cannot eliminate Server bytes or make an unpaginated response resumable.</p>
         </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>5. Next: Windows-side Restore &amp; Open for the Demo</h2>
+      <p class="lead">The fixes above make "sync" usable;<br>this is the last piece needed to run the demo end-to-end.</p>
+      <div class="frame">
+        <div class="frow"><div class="k">Current (temporary workaround)</div><div class="v">On the Android nNote side we can <b>manually work around</b> the seed/format issue to get sync running.<br>But that is a manual stopgap, not a complete flow;<br>the Windows app side will later need an application to assist.</div></div>
+        <div class="frow"><div class="k">The gap</div><div class="v">The Server does not store each note as a <code>.zip</code> file; it stores the <b>Base64 string in the SQLite <code>notes</code> table</b>.<br>To obtain the actual note file, one must fetch <code>content</code> via API or DB and restore it back to <code>.ent</code>/<code>.zip</code>.<br>Today that "fetch + restore to a file" work falls on the Windows app itself.</div></div>
+        <div class="frow"><div class="k">Ask HP to provide</div><div class="v">Beyond the fixes above, please add one capability to the Server setup SOP:<br>after we upload an <code>.ent</code>/ZIP (Base64) and it syncs to the Windows side, <b>the Server (or a companion tool) restores <code>content</code> into an actual file at a known path on Windows</b>.<br>Please also provide how to trigger it - a <b>Windows CMD command</b>, or a <b>Server UI</b> action - so we can confirm on-site that "the just-uploaded note has synced to the Windows side."</div></div>
+        <div class="frow"><div class="k">Demo goal</div><div class="v">Ultimately we can demo <b>opening the restored note directly in the FluxInk app</b>,<br>completing the round trip Android nNote → Server → Windows FluxInk.<br>(Test scenario: delete the local file first, then pull it back from the Server and open it.)</div></div>
       </div>
     </section>
 
