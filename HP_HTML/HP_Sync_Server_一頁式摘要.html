@@ -145,7 +145,6 @@
     <section>
       <h2>2. 問題與優先級 <span class="n">Issues &amp; priorities</span></h2>
       <p class="lead">前兩個 P0 是 Server 端的 Demo 阻斷修正；<br>第三個 P0 是雙方必須在會議中定案的容量契約。<br>P1 為正式上線前必須完成的項目。</p>
-      <span class="clickhint">👆 點任一列，跳出白話詳解（適合非技術與會者）</span>
       <div class="tblw"><table>
         <thead><tr><th style="width:64px">優先</th><th>問題</th><th style="width:110px">POC 影響</th></tr></thead>
         <tbody>
@@ -203,7 +202,7 @@
         <p>既有 DB 將如何處理（migration ／ cleanup 工具 ／ 版本升級）？<br>是否會改動 <code>updatedAt</code>，並如何維持 watermark 與 <code>updatedAt &gt; since</code> 語意安全？</p>
       </div>
       <div class="card ask"><div class="chead"><span class="tag t-ask">Q3 · 容量</span><span class="ctitle">大小上限與交付版本</span></div>
-        <p>Server 是否保證接受所有 <code>content ≤ 8 MiB</code>？<br>現行 encoded content 與完整 request-body 的 ceiling 各為何？<br>修正將落在哪個 package 版本、預計交付日？</p>
+        <p>Server 是否保證接受所有「Base64 encoded content 欄位大小 ≤ 8 MiB」的請求？<br>現行 encoded content 與完整 request-body 的 ceiling 各為何？<br>修正將落在哪個 package 版本、預計交付日？</p>
       </div>
     </section>
 
@@ -269,7 +268,6 @@
     <section>
       <h2>2. Issues &amp; Priorities</h2>
       <p class="lead">The first two P0s are Server-side Demo-blocker fixes;<br>the third P0 is the capacity contract both sides must settle in the meeting.<br>The P1s must be completed before GA.</p>
-      <span class="clickhint">👆 Click any row for a plain-language explanation (for non-technical attendees)</span>
       <div class="tblw"><table>
         <thead><tr><th style="width:64px">Pri</th><th>Issue</th><th style="width:120px">POC impact</th></tr></thead>
         <tbody>
@@ -327,7 +325,7 @@
         <p>How will existing DBs be handled (migration / cleanup tool / package upgrade)?<br>Will it change <code>updatedAt</code>, and how will watermark and <code>updatedAt &gt; since</code> semantics stay safe?</p>
       </div>
       <div class="card ask"><div class="chead"><span class="tag t-ask">Q3 · Capacity</span><span class="ctitle">Size ceilings &amp; delivery version</span></div>
-        <p>Does the Server guarantee acceptance of every <code>content ≤ 8 MiB</code>?<br>What are the current encoded-content and full request-body ceilings?<br>Which package version ships the fix, and by when?</p>
+        <p>Does the Server guarantee acceptance when the Base64-encoded content field is ≤ 8 MiB?<br>What are the current encoded-content and full request-body ceilings?<br>Which package version ships the fix, and by when?</p>
       </div>
     </section>
 
