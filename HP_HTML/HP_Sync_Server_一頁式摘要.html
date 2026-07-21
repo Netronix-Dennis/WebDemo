@@ -77,6 +77,11 @@
   .col h3{margin:.1em 0 .3em;font-size:16px;color:#20364e}
   @media(max-width:680px){.two{grid-template-columns:1fr}}
   footer{text-align:center;color:var(--muted);font-size:13px;margin-top:26px}
+  .video-wrap{max-width:320px;margin:10px auto 0;aspect-ratio:9/16;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:#000}
+  .video-wrap iframe{width:100%;height:100%;border:0;display:block}
+  .vlink{text-align:center;font-size:13px;margin-top:8px}
+  .vlink a{color:var(--accent);text-decoration:none;font-weight:700}
+  .vlink a:hover{text-decoration:underline}
   /* ===== modal ===== */
   .modal-bg{position:fixed;inset:0;background:rgba(15,30,50,.55);display:none;z-index:100;overflow-y:auto;padding:30px 16px}
   .modal-bg.open{display:block;animation:mfade .16s ease}
@@ -103,7 +108,7 @@
   .m-analogy h4{color:#0b3d66;border-left-color:#0b3d66}
   .m-analogy p{color:#20364e}
   [data-lang]{display:none}[data-lang].show{display:block}
-  @media print{body{background:#fff}.lang-bar,.clickhint,.more{display:none}
+  @media print{body{background:#fff}.lang-bar,.clickhint,.more,.video-wrap{display:none}
     section,header.top{box-shadow:none;break-inside:avoid}.modal-bg{display:none!important}
     [data-lang]{display:none!important}[data-lang].show{display:block!important}}
 </style>
@@ -118,6 +123,15 @@
       <h1>HP Sync Server - 疑慮與建議一頁式摘要</h1>
       <div class="meta">2026-07-21　|　NTX nNote Phase 6 實機測試發現　|　給 HP／Axoflow Server 團隊　|　來源：changes?since=0 實測 2026-07-17</div>
     </header>
+
+    <section class="videobox">
+      <h2>Demo 影片 <span class="n">Demo video</span></h2>
+      <p class="lead">Note App 上傳到 Server 並同步的流程展示。</p>
+      <div class="video-wrap">
+        <iframe src="https://www.youtube.com/embed/kD30jkK1Rw0" title="nNote 上傳與同步 Demo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <p class="vlink"><a href="https://youtube.com/shorts/kD30jkK1Rw0" target="_blank" rel="noopener">▶ 在 YouTube 開啟</a></p>
+    </section>
 
     <div class="legend">
       <span class="lg"><span class="dot" style="background:var(--pend)"></span>P0 · 阻斷</span>
@@ -234,12 +248,10 @@
 
     <section>
       <h2>5. 後續 Demo 銜接：Windows 端還原與開啟 <span class="n">Next: Windows-side restore &amp; open</span></h2>
-      <p class="lead">前述修正讓「同步」可用；<br>這一段是讓「Demo 端到端跑完」還缺的最後一塊。</p>
-      <div class="frame">
-        <div class="frow"><div class="k">現況（可暫時繞過）</div><div class="v">Android nNote 端目前可透過<b>手動修正</b>先繞過 seed／格式問題，讓同步運作。<br>但這是人工暫解，不是完整流程；<br>後續 Windows App 端則需要應用程式協助。</div></div>
-        <div class="frow"><div class="k">缺口</div><div class="v">Server 並非把每本筆記存成 <code>.zip</code> 檔，而是把 <b>Base64 字串存在 SQLite 的 <code>notes</code> table</b>。<br>要得到實體筆記檔，必須透過 API 或 DB 取出 <code>content</code>，再還原成 <code>.ent</code>／<code>.zip</code>。<br>目前這個「取出＋還原成檔案」的工作，落在 Windows App 端自行處理。</div></div>
-        <div class="frow"><div class="k">請 HP 提供</div><div class="v">除了修正前述問題外，請在 Server 建置 SOP 再補一項能力：<br>當我方把 <code>.ent</code>／ZIP（Base64）上傳、同步到 Windows 端後，<b>Server（或伴隨工具）把 <code>content</code> 還原成實體檔案，落在 Windows 端一個已知路徑</b>。<br>並提供觸發方式 - 可用 <b>Windows CMD 指令</b>呼叫，或 <b>Server UI</b> 有對應操作 - 方便 Demo 現場確認「剛上傳的筆記已同步到 Windows 端」。</div></div>
-        <div class="frow"><div class="k">Demo 目標</div><div class="v">最終能 Demo：<b>從 FluxInk 應用程式直接開啟</b>還原出來的筆記，<br>完成 Android nNote → Server → Windows FluxInk 的端到端來回。<br>（驗證情境：先在本機刪除該檔，再從 Server 撈回並開啟。）</div></div>
+      <p class="lead">Android 端目前靠手動繞過即可同步；<br>但要在 Windows 端完成 Demo，還缺 Server 的一項配合。</p>
+      <p>Server 是把筆記以 Base64 存在資料庫，而非實體檔；<br>因此同步到 Windows 端後，仍需有人把它還原成可開啟的 <code>.ent</code>／ZIP。</p>
+      <div class="card ask"><div class="chead"><span class="tag t-ask">請 HP 後續補上</span><span class="ctitle">Windows 端自動還原成檔</span></div>
+        <p>同步到 Windows 端後，由 <b>Server 或伴隨工具把 <code>content</code> 還原成實體檔、放到已知路徑</b>，並能以 <b>CMD 指令或 Server UI 觸發</b>。<br>目標：讓 <b>FluxInk 直接開啟</b>該筆記，完成 Android → Server → Windows 的端到端 Demo。</p>
       </div>
     </section>
 
@@ -252,6 +264,15 @@
       <h1>HP Sync Server - One-Page Brief: Concerns &amp; Recommendations</h1>
       <div class="meta">2026-07-21　|　Findings from NTX nNote Phase 6 device testing　|　For the HP/Axoflow Server team　|　Source: changes?since=0 measured 2026-07-17</div>
     </header>
+
+    <section class="videobox">
+      <h2>Demo Video</h2>
+      <p class="lead">A walkthrough of the Note app uploading to the Server and syncing.</p>
+      <div class="video-wrap">
+        <iframe src="https://www.youtube.com/embed/kD30jkK1Rw0" title="nNote upload &amp; sync demo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <p class="vlink"><a href="https://youtube.com/shorts/kD30jkK1Rw0" target="_blank" rel="noopener">▶ Open on YouTube</a></p>
+    </section>
 
     <div class="legend">
       <span class="lg"><span class="dot" style="background:var(--pend)"></span>P0 · Blocker</span>
@@ -368,12 +389,10 @@
 
     <section>
       <h2>5. Next: Windows-side Restore &amp; Open for the Demo</h2>
-      <p class="lead">The fixes above make "sync" usable;<br>this is the last piece needed to run the demo end-to-end.</p>
-      <div class="frame">
-        <div class="frow"><div class="k">Current (temporary workaround)</div><div class="v">On the Android nNote side we can <b>manually work around</b> the seed/format issue to get sync running.<br>But that is a manual stopgap, not a complete flow;<br>the Windows app side will later need an application to assist.</div></div>
-        <div class="frow"><div class="k">The gap</div><div class="v">The Server does not store each note as a <code>.zip</code> file; it stores the <b>Base64 string in the SQLite <code>notes</code> table</b>.<br>To obtain the actual note file, one must fetch <code>content</code> via API or DB and restore it back to <code>.ent</code>/<code>.zip</code>.<br>Today that "fetch + restore to a file" work falls on the Windows app itself.</div></div>
-        <div class="frow"><div class="k">Ask HP to provide</div><div class="v">Beyond the fixes above, please add one capability to the Server setup SOP:<br>after we upload an <code>.ent</code>/ZIP (Base64) and it syncs to the Windows side, <b>the Server (or a companion tool) restores <code>content</code> into an actual file at a known path on Windows</b>.<br>Please also provide how to trigger it - a <b>Windows CMD command</b>, or a <b>Server UI</b> action - so we can confirm on-site that "the just-uploaded note has synced to the Windows side."</div></div>
-        <div class="frow"><div class="k">Demo goal</div><div class="v">Ultimately we can demo <b>opening the restored note directly in the FluxInk app</b>,<br>completing the round trip Android nNote → Server → Windows FluxInk.<br>(Test scenario: delete the local file first, then pull it back from the Server and open it.)</div></div>
+      <p class="lead">Android already syncs via a manual workaround;<br>but finishing the demo on Windows needs one thing from the Server.</p>
+      <p>The Server stores notes as Base64 in the database, not as real files;<br>so after a note syncs to Windows, something still has to restore it into an openable <code>.ent</code>/ZIP.</p>
+      <div class="card ask"><div class="chead"><span class="tag t-ask">Ask HP to add next</span><span class="ctitle">Auto-restore to a file on Windows</span></div>
+        <p>After sync to Windows, have the <b>Server or a companion tool restore <code>content</code> into a real file at a known path</b>, triggerable via <b>a CMD command or the Server UI</b>.<br>Goal: let <b>FluxInk open the note directly</b>, completing the Android → Server → Windows round trip.</p>
       </div>
     </section>
 
