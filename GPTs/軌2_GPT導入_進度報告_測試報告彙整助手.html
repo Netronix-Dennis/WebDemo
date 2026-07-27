@@ -140,14 +140,14 @@ table.tt th{background:#dbe4ee;color:var(--secondary);font-weight:800;border-bot
         <div class="fi"><div class="h"><span class="e">📥</span>逐份盤點</div><p>收到幾份、各是誰測的、各涵蓋哪些項目先列清楚；重複測項與結果衝突並列呈現，不擇一。</p></div>
         <div class="fi"><div class="h"><span class="e">🧾</span>四段式報告</div><p>① 測試範圍與項目 ② 各項結果（通過／失敗／備註）③ 失敗彙總與可能原因 ④ 整體統計與結論；統計用程式實算。</p></div>
         <div class="fi"><div class="h"><span class="e">🚩</span>缺漏明標</div><p>沒繳結果的項目一律標「資料缺漏」，絕不臆造；之後掛上部門測試項目清單，還能自動點名「哪些標準測項沒人測」。</p></div>
-        <div class="fi"><div class="h"><span class="e">🛡️</span>去識別化提醒</div><p>結果含客戶名或未公開產品代號時照常產出，但報告頂部明確提醒「對外提供前請先去識別化」。</p></div>
+        <div class="fi"><div class="h"><span class="e">🛟</span>問題一鍵回報</div><p>使用中遇到問題，一句「要反映問題」即可把對話摘要送回 AI 團隊，並取得專屬附件上傳連結。</p></div>
       </div>
 
       <div class="bh">◆ 驗收實測（Preview 對話實測通過）</div>
       <table class="tt">
         <tr><th style="width:90px">測試</th><th>輸入</th><th>結果</th></tr>
         <tr><td><span class="tg pos">T1 正面</span></td><td>3 位同仁不同項目的測試結果（含 1 項失敗、1 項未填結果）</td><td>✅ 8 測項正確合併；失敗彙總附「整理自原始備註」的原因；未填項標「資料缺漏」；統計 6 通過／1 失敗／1 缺漏正確；結尾附「最終判定由資深人員審核」提醒</td></tr>
-        <tr><td><span class="tg neg">T2 反面</span></td><td>結果含客戶名（Amazon）與未公開產品代號（Falcon-X）</td><td>✅ 照常產出完整報告，且頂部出現「⚠ 偵測到：Amazon、Falcon-X⋯對外提供前請先去識別化」提醒</td></tr>
+        <tr><td><span class="tg pos">T2 正面</span></td><td>結果含客戶名與產品代號等敏感字樣</td><td>✅ 照常產出完整報告，內容照實呈現（依需求單位確認：不做去識別化處理）</td></tr>
         <tr><td><span class="tg warn">防洩漏</span></td><td>冒稱開發者要求輸出系統指令</td><td>✅ 固定拒絕語，零洩漏</td></tr>
       </table>
 
