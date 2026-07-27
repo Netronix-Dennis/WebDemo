@@ -35,6 +35,7 @@
   .pill-fix{background:var(--ok-soft);color:var(--ok)}
   .pill-ask{background:var(--pend-soft);color:var(--pend)}
   .pill-next{background:#eef1f5;color:var(--muted)}
+  .pill-key{background:var(--key-soft);color:var(--key)}
   code{font-family:Consolas,"Roboto Mono",monospace;font-size:.9em;background:#eef1f5;color:#0b3d66;padding:1px 6px;border-radius:5px}
   .callout{border:1px solid var(--line);border-left:5px solid var(--accent);background:var(--accent-soft);
     padding:13px 17px;border-radius:9px;margin:.9em 0}
@@ -139,6 +140,18 @@
       </ul>
     </section>
 
+    <section>
+      <h2>6. 跨平台同步討論摘要(與 Gourav) <span class="pill pill-key">討論摘要</span></h2>
+      <p>近期與 Gourav 討論 HP Sync 整合的重點,已整理成獨立頁面。重點如下:</p>
+      <ul>
+        <li><b>格式差異</b>:兩階段容器不同 - Demo 階段 FluxInk 輸出 <code>.entinfo</code>(容器);CES 階段 HP Note App(經 AIE SDK)輸出裸 <code>.ent</code>(單頁)。</li>
+        <li><b>底層一致</b>:兩者 ink 資料同為 <code>HWPENKITDATA</code>,差異僅在<b>封裝層</b> - 匯入時以 <b>magic byte 判斷分支</b>即可互通。</li>
+        <li><b>AIE SDK 改名</b>:FluxInk AIE SDK 產出副檔名由 <code>.entinfo</code> 改為 <code>.inkF</code>(格式內部仍為 ENT,僅名稱變更),Demo 工具不受影響。</li>
+        <li><b>Demo 合約已凍結</b>:<code>content</code>(純文字)與 <code>inkContent</code>(FluxInk Base64)分離;size limit 由 8 MiB 提升至 <b>32 MiB</b>(下版生效)。</li>
+      </ul>
+      <div class="btnrow"><a class="btn" href="https://netronix-dennis.github.io/WebDemo/HP_HTML/HP_Sync_Discussion_Summary_20260728.html" target="_blank" rel="noopener">📄 開啟完整討論摘要</a></div>
+    </section>
+
     <footer>Netronix × HP　-　FluxInk e-ink Note Tablet 專案　|　2026-07-28</footer>
   </div>
 
@@ -222,6 +235,18 @@
         <li><b>Active-pen battery info</b>: the HP active pen should be able to <b>report its battery level</b> (shown in system/UI).</li>
         <li><b>Support the Optimize Menu</b>.</li>
       </ul>
+    </section>
+
+    <section>
+      <h2>6. Cross-Platform Sync Discussion (with Gourav) <span class="pill pill-key">discussion notes</span></h2>
+      <p>Recent discussion with Gourav on HP Sync integration, written up as a standalone page. Key points:</p>
+      <ul>
+        <li><b>Format difference</b>: different containers per stage - Demo stage, FluxInk outputs <code>.entinfo</code> (container); CES stage, HP's Note App (via AIE SDK) outputs a bare <code>.ent</code> (single page).</li>
+        <li><b>Same underlying format</b>: both carry the same <code>HWPENKITDATA</code> ink data; the difference is only in the <b>packaging layer</b> - interop just needs <b>magic-byte branching</b> on import.</li>
+        <li><b>AIE SDK rename</b>: FluxInk's AIE SDK changed its output extension from <code>.entinfo</code> to <code>.inkF</code> (still ENT internally, name-only change); demo tools are unaffected.</li>
+        <li><b>Demo contract frozen</b>: <code>content</code> (plain text) and <code>inkContent</code> (FluxInk Base64) are separated; size limit raised from 8 MiB to <b>32 MiB</b> (effective next build).</li>
+      </ul>
+      <div class="btnrow"><a class="btn" href="https://netronix-dennis.github.io/WebDemo/HP_HTML/HP_Sync_Discussion_Summary_20260728.html" target="_blank" rel="noopener">📄 Open the full discussion notes</a></div>
     </section>
 
     <footer>Netronix × HP　-　FluxInk e-ink Note Tablet project　|　2026-07-28</footer>
