@@ -34,6 +34,7 @@
   .pill-plan{background:var(--accent-soft);color:var(--accent)}
   .pill-fix{background:var(--ok-soft);color:var(--ok)}
   .pill-ask{background:var(--pend-soft);color:var(--pend)}
+  .pill-next{background:#eef1f5;color:var(--muted)}
   code{font-family:Consolas,"Roboto Mono",monospace;font-size:.9em;background:#eef1f5;color:#0b3d66;padding:1px 6px;border-radius:5px}
   .callout{border:1px solid var(--line);border-left:5px solid var(--accent);background:var(--accent-soft);
     padding:13px 17px;border-radius:9px;margin:.9em 0}
@@ -106,7 +107,7 @@
       <h2>3. 架構調整:Gallery 自 Tools 移除 <span class="pill pill-plan">本次更新</span></h2>
       <ul>
         <li>將 <b>Gallery 從 Tools 移除</b>。</li>
-        <li>配合此調整,<b>nImage</b> 與 <b>nMediaPlayer</b> 會改為<b>搜尋 Camera 儲存路徑下的檔案</b>。</li>
+        <li>配合此調整,<b>nImage</b> 與 <b>nMediaPlayer</b> 會<b>新增搜尋 Camera 儲存路徑下的檔案</b>。</li>
       </ul>
       <div class="callout callout-ok">
         <b>結果:</b>即使 Gallery 從 Tools 移除,我方 App(nImage / nMediaPlayer)<b>仍能讀取相機拍攝的媒體檔案</b>,使用者體驗不受影響。
@@ -126,6 +127,16 @@
         <b>①</b> 隱藏相關 UI,Demo 時不展示(僅展示已完成的原子筆 + 毛筆)。<br>
         <b>②</b> 繼續等待相關修正。
       </div>
+    </section>
+
+    <section>
+      <h2>5. 後續待評估項目(會議提出) <span class="pill pill-next">後續</span></h2>
+      <p class="muted">以下為近期會議提出、尚待規劃/評估的項目,<b>非本次(07/31)更新範圍</b>:</p>
+      <ul>
+        <li><b>筆側鍵切換筆種</b>:將主動筆的<b>側鍵</b>功能改為<b>切換筆種</b>。</li>
+        <li><b>主動筆電量資訊</b>:HP 主動筆需能<b>取得電量資訊</b>(於系統/UI 顯示)。</li>
+        <li><b>支援 Optimize Menu</b>。</li>
+      </ul>
     </section>
 
     <footer>Netronix × HP　-　FluxInk e-ink Note Tablet 專案　|　2026-07-28</footer>
@@ -181,7 +192,7 @@
       <h2>3. Architecture: Remove Gallery from Tools <span class="pill pill-plan">this update</span></h2>
       <ul>
         <li><b>Remove Gallery from Tools.</b></li>
-        <li>To support this, <b>nImage</b> and <b>nMediaPlayer</b> will <b>search files under the Camera storage path</b>.</li>
+        <li>To support this, <b>nImage</b> and <b>nMediaPlayer</b> will <b>additionally search files under the Camera storage path</b>.</li>
       </ul>
       <div class="callout callout-ok">
         <b>Result:</b> even with Gallery removed from Tools, our apps (nImage / nMediaPlayer) <b>can still read the media captured by the camera</b> — no impact on the user experience.
@@ -201,6 +212,16 @@
         <b>①</b> Hide the related UI and skip it in the demo (show only the ready ballpoint + brush pens).<br>
         <b>②</b> Wait for the fix.
       </div>
+    </section>
+
+    <section>
+      <h2>5. Follow-up Items (raised in meetings) <span class="pill pill-next">follow-up</span></h2>
+      <p class="muted">Items raised in recent meetings, pending planning/evaluation — <b>not part of this (07/31) update</b>:</p>
+      <ul>
+        <li><b>Side-button pen-type switching</b>: change the active pen's <b>side button</b> to <b>switch pen types</b>.</li>
+        <li><b>Active-pen battery info</b>: the HP active pen should be able to <b>report its battery level</b> (shown in system/UI).</li>
+        <li><b>Support the Optimize Menu</b>.</li>
+      </ul>
     </section>
 
     <footer>Netronix × HP　-　FluxInk e-ink Note Tablet project　|　2026-07-28</footer>
