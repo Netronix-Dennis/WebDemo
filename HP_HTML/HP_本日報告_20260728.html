@@ -33,11 +33,13 @@
   .pill{font-size:12px;font-weight:700;padding:3px 11px;border-radius:999px;white-space:nowrap}
   .pill-plan{background:var(--accent-soft);color:var(--accent)}
   .pill-fix{background:var(--ok-soft);color:var(--ok)}
+  .pill-ask{background:var(--pend-soft);color:var(--pend)}
   code{font-family:Consolas,"Roboto Mono",monospace;font-size:.9em;background:#eef1f5;color:#0b3d66;padding:1px 6px;border-radius:5px}
   .callout{border:1px solid var(--line);border-left:5px solid var(--accent);background:var(--accent-soft);
     padding:13px 17px;border-radius:9px;margin:.9em 0}
   .callout-key{border-left-color:var(--key);background:var(--key-soft)}
   .callout-ok{border-left-color:var(--ok);background:var(--ok-soft)}
+  .callout-ask{border-left-color:var(--pend);background:var(--pend-soft)}
   .grid2{display:flex;flex-wrap:wrap;gap:16px}
   .grid2 .col{flex:1 1 300px;background:#fafbfd;border:1px solid var(--line);border-radius:11px;padding:14px 18px}
   .grid2 .col h3{margin-top:.2em}
@@ -62,7 +64,7 @@
     </header>
 
     <div class="callout callout-key">
-      <b>預計 07/31 釋出一版 FW</b>,主要更新項目如下(PD 充電、Camera / Gallery / 媒體播放,以及 Gallery 從 Tools 移除的架構調整)。
+      <b>預計 07/31 釋出一版 FW</b>,主要更新項目如下(PD 充電、Camera / Gallery / 媒體播放,Gallery 從 Tools 移除的架構調整,以及手寫筆型進度(需 HP 決策))。
     </div>
 
     <section>
@@ -111,6 +113,21 @@
       </div>
     </section>
 
+    <section>
+      <h2>4. 手寫筆型(Fast handwriting layer)進度 <span class="pill pill-ask">需 HP 決策</span></h2>
+      <p>原訂 07/31 更新包含<b>鋼筆</b>與<b>毛筆</b>演算法,目前進度:</p>
+      <ul>
+        <li><b>毛筆</b>:已於上週(7/17 版)提供。✅</li>
+        <li><b>鋼筆</b>:本週<b>可能來不及</b>。</li>
+        <li><b>非純色筆種與色項</b>:本週<b>皆來不及</b>。</li>
+      </ul>
+      <div class="callout callout-ask">
+        <b>需 HP 決策(擇一):</b><br>
+        <b>①</b> 隱藏相關 UI,Demo 時不展示(僅展示已完成的原子筆 + 毛筆)。<br>
+        <b>②</b> 繼續等待相關修正。
+      </div>
+    </section>
+
     <footer>Netronix × HP　-　FluxInk e-ink Note Tablet 專案　|　2026-07-28</footer>
   </div>
 
@@ -122,7 +139,7 @@
     </header>
 
     <div class="callout callout-key">
-      <b>A FW update is planned for 07/31.</b> Key items below (PD charging, Camera / Gallery / media playback, and the architecture change of removing Gallery from Tools).
+      <b>A FW update is planned for 07/31.</b> Key items below (PD charging, Camera / Gallery / media playback, the architecture change of removing Gallery from Tools, and handwriting pen-type progress (needs HP decision)).
     </div>
 
     <section>
@@ -168,6 +185,21 @@
       </ul>
       <div class="callout callout-ok">
         <b>Result:</b> even with Gallery removed from Tools, our apps (nImage / nMediaPlayer) <b>can still read the media captured by the camera</b> — no impact on the user experience.
+      </div>
+    </section>
+
+    <section>
+      <h2>4. Handwriting Pen-Type Progress <span class="pill pill-ask">needs HP decision</span></h2>
+      <p>The 07/31 update was planned to include the <b>fountain pen</b> and <b>brush pen</b> algorithms. Current status:</p>
+      <ul>
+        <li><b>Brush pen</b>: already delivered last week (7/17 build). ✅</li>
+        <li><b>Fountain pen</b>: <b>may not make it</b> this week.</li>
+        <li><b>Non-solid-color pen types &amp; color options</b>: <b>will not make it</b> this week.</li>
+      </ul>
+      <div class="callout callout-ask">
+        <b>Needs HP decision (choose one):</b><br>
+        <b>①</b> Hide the related UI and skip it in the demo (show only the ready ballpoint + brush pens).<br>
+        <b>②</b> Wait for the fix.
       </div>
     </section>
 
