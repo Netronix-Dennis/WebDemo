@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" id="root">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HP 本日報告 2026-07-28</title>
+<style>
+  :root{--bg:#eef1f6;--card:#fff;--ink:#1f2733;--muted:#5b6675;--line:#e1e6ec;--head:#0b2740;
+    --accent:#1f6feb;--accent-soft:#eaf2ff;--ok:#1f9d57;--ok-soft:#e9f8ef;--warn:#c77700;--warn-soft:#fff6e6;
+    --key:#0b66c3;--key-soft:#e9f3fc;--pend:#b03a4b;--pend-soft:#fdeef0;}
+  *{box-sizing:border-box}html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);line-height:1.74;
+    font-family:"Noto Sans CJK TC","PingFang TC","Microsoft JhengHei","Segoe UI",system-ui,sans-serif;}
+  .wrap{max-width:1000px;margin:0 auto;padding:24px 22px 90px}
+  .lang-bar{position:sticky;top:0;z-index:20;display:flex;justify-content:flex-end;
+    padding:10px 0 6px;background:linear-gradient(var(--bg),var(--bg) 70%,transparent)}
+  .lang-btn{border:1px solid var(--accent);background:#fff;color:var(--accent);cursor:pointer;
+    font-size:14px;padding:7px 16px;font-weight:600}
+  .lang-btn:first-child{border-radius:8px 0 0 8px}
+  .lang-btn:last-child{border-radius:0 8px 8px 0;border-left:none}
+  .lang-btn.active{background:var(--accent);color:#fff}
+  header.top{background:linear-gradient(120deg,#0b2740,#1f6feb);color:#fff;border-radius:16px;
+    padding:26px 30px;margin-bottom:4px;box-shadow:0 6px 24px rgba(11,39,64,.18)}
+  header.top h1{margin:0 0 8px;font-size:28px}
+  header.top .meta{font-size:14.5px;opacity:.92}
+  section{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:22px 26px;margin:16px 0;box-shadow:0 1px 3px rgba(16,30,54,.05)}
+  h2{font-size:21px;color:var(--head);margin:.1em 0 .3em;padding-left:11px;border-left:5px solid var(--accent);
+    display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  h3{font-size:16px;color:#24405c;margin:1.1em 0 .35em}
+  p{margin:.5em 0}.muted{color:var(--muted)}
+  ul{margin:.4em 0 .5em 1.15em}li{margin:.4em 0}
+  .pill{font-size:12px;font-weight:700;padding:3px 11px;border-radius:999px;white-space:nowrap}
+  .pill-plan{background:var(--accent-soft);color:var(--accent)}
+  .pill-fix{background:var(--ok-soft);color:var(--ok)}
+  code{font-family:Consolas,"Roboto Mono",monospace;font-size:.9em;background:#eef1f5;color:#0b3d66;padding:1px 6px;border-radius:5px}
+  .callout{border:1px solid var(--line);border-left:5px solid var(--accent);background:var(--accent-soft);
+    padding:13px 17px;border-radius:9px;margin:.9em 0}
+  .callout-key{border-left-color:var(--key);background:var(--key-soft)}
+  .callout-ok{border-left-color:var(--ok);background:var(--ok-soft)}
+  .grid2{display:flex;flex-wrap:wrap;gap:16px}
+  .grid2 .col{flex:1 1 300px;background:#fafbfd;border:1px solid var(--line);border-radius:11px;padding:14px 18px}
+  .grid2 .col h3{margin-top:.2em}
+  .btn{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-size:14.5px;font-weight:600;padding:10px 16px;border-radius:10px;border:1px solid var(--accent);color:var(--accent);background:#fff}
+  .btn:hover{background:var(--accent);color:#fff}
+  .btnrow{display:flex;flex-wrap:wrap;gap:11px;margin:.6em 0}
+  footer{text-align:center;color:var(--muted);font-size:13px;margin-top:26px}
+  [data-lang]{display:none}[data-lang].show{display:block}
+  @media print{body{background:#fff}.lang-bar{display:none}section,header.top{box-shadow:none;break-inside:avoid}
+    [data-lang]{display:none!important}[data-lang].show{display:block!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="lang-bar"><button class="lang-btn active" id="btn-zh" onclick="setLang('zh')">中文</button><button class="lang-btn" id="btn-en" onclick="setLang('en')">English</button></div>
+
+  <!-- ===== 中文 ===== -->
+  <div data-lang="zh" class="show">
+    <header class="top">
+      <h1>HP 本日報告</h1>
+      <div class="meta">2026-07-28　|　07/31 FW 更新預告　|　Netronix</div>
+    </header>
+
+    <div class="callout callout-key">
+      <b>預計 07/31 釋出一版 FW</b>,主要更新項目如下(PD 充電、Camera / Gallery / 媒體播放,以及 Gallery 從 Tools 移除的架構調整)。
+    </div>
+
+    <section>
+      <h2>1. PD 充電問題修正 <span class="pill pill-fix">Known Issue</span></h2>
+      <ul>
+        <li>針對 Known Issue 的 <b>PD 充電問題</b>進行修正(對齊 IBP、<b>5V / 9V / 12V PD charging</b>;9V 充電穩定度 finetune)。</li>
+      </ul>
+      <div class="btnrow"><a class="btn" href="https://docs.google.com/spreadsheets/d/1GE6DmD7WhkliivO2_N5iBsR_iyIP7YTD/edit?usp=sharing&ouid=113113930444333014662&rtpof=true&sd=true" target="_blank" rel="noopener">📊 Known Issue 清單(Excel)</a></div>
+    </section>
+
+    <section>
+      <h2>2. Camera / Gallery / 媒體播放 <span class="pill pill-plan">本次更新</span></h2>
+      <div class="grid2">
+        <div class="col">
+          <h3>Camera</h3>
+          <ul>
+            <li>拍攝並確認後,<b>直接進入 Gallery</b>。</li>
+            <li>移除 <b>FPS</b> 顯示。</li>
+            <li>移除相關 <b>Debug 設定</b>。</li>
+          </ul>
+        </div>
+        <div class="col">
+          <h3>Gallery</h3>
+          <ul>
+            <li>影片模式支援 <b>DU</b>。</li>
+            <li>影片模式支援 <b>白底 UI</b>。</li>
+          </ul>
+        </div>
+        <div class="col">
+          <h3>nMediaPlayer</h3>
+          <ul>
+            <li>播放<b>檔案名稱</b>修正。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>3. 架構調整:Gallery 自 Tools 移除 <span class="pill pill-plan">本次更新</span></h2>
+      <ul>
+        <li>將 <b>Gallery 從 Tools 移除</b>。</li>
+        <li>配合此調整,<b>nImage</b> 與 <b>nMediaPlayer</b> 會改為<b>搜尋 Camera 儲存路徑下的檔案</b>。</li>
+      </ul>
+      <div class="callout callout-ok">
+        <b>結果:</b>即使 Gallery 從 Tools 移除,我方 App(nImage / nMediaPlayer)<b>仍能讀取相機拍攝的媒體檔案</b>,使用者體驗不受影響。
+      </div>
+    </section>
+
+    <footer>Netronix × HP　-　FluxInk e-ink Note Tablet 專案　|　2026-07-28</footer>
+  </div>
+
+  <!-- ===== English ===== -->
+  <div data-lang="en">
+    <header class="top">
+      <h1>HP Daily Report</h1>
+      <div class="meta">2026-07-28　|　07/31 FW update preview　|　Netronix</div>
+    </header>
+
+    <div class="callout callout-key">
+      <b>A FW update is planned for 07/31.</b> Key items below (PD charging, Camera / Gallery / media playback, and the architecture change of removing Gallery from Tools).
+    </div>
+
+    <section>
+      <h2>1. PD Charging Fix <span class="pill pill-fix">Known Issue</span></h2>
+      <ul>
+        <li>Fix the <b>PD charging</b> Known Issue (align with IBP, <b>5V / 9V / 12V PD charging</b>; finetune 9V charging stability).</li>
+      </ul>
+      <div class="btnrow"><a class="btn" href="https://docs.google.com/spreadsheets/d/1GE6DmD7WhkliivO2_N5iBsR_iyIP7YTD/edit?usp=sharing&ouid=113113930444333014662&rtpof=true&sd=true" target="_blank" rel="noopener">📊 Known Issue list (Excel)</a></div>
+    </section>
+
+    <section>
+      <h2>2. Camera / Gallery / Media Playback <span class="pill pill-plan">this update</span></h2>
+      <div class="grid2">
+        <div class="col">
+          <h3>Camera</h3>
+          <ul>
+            <li>After capturing and confirming, <b>go directly to Gallery</b>.</li>
+            <li>Remove the <b>FPS</b> display.</li>
+            <li>Remove related <b>debug settings</b>.</li>
+          </ul>
+        </div>
+        <div class="col">
+          <h3>Gallery</h3>
+          <ul>
+            <li>Video mode supports <b>DU</b>.</li>
+            <li>Video mode supports a <b>white-background UI</b>.</li>
+          </ul>
+        </div>
+        <div class="col">
+          <h3>nMediaPlayer</h3>
+          <ul>
+            <li>Fix the playback <b>file name</b>.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>3. Architecture: Remove Gallery from Tools <span class="pill pill-plan">this update</span></h2>
+      <ul>
+        <li><b>Remove Gallery from Tools.</b></li>
+        <li>To support this, <b>nImage</b> and <b>nMediaPlayer</b> will <b>search files under the Camera storage path</b>.</li>
+      </ul>
+      <div class="callout callout-ok">
+        <b>Result:</b> even with Gallery removed from Tools, our apps (nImage / nMediaPlayer) <b>can still read the media captured by the camera</b> — no impact on the user experience.
+      </div>
+    </section>
+
+    <footer>Netronix × HP　-　FluxInk e-ink Note Tablet project　|　2026-07-28</footer>
+  </div>
+</div>
+<script>
+  function setLang(l){
+    document.querySelectorAll('[data-lang]').forEach(function(d){d.classList.toggle('show',d.getAttribute('data-lang')===l);});
+    document.getElementById('btn-zh').classList.toggle('active',l==='zh');
+    document.getElementById('btn-en').classList.toggle('active',l==='en');
+    document.getElementById('root').setAttribute('lang',l==='zh'?'zh-Hant':'en');
+    window.scrollTo(0,0);
+  }
+</script>
+</body>
+</html>
