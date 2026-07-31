@@ -97,12 +97,17 @@
     <section>
       <h2>1. 版本資訊</h2>
       <div class="tbl"><table><tbody>
-        <tr><td style="width:34%"><b>Release 名稱 / 版本</b></td><td><code>18_EA0T4A_A00-userdebug_otapackage.zip</code>　<span class="fill">命名規則同前版,字串待核</span></td></tr>
-        <tr><td><b>System Version</b></td><td><code>18-20260731.____</code>　<span class="fill">待核</span></td></tr>
-        <tr><td><b>Build 日期</b></td><td>2026-07-31　<span class="fill">待核</span></td></tr>
+        <tr><td style="width:34%"><b>Release 名稱 / 版本</b></td><td><code>21_EA0T4A_A00-userdebug_otapackage.zip</code></td></tr>
+        <tr><td><b>System Version</b></td><td><code>1.0.3</code></td></tr>
+        <tr><td><b>Build 日期</b></td><td>2026-07-30</td></tr>
         <tr><td><b>目標裝置</b></td><td>POC 裝置 30 台</td></tr>
-        <tr><td><b>Touch FW（ILITek）</b></td><td><code>07-00-00-03</code>(同前版,本次無異動)　<span class="fill">待核</span></td></tr>
-        <tr><td><b>備註</b></td><td>本版新增 <b>aDraw 鋼筆快速手寫層渲染</b>;Camera / Gallery 體驗調整;PD 充電修正;OCR 名稱與辨識說明。</td></tr>
+        <tr><td><b>Touch FW（ILITek）</b></td><td><code>07-00-00-03</code>(同前版,本次無異動)</td></tr>
+        <tr><td><b>備註</b></td><td><ul style="margin:.2em 0 .1em 1.1em;padding:0">
+          <li>新增 <b>aDraw 鋼筆快速手寫層渲染</b></li>
+          <li>Camera / Gallery 體驗調整</li>
+          <li>PD 充電修正</li>
+          <li>OCR 名稱與辨識說明</li>
+        </ul></td></tr>
       </tbody></table></div>
     </section>
 
@@ -125,6 +130,13 @@
         <li>將 <b>Gallery 從 Tools 移除</b>;<b>nImage</b> 與 <b>nMediaPlayer</b> <b>新增搜尋 Camera 儲存路徑下的檔案</b>。</li>
       </ul>
       <div class="callout callout-key">即使 Gallery 從 Tools 移除,我方 App(nImage / nMediaPlayer)<b>仍能讀取相機拍攝的媒體檔案</b>,使用者體驗不受影響。</div>
+
+      <div class="vgroup"><div class="vgroup-t">展示影片</div>
+        <div class="vrow">
+          <figure class="vfig"><a class="vid-short" href="https://youtu.be/mjQ207xFrHk" target="_blank" rel="noopener"><img src="pen_demo_thumb.jpg" alt="鋼筆 aDraw 快速手寫展示"><span class="play"></span></a><figcaption>鋼筆 aDraw:快速手寫層展示</figcaption></figure>
+          <figure class="vfig"><a class="vid-short" href="https://youtu.be/GT6cUOyPZcc" target="_blank" rel="noopener"><img src="nmp_demo_thumb.jpg" alt="nMediaPlayer 播放展示"><span class="play"></span></a><figcaption>nMediaPlayer:播放展示</figcaption></figure>
+        </div>
+      </div>
     </section>
 
     <section>
@@ -154,11 +166,11 @@
       <p class="muted">下圖工具列中,<b>剪刀</b>與<b>分享箭頭</b>之間的三個 icon(紅 / 藍 / 綠框)功能如下:</p>
       <div class="media"><figure><img src="ocr_tools_framed.png" alt="OCR 工具列 icon"><figcaption>OCR 工具列:紅框〔W〕、藍框〔😀〕、綠框〔M〕</figcaption></figure></div>
       <div class="tbl"><table>
-        <thead><tr><th style="width:16%">外框</th><th style="width:14%">Icon</th><th>功能</th></tr></thead>
+        <thead><tr><th style="width:20%">外框</th><th>功能</th></tr></thead>
         <tbody>
-          <tr><td>🔴 紅框</td><td>〔W〕</td><td><b>手寫筆跡辨識(純文字)</b>。辨識後會跳出視窗詢問:<b>插入</b>(與墨跡共存)或<b>取代</b>(取代原墨跡)。</td></tr>
-          <tr><td>🔵 藍框</td><td>〔😀〕</td><td><b>圖形辨識(混合辨識)</b>。FluxInk 圖形辨識採<b>混合辨識</b>,可同時辨識<b>圖形 / 數學公式 / 文字</b>;本版已<b>重修相關邏輯</b>,改為<b>依所選語言模型辨識</b>,辨識後<b>直接取代原有墨跡</b>。</td></tr>
-          <tr><td>🟢 綠框</td><td>〔M〕</td><td><b>數學公式辨識</b>。</td></tr>
+          <tr><td>🔴 紅框(左)</td><td><b>手寫筆跡辨識(純文字)</b>。辨識後會跳出視窗詢問:<b>插入</b>(與墨跡共存)或<b>取代</b>(取代原墨跡)。</td></tr>
+          <tr><td>🔵 藍框(中)</td><td><b>圖形辨識(混合辨識)</b>。FluxInk 圖形辨識採<b>混合辨識</b>,可同時辨識<b>圖形 / 數學公式 / 文字</b>;本版已<b>重修相關邏輯</b>,改為<b>依所選語言模型辨識</b>,辨識後<b>直接取代原有墨跡</b>。</td></tr>
+          <tr><td>🟢 綠框(右)</td><td><b>數學公式辨識</b>。</td></tr>
         </tbody>
       </table></div>
     </section>
@@ -174,7 +186,7 @@
     </section><section>
       <h2>6. 裝置 FW 更新教學（update.zip / ota-package）</h2>
       <p class="muted" style="margin:.2em 0 .5em">BSP FW Update SOP 已內嵌於下方（框內可捲動、可切換中英、點圖可放大）。</p>
-      <div class="btnrow"><a class="btn" href="#" onclick="openBrief(this);return false;">↗ 另開全螢幕檢視</a><a class="btn" href="https://drive.google.com/file/d/14CfrPvl5dthPmcn-fsn0q4OV7jGzIr-j/view?usp=sharing" target="_blank" rel="noopener">📦 ota-package 下載</a></div>
+      <div class="btnrow"><a class="btn" href="#" onclick="openBrief(this);return false;">↗ 另開全螢幕檢視</a><a class="btn" href="https://drive.google.com/file/d/1k4bvSNhqthlD3NdtlnLjD6JFKyKBguHC/view?usp=sharing" target="_blank" rel="noopener">📦 ota-package 下載</a></div>
       <iframe class="embed" title="BSP FW Update SOP" srcdoc="<!DOCTYPE html>
 <html lang=&quot;zh-Hant&quot; id=&quot;root&quot;>
 <head>
@@ -240,7 +252,7 @@
       <b>前置準備</b><br>
       1. 請先將裝置透過 <b>USB Type-C</b> 與電腦連接。<br>
       2. 下載以下連結提供的 <b>ota-package</b> 更新壓縮檔。
-      <div class=&quot;btnrow&quot; style=&quot;margin-top:10px&quot;><a class=&quot;btn&quot; href=&quot;https://drive.google.com/file/d/14CfrPvl5dthPmcn-fsn0q4OV7jGzIr-j/view?usp=sharing&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;>⬇️ ota-package 下載</a></div>
+      <div class=&quot;btnrow&quot; style=&quot;margin-top:10px&quot;><a class=&quot;btn&quot; href=&quot;https://drive.google.com/file/d/1k4bvSNhqthlD3NdtlnLjD6JFKyKBguHC/view?usp=sharing&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;>⬇️ ota-package 下載</a></div>
     </div>
 
     <section>
@@ -279,7 +291,7 @@
       <b>Preparation</b><br>
       1. Connect the device to a PC via <b>USB Type-C</b>.<br>
       2. Download the <b>ota-package</b> update zip from the link below.
-      <div class=&quot;btnrow&quot; style=&quot;margin-top:10px&quot;><a class=&quot;btn&quot; href=&quot;https://drive.google.com/file/d/14CfrPvl5dthPmcn-fsn0q4OV7jGzIr-j/view?usp=sharing&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;>⬇️ ota-package download</a></div>
+      <div class=&quot;btnrow&quot; style=&quot;margin-top:10px&quot;><a class=&quot;btn&quot; href=&quot;https://drive.google.com/file/d/1k4bvSNhqthlD3NdtlnLjD6JFKyKBguHC/view?usp=sharing&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;>⬇️ ota-package download</a></div>
     </div>
 
     <section>
@@ -591,12 +603,17 @@ adb shell &quot;dmesg | grep 'FW Version'&quot;</pre>
     <section>
       <h2>1. Release Version Info</h2>
       <div class="tbl"><table><tbody>
-        <tr><td style="width:34%"><b>Release name / version</b></td><td><code>18_EA0T4A_A00-userdebug_otapackage.zip</code>　<span class="fill">same naming as prev; TBC</span></td></tr>
-        <tr><td><b>System Version</b></td><td><code>18-20260731.____</code>　<span class="fill">TBC</span></td></tr>
-        <tr><td><b>Build date</b></td><td>2026-07-31　<span class="fill">TBC</span></td></tr>
+        <tr><td style="width:34%"><b>Release name / version</b></td><td><code>21_EA0T4A_A00-userdebug_otapackage.zip</code></td></tr>
+        <tr><td><b>System Version</b></td><td><code>1.0.3</code></td></tr>
+        <tr><td><b>Build date</b></td><td>2026-07-30</td></tr>
         <tr><td><b>Target devices</b></td><td>30 POC devices</td></tr>
-        <tr><td><b>Touch FW (ILITek)</b></td><td><code>07-00-00-03</code> (same as prev, unchanged)　<span class="fill">TBC</span></td></tr>
-        <tr><td><b>Notes</b></td><td>Adds <b>aDraw fountain-pen fast-handwriting rendering</b>; Camera / Gallery UX changes; PD charging fix; OCR naming &amp; recognition notes.</td></tr>
+        <tr><td><b>Touch FW (ILITek)</b></td><td><code>07-00-00-03</code> (same as prev, unchanged)</td></tr>
+        <tr><td><b>Notes</b></td><td><ul style="margin:.2em 0 .1em 1.1em;padding:0">
+          <li>Adds <b>aDraw fountain-pen fast-handwriting rendering</b></li>
+          <li>Camera / Gallery UX changes</li>
+          <li>PD charging fix</li>
+          <li>OCR naming &amp; recognition notes</li>
+        </ul></td></tr>
       </tbody></table></div>
     </section>
 
@@ -619,6 +636,13 @@ adb shell &quot;dmesg | grep 'FW Version'&quot;</pre>
         <li><b>Remove Gallery from Tools</b>; <b>nImage</b> and <b>nMediaPlayer</b> <b>additionally search files under the Camera storage path</b>.</li>
       </ul>
       <div class="callout callout-key">Even with Gallery removed from Tools, our apps (nImage / nMediaPlayer) <b>can still read media captured by the camera</b> — no impact on the user experience.</div>
+
+      <div class="vgroup"><div class="vgroup-t">Demo videos</div>
+        <div class="vrow">
+          <figure class="vfig"><a class="vid-short" href="https://youtu.be/mjQ207xFrHk" target="_blank" rel="noopener"><img src="pen_demo_thumb.jpg" alt="Fountain-pen aDraw demo"><span class="play"></span></a><figcaption>Fountain pen aDraw: fast handwriting demo</figcaption></figure>
+          <figure class="vfig"><a class="vid-short" href="https://youtu.be/GT6cUOyPZcc" target="_blank" rel="noopener"><img src="nmp_demo_thumb.jpg" alt="nMediaPlayer playback demo"><span class="play"></span></a><figcaption>nMediaPlayer: playback demo</figcaption></figure>
+        </div>
+      </div>
     </section>
 
     <section>
@@ -648,11 +672,11 @@ adb shell &quot;dmesg | grep 'FW Version'&quot;</pre>
       <p class="muted">In the toolbar below, the three icons between the <b>scissors</b> and the <b>share arrow</b> (red / blue / green frames) are:</p>
       <div class="media"><figure><img src="ocr_tools_framed.png" alt="OCR toolbar icons"><figcaption>OCR toolbar: red 〔W〕, blue 〔😀〕, green 〔M〕</figcaption></figure></div>
       <div class="tbl"><table>
-        <thead><tr><th style="width:16%">Frame</th><th style="width:14%">Icon</th><th>Function</th></tr></thead>
+        <thead><tr><th style="width:20%">Frame</th><th>Function</th></tr></thead>
         <tbody>
-          <tr><td>🔴 Red</td><td>〔W〕</td><td><b>Handwriting (text) recognition</b>. After recognition a dialog asks: <b>Insert</b> (coexist with ink) or <b>Replace</b> (replace the ink).</td></tr>
-          <tr><td>🔵 Blue</td><td>〔😀〕</td><td><b>Shape recognition (hybrid)</b>. FluxInk shape recognition is <b>hybrid</b> — it recognizes <b>shapes / math formulas / text</b> at once; this build <b>reworks the logic</b> to recognize <b>per the selected language model</b>, and the result <b>directly replaces the original ink</b>.</td></tr>
-          <tr><td>🟢 Green</td><td>〔M〕</td><td><b>Math-formula recognition</b>.</td></tr>
+          <tr><td>🔴 Red (left)</td><td><b>Handwriting (text) recognition</b>. After recognition a dialog asks: <b>Insert</b> (coexist with ink) or <b>Replace</b> (replace the ink).</td></tr>
+          <tr><td>🔵 Blue (middle)</td><td><b>Shape recognition (hybrid)</b>. FluxInk shape recognition is <b>hybrid</b> — it recognizes <b>shapes / math formulas / text</b> at once; this build <b>reworks the logic</b> to recognize <b>per the selected language model</b>, and the result <b>directly replaces the original ink</b>.</td></tr>
+          <tr><td>🟢 Green (right)</td><td><b>Math-formula recognition</b>.</td></tr>
         </tbody>
       </table></div>
     </section>
@@ -668,7 +692,7 @@ adb shell &quot;dmesg | grep 'FW Version'&quot;</pre>
     </section><section>
       <h2>6. Device FW Update Guide (update.zip / ota-package)</h2>
       <p class="muted" style="margin:.2em 0 .5em">The BSP FW Update SOP is embedded below (scroll inside the frame; toggle language; click images to zoom).</p>
-      <div class="btnrow"><a class="btn" href="#" onclick="openBrief(this);return false;">↗ Open full screen</a><a class="btn" href="https://drive.google.com/file/d/14CfrPvl5dthPmcn-fsn0q4OV7jGzIr-j/view?usp=sharing" target="_blank" rel="noopener">📦 ota-package download</a></div>
+      <div class="btnrow"><a class="btn" href="#" onclick="openBrief(this);return false;">↗ Open full screen</a><a class="btn" href="https://drive.google.com/file/d/1k4bvSNhqthlD3NdtlnLjD6JFKyKBguHC/view?usp=sharing" target="_blank" rel="noopener">📦 ota-package download</a></div>
       <iframe class="embed" title="BSP FW Update SOP" srcdoc="<!DOCTYPE html>
 <html lang=&quot;zh-Hant&quot; id=&quot;root&quot;>
 <head>
@@ -734,7 +758,7 @@ adb shell &quot;dmesg | grep 'FW Version'&quot;</pre>
       <b>前置準備</b><br>
       1. 請先將裝置透過 <b>USB Type-C</b> 與電腦連接。<br>
       2. 下載以下連結提供的 <b>ota-package</b> 更新壓縮檔。
-      <div class=&quot;btnrow&quot; style=&quot;margin-top:10px&quot;><a class=&quot;btn&quot; href=&quot;https://drive.google.com/file/d/14CfrPvl5dthPmcn-fsn0q4OV7jGzIr-j/view?usp=sharing&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;>⬇️ ota-package 下載</a></div>
+      <div class=&quot;btnrow&quot; style=&quot;margin-top:10px&quot;><a class=&quot;btn&quot; href=&quot;https://drive.google.com/file/d/1k4bvSNhqthlD3NdtlnLjD6JFKyKBguHC/view?usp=sharing&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;>⬇️ ota-package 下載</a></div>
     </div>
 
     <section>
@@ -773,7 +797,7 @@ adb shell &quot;dmesg | grep 'FW Version'&quot;</pre>
       <b>Preparation</b><br>
       1. Connect the device to a PC via <b>USB Type-C</b>.<br>
       2. Download the <b>ota-package</b> update zip from the link below.
-      <div class=&quot;btnrow&quot; style=&quot;margin-top:10px&quot;><a class=&quot;btn&quot; href=&quot;https://drive.google.com/file/d/14CfrPvl5dthPmcn-fsn0q4OV7jGzIr-j/view?usp=sharing&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;>⬇️ ota-package download</a></div>
+      <div class=&quot;btnrow&quot; style=&quot;margin-top:10px&quot;><a class=&quot;btn&quot; href=&quot;https://drive.google.com/file/d/1k4bvSNhqthlD3NdtlnLjD6JFKyKBguHC/view?usp=sharing&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;>⬇️ ota-package download</a></div>
     </div>
 
     <section>
