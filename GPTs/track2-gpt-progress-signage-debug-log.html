@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>廣告機 SW Debug Log 分析工具 · 專案說明</title>
+<style>
+:root{
+  --primary:#10a37f; --primary-d:#0d8a6b; --secondary:#1e3a5f; --secondary-l:#2d527f;
+  --accent:#f59e0b; --bg:#eef2f6; --panel:#fff; --ink:#1a202c; --muted:#475569; --body:#334155;
+  --line:#dbe3ec; --good:#0ca30c; --warn:#fab219; --crit:#d03b3b;
+  --c-app:#2a78d6; --c-da:#eb6834; --c-nat:#1baf7a;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--body);
+ font:15px/1.7 -apple-system,"Noto Sans TC","Microsoft JhengHei",sans-serif}
+.wrap{max-width:1000px;margin:0 auto;padding:0 18px 70px}
+header{background:linear-gradient(135deg,var(--secondary),var(--secondary-l));color:#fff;
+ padding:38px 18px 30px;margin-bottom:26px}
+header .in{max-width:1000px;margin:0 auto}
+h1{margin:0 0 8px;font-size:27px;letter-spacing:.01em}
+.sub{opacity:.9;font-size:15px;margin:0}
+.tags{margin-top:16px;display:flex;flex-wrap:wrap;gap:8px}
+.tag{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);
+ border-radius:99px;padding:3px 12px;font-size:12.5px}
+h2{color:var(--secondary);font-size:20px;margin:34px 0 14px;padding-bottom:8px;
+ border-bottom:3px solid var(--primary)}
+h3{color:var(--secondary);font-size:16px;margin:22px 0 8px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+ padding:20px 22px;margin:14px 0;box-shadow:0 1px 3px rgba(30,58,95,.05)}
+.lead{font-size:16.5px;color:var(--ink)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:16px 0}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+ border-top:4px solid var(--primary)}
+.kpi b{display:block;font-size:25px;color:var(--secondary);line-height:1.2}
+.kpi span{font-size:12.5px;color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:14px;margin:10px 0}
+th,td{border-bottom:1px solid var(--line);padding:9px 10px;text-align:left;vertical-align:top}
+th{background:#f5f8fb;color:var(--secondary);font-weight:600;font-size:13px;white-space:nowrap}
+.scroll{overflow-x:auto}
+.scroll table{min-width:560px}
+code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;
+ background:#eef2f6;padding:1px 5px;border-radius:4px}
+pre{background:#1e293b;color:#e2e8f0;padding:14px 16px;border-radius:10px;overflow-x:auto;
+ font-family:ui-monospace,Menlo,monospace;font-size:12.5px;line-height:1.6}
+pre .hl{color:#fbbf24;font-weight:700}
+pre .dim{color:#94a3b8}
+ol,ul{padding-left:22px;margin:8px 0}
+li{margin:5px 0}
+.flow{display:flex;flex-wrap:wrap;gap:9px;align-items:stretch;margin:14px 0}
+.step{flex:1 1 168px;background:var(--panel);border:1px solid var(--line);border-radius:10px;
+ padding:12px 14px;border-left:4px solid var(--primary);min-width:0}
+.step b{display:block;color:var(--secondary);font-size:13.5px;margin-bottom:3px}
+.step span{font-size:12.5px;color:var(--muted)}
+.step.hi{border-left-color:var(--accent);background:#fffbeb}
+.note{border-left:5px solid var(--primary);background:#f0fdf9;border-radius:8px;padding:13px 16px;margin:13px 0}
+.warn{border-left:5px solid var(--warn);background:#fffbeb;border-radius:8px;padding:13px 16px;margin:13px 0}
+.crit{border-left:5px solid var(--crit);background:#fef2f2;border-radius:8px;padding:13px 16px;margin:13px 0}
+.ok{color:var(--good);font-weight:700}
+.bar{display:flex;height:30px;border-radius:6px;overflow:hidden;margin:12px 0 6px;gap:2px}
+.bar div{display:flex;align-items:center;justify-content:center;color:#fff;font-size:11.5px;font-weight:600}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12.5px;color:var(--muted)}
+.legend i{width:11px;height:11px;border-radius:3px;display:inline-block;margin-right:5px;vertical-align:-1px}
+footer{border-top:1px solid var(--line);margin-top:40px;padding-top:16px;font-size:12.5px;color:var(--muted)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:760px){.two{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header><div class="in">
+  <h1>廣告機 SW Debug Log 分析工具</h1>
+  <p class="sub">軌2 #12 ｜ 需求部門：研發（SW） ｜ 本機 Codex 專案</p>
+  <div class="tags">
+    <span class="tag">🖥️ 本機工具（非線上 GPT）</span>
+    <span class="tag">🔍 讀真實原始碼追因</span>
+    <span class="tag">📄 產出 HTML 報告</span>
+    <span class="tag">📚 知識庫會成長</span>
+    <span class="tag">✅ 已用真實客訴 log 驗證</span>
+  </div>
+</div></header>
+
+<div class="wrap">
+
+<h2>一、這是什麼</h2>
+<div class="panel">
+  <p class="lead">同仁把<strong>客戶回報的 log</strong> 丟給它，它會自動找出對應版本的<strong>真實原始碼</strong>，
+  把 log 的每一行對應回程式碼位置，指出<strong>錯在哪裡、為什麼會錯</strong>，最後產出一份 HTML 報告。</p>
+  <p>過去這件事要人工做：翻幾十萬行 log、猜是哪個版本、手動 checkout 程式碼、逐行比對。
+  一個案子動輒半天到一天。</p>
+
+  <h3>為什麼這個不做成線上 GPT？</h3>
+  <div class="scroll"><table>
+    <tr><th></th><th>線上 GPT（軌2 其他專案）</th><th>本機 Codex（本專案）</th></tr>
+    <tr><td>能讀公司程式碼？</td><td>❌ 碰不到內網 repo</td><td>✅ 直接 checkout 對應版本</td></tr>
+    <tr><td>能跑 git／grep？</td><td>❌</td><td>✅ 可跨檔追因</td></tr>
+    <tr><td>能處理 150MB log？</td><td>❌ 貼不進去</td><td>✅ 實測 147 萬行 32 秒</td></tr>
+    <tr><td>使用方式</td><td>瀏覽器對話</td><td>VS Code + Codex plugin</td></tr>
+  </table></div>
+  <p style="margin-bottom:0">追因必須「看那個版本當下的程式碼」，所以只能走本機。</p>
+</div>
+
+<h2>二、使用情境</h2>
+<div class="panel">
+  <h3>誰在什麼時候用</h3>
+  <p>客戶的廣告機出問題 → 現場收 log 回來 → <strong>研發 SW 同仁</strong> 要找出原因。</p>
+
+  <h3>同仁要做的事：把 log 丟過去，講一句話</h3>
+  <pre>分析這個廣告機問題：
+問題簡述：客戶反應開機後畫面卡在 logo、圖片不更新
+Log：<span class="hl">/path/to/CaptureLog.zip</span></pre>
+  <div class="note"><strong>版本號不用給。</strong>App 開機就會把自己的版本印在 log 裡，
+  工具會自己抓（實測兩份不同來源的真實 log 都成功抓到）。同仁記錯版本反而會誤導分析。</div>
+
+  <h3>吃得下哪些 log</h3>
+  <div class="scroll"><table>
+    <tr><th>來源</th><th>樣子</th><th>常見度</th></tr>
+    <tr><td><strong>程式內建 CaptureLog</strong></td><td>一個 zip，裡面是 SD 卡結構，含 5 個輪替 log 檔（約 150MB）</td><td>★ 最常見</td></tr>
+    <tr><td>Android Studio 匯出</td><td>單一 txt，工程師自己從 IDE 存下來的</td><td>常見</td></tr>
+    <tr><td>adb logcat 存檔</td><td>單一檔</td><td>偶爾</td></tr>
+    <tr><td>拆殼序列埠錄製</td><td>拆機接線錄的，是唯一能看到 MCU 內部的方式</td><td>少（特殊案例）</td></tr>
+  </table></div>
+  <p style="margin-bottom:0">共 <strong>5 種格式</strong>會自動辨識，同仁不需要事先整理或轉檔。</p>
+</div>
+
+<h2>三、核心原理：讓 log 自己指出程式碼位置</h2>
+<div class="panel">
+  <p>這個工具能成立，靠的是一個發現 —— 廣告機的 App 不是用一般的 log 寫法，
+  而是走自製的紀錄器，<strong>每一行 log 都自帶「哪個類別、哪個方法、第幾行」</strong>：</p>
+  <pre>08-03 14:22:03.839  2143  2150 E SA0P10: <span class="hl">MainActivity.onReceiveResult(2208)</span>: [onReceiveResult action:]
+                                          <span class="dim">└── 類別 . 方法 ( 行號 ) ──┘</span></pre>
+  <div class="two">
+    <div class="note"><strong>好處一：對應是確定的</strong><br>
+      不用猜「這行 log 大概是哪段程式印的」—— log 直接寫了。</div>
+    <div class="note"><strong>好處二：可以反過來驗證版本</strong><br>
+      到那個版本的程式碼第 2208 行去看，是不是真的有一句紀錄指令？
+      對得上就是版本正確。</div>
+  </div>
+  <div class="warn"><strong>為什麼第二點很重要：</strong>行號只在正確的版本下才有意義。
+  版本錯了，工具會指著完全無關的程式碼講得頭頭是道 —— 那比不分析更糟。
+  所以每份報告最前面都會標<strong>版本一致性百分比</strong>，讓看報告的人知道能不能信。</div>
+</div>
+
+<h2>四、完整流程</h2>
+<div class="flow">
+  <div class="step"><b>① 收到 log</b><span>zip／目錄／單檔都行</span></div>
+  <div class="step"><b>② 抓版本</b><span>從 log 自報的版本讀出來</span></div>
+  <div class="step"><b>③ 取程式碼</b><span>自動 checkout 對應版本（唯讀，不動任何人的工作區）</span></div>
+  <div class="step"><b>④ 分層過濾</b><span>147 萬行 → 只留相關的幾萬行</span></div>
+  <div class="step hi"><b>⑤ 對應＋驗證</b><span>log 行 → 檔案:行號，並算版本一致性</span></div>
+  <div class="step hi"><b>⑥ 比對知識庫</b><span>「這個問題看過，上次結論是…」</span></div>
+  <div class="step"><b>⑦ 追因</b><span>Codex 讀程式碼判斷原因</span></div>
+  <div class="step hi"><b>⑧ 產出報告</b><span>HTML，放在「分析報告」資料夾</span></div>
+  <div class="step"><b>⑨ 沉澱</b><span>學到的寫回知識庫 → 下次更快</span></div>
+</div>
+
+<h3>④ 分層過濾在做什麼</h3>
+<div class="panel">
+  <p>完整 log 裡大部分是 Android 系統本身的訊息，跟廣告機程式無關。而廣告機的程式又分三層，
+  <strong>各層的原始碼在不同的專案裡</strong>，必須分開比對：</p>
+  <div class="bar">
+    <div style="background:var(--c-app);width:18%">App 18%</div>
+    <div style="background:var(--c-da);width:26%">DA 26%</div>
+    <div style="background:var(--c-nat);width:19%">底層 19%</div>
+    <div style="background:#94a3b8;width:37%">系統雜訊 37%</div>
+  </div>
+  <div class="legend">
+    <span><i style="background:var(--c-app)"></i>App 層 261,385 行</span>
+    <span><i style="background:var(--c-da)"></i>DA 層 371,098 行</span>
+    <span><i style="background:var(--c-nat)"></i>底層 268,662 行</span>
+    <span><i style="background:#94a3b8"></i>系統雜訊 527,323 行（擱置）</span>
+  </div>
+  <p style="margin-bottom:0;font-size:13.5px;color:var(--muted)">
+    （真實 CaptureLog 實測數字，共 147 萬行）</p>
+</div>
+
+<h2>五、最終產出：HTML 報告</h2>
+<div class="panel">
+  <p>報告產在專案的 <code>分析報告/</code> 資料夾，檔名是 <code>&lt;log名&gt;_&lt;日期時間&gt;.html</code>。
+  <strong>直接雙擊用瀏覽器打開</strong>，不需要網路、不需要裝任何東西。</p>
+  <div class="scroll"><table>
+    <tr><th>報告區塊</th><th>內容</th></tr>
+    <tr><td>結論橫幅</td><td>一句話講完根因</td></tr>
+    <tr><td><strong>版本一致性</strong></td><td>百分比 + 判定，<strong>先看這個</strong>才知道報告能不能信</td></tr>
+    <tr><td>發生了什麼</td><td>現象，每條標【確定】或【推測】</td></tr>
+    <tr><td>為什麼會發生</td><td>因果鏈 + <strong>原始碼片段（出錯那行高亮）</strong></td></tr>
+    <tr><td>事件時序</td><td>關鍵事件依順序排列</td></tr>
+    <tr><td>已知問題比對</td><td>命中知識庫哪幾筆、上次的結論</td></tr>
+    <tr><td>建議下一步</td><td>依優先序，給工程師參考</td></tr>
+    <tr><td>分析限制</td><td>誠實列出哪裡資訊不足</td></tr>
+  </table></div>
+  <div class="note"><strong>報告格式強制「有依據」：</strong>每條研判都必須標明是【確定】還是【推測】，
+  並附上 log 行號與程式碼位置。<strong>寫不出沒有依據的結論</strong> —— 這是刻意設計的，
+  避免報告看起來很有把握其實在猜。</div>
+  <div class="warn"><strong>個資提醒：</strong>報告會自動掃出 log 裡的 WiFi 密碼、MAC 位址、Token 樣式並警示
+  （某份真實 log 就命中 WiFi 密碼樣式 107 筆、MAC 42 筆）。但<strong>不會自動改寫原始 log</strong>，
+  因為改了會破壞追因證據。</div>
+</div>
+
+<h2>六、知識庫：愈用愈準</h2>
+<div class="panel">
+  <p>每分析一次就把學到的東西<strong>寫回知識庫</strong>，下一次遇到同樣的現象會直接命中：</p>
+  <pre>【KI-0007】外接 T-Con 偵測失敗 → 空清單操作 → 崩潰重啟迴圈
+   狀態 known · <span class="hl">🌟 已證實</span> · 過去出現 1 次 · 本次命中 2 行
+   典型現象：App 反覆崩潰重啟（約每 7 分鐘一次）
+   該查什麼：① 先加空清單保護（一行止血）② 補錯誤處理 ③ 才查硬體</pre>
+  <p>目前知識庫有 <strong>7 筆</strong>，其中 4 筆已由實際案例或團隊文件證實。
+  沒有這個「寫回」動作，工具就永遠停在第一天的水準。</p>
+  <div class="note"><strong>最有價值的一欄是「工程師最後查出的真正根因」。</strong>
+  工程師拍板後回填，工具下次就能直接給出正確方向 —— 而不是重新推一遍。</div>
+</div>
+
+<h2>七、已驗證的成果</h2>
+<div class="kpis">
+  <div class="kpi"><b>147 萬行</b><span>真實 CaptureLog，32 秒跑完</span></div>
+  <div class="kpi"><b>100%</b><span>版本識別正確率（真實案例）</span></div>
+  <div class="kpi"><b>5 種</b><span>log 格式自動辨識</span></div>
+  <div class="kpi"><b>7 筆</b><span>知識庫已知問題</span></div>
+</div>
+<div class="panel">
+  <h3>真實客訴案例：完整找出根因</h3>
+  <p>拿一份真實的客訴 log 測試，<strong>不告訴工具任何線索</strong>（連當時的情況都已經忘記），
+  由 Codex 自己分析。結果它找出了完整的根因鏈：</p>
+  <div class="flow">
+    <div class="step"><b>1. USB 暫時斷開</b><span>外接顯示控制器被移除</span></div>
+    <div class="step"><b>2. 太早檢查</b><span>供電後只等 50 毫秒</span></div>
+    <div class="step"><b>3. 找不到裝置</b><span>清單變成空的</span></div>
+    <div class="step hi"><b>4. 對空清單操作</b><span>程式沒檢查就取第一筆 → 崩潰</span></div>
+    <div class="step hi"><b>5. 沒有錯誤處理</b><span>可回復的錯誤升級成整個程式死亡</span></div>
+    <div class="step"><b>6. 重啟迴圈</b><span>每 7 分鐘重複一次</span></div>
+  </div>
+  <p><strong>關鍵是它推翻了直覺的判斷。</strong>表面看像是「硬體壞了」，
+  但它發現 <span class="ok">USB 裝置每次崩潰後幾秒就回來且能正常使用</span> ——
+  所以不是硬體故障，是<strong>程式沒等裝置就緒</strong>。
+  這個差別決定了要去修程式還是去換硬體。</p>
+  <div class="note">工具也同時排除了另一個容易誤判的方向，並在報告裡明講理由。
+  修復建議是「先加一行保護止血 → 補錯誤處理 → 再調時序 → 最後才查硬體」，
+  跟直覺相反但正確。</div>
+</div>
+
+<h2>八、大使該如何使用</h2>
+<div class="panel">
+  <div class="crit"><strong>先確認一件事：這個工具需要公司內網。</strong>
+  它要去內網的程式碼伺服器抓原始碼，所以<strong>必須在公司內網或連上 VPN，並且有對應的存取權限</strong>。
+  沒有權限的話工具跑不起來 —— 這種情況請找研發（SW）協助。</div>
+
+  <h3>如果你是要「了解／介紹」這個工具</h3>
+  <ol>
+    <li>看這份說明就夠了 —— 第一、二、五節是重點（它做什麼、怎麼用、產出長什麼樣）</li>
+    <li>想看實際產出：請研發同仁給你一份 <code>分析報告/</code> 裡的 HTML，雙擊就能開</li>
+  </ol>
+
+  <h3>如果你是要「實際使用」</h3>
+  <ol>
+    <li><strong>拿到交付包</strong>（一個 zip，約 120KB）並解開</li>
+    <li><strong>第一次要初始化</strong>：執行 <code>scripts/bootstrap_repos.sh</code><br>
+      <span style="color:var(--muted);font-size:13.5px">它會自動把需要的三個程式碼專案抓下來（約 200MB，只需做一次）</span></li>
+    <li><strong>丟 log 進去</strong>：<code>scripts/analyze.sh &lt;log路徑&gt;</code><br>
+      <span style="color:var(--muted);font-size:13.5px">或在 VS Code 裡直接跟 Codex 講（它會讀專案的作業說明自己執行）</span></li>
+    <li><strong>開報告</strong>：到 <code>分析報告/</code> 資料夾，雙擊最新的 HTML</li>
+  </ol>
+
+  <h3>使用上要知道的三件事</h3>
+  <div class="scroll"><table>
+    <tr><th>事項</th><th>說明</th></tr>
+    <tr><td><strong>先看版本一致性</strong></td>
+        <td>報告最上面那個百分比。高＝可信；低＝先確認版本，別急著相信結論</td></tr>
+    <tr><td><strong>根因由工程師拍板</strong></td>
+        <td>工具的角色是<strong>加速定位</strong>，把範圍從幾十萬行縮到幾行。
+            最終判斷與修復方案仍由研發工程師決定</td></tr>
+    <tr><td><strong>報告含客戶資訊</strong></td>
+        <td><code>分析報告/</code> 裡的檔案會引用客戶 log 內容，
+            <strong>不要隨意外傳</strong>，也不進版本控制</td></tr>
+  </table></div>
+</div>
+
+<h2>九、目前狀態與後續</h2>
+<div class="panel">
+  <div class="scroll"><table>
+    <tr><th>項目</th><th>狀態</th></tr>
+    <tr><td>log 格式支援（5 種）</td><td class="ok">✅ 已完成，真實 log 驗證</td></tr>
+    <tr><td>版本自動識別</td><td class="ok">✅ 已完成，兩份真實 log 都正確</td></tr>
+    <tr><td>分層過濾與碼感知追因</td><td class="ok">✅ 已完成</td></tr>
+    <tr><td>HTML 報告產出</td><td class="ok">✅ 已完成</td></tr>
+    <tr><td>知識庫成長機制</td><td class="ok">✅ 已完成（7 筆）</td></tr>
+    <tr><td>真實案例根因驗證</td><td class="ok">✅ 已完成</td></tr>
+    <tr><td>MCU 內部 log 解析</td><td>⬜ 保留給後續（僅拆殼案例需要，優先度低）</td></tr>
+  </table></div>
+  <div class="note"><strong>後續交給接手的人自由發揮。</strong>
+  專案裡的作業說明刻意只寫「已查證的事實」與「踩過的坑」，
+  不把流程寫死 —— 因為執行者是有判斷力的 AI Agent，
+  規則定太死反而會限制它想到正確的做法。
+  <span style="color:var(--muted)">（這一點是實際驗證過的：某次工具誤判版本不符，
+  正是因為 Agent 沒照死規則停手，才做出正確分析。）</span></div>
+</div>
+
+<footer>
+  廣告機 SW Debug Log 分析工具 ｜ 軌2 #12 ｜ 需求部門：研發（SW）<br>
+  本檔為自足 HTML，可離線開啟。根因確認與修復方案由研發工程師拍板，本工具僅輔助定位。
+</footer>
+</div>
+</body>
+</html>
