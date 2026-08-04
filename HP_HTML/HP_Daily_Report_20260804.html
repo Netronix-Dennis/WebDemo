@@ -152,7 +152,11 @@
       <ul>
         <li><b>Note App</b>:套索辨識與整頁辨識結果出入(套索準確度較整頁 OCR 低)。</li>
         <li><b>字母大小寫</b>辨識不正確(併請提供操作說明)。</li>
+        <li><b>混合辨識(辨識完插入)不準　<span class="pill pill-ask">HP 新回報 08/04</span></b><br>HP 反映「識別完插入」選項非常不準、<b>好像只能用來弄流程圖</b>;而<b>單文字、單數學式</b>單獨辨識都還不錯。<br>此選項對應 Release Note 的 <b>藍框(中)〔😀〕圖形混合辨識</b>(同時辨識 圖形 / 數學公式 / 文字);紅框(左)= 單文字、綠框(右)= 單數學式。</li>
       </ul>
+      <div class="callout callout-ask">
+        <b>需 HP 補充(混合辨識):</b>HP 尚未具體描述「不準」為何。請提供 - <b>流程圖之外還畫了什麼、混入哪些內容</b>(例:在流程圖上寫數學式)、操作步驟,以及 <b><code>.note</code> 檔</b>,以利復現並回饋 HWR PM / RD。
+      </div>
       <h3>待 HP 確認</h3>
       <ul>
         <li><b>OCR 語系納入範圍</b>:全部或僅部分(見 §3)。</li>
@@ -257,7 +261,11 @@
       <ul>
         <li><b>Note App</b>: lasso vs full-page recognition results differ (lasso is less accurate than full-page OCR).</li>
         <li><b>Upper / lower case</b> recognition is incorrect (please also provide the operation steps).</li>
+        <li><b>Hybrid recognition ("recognize then insert") is inaccurate　<span class="pill pill-ask">new HP feedback 08/04</span></b><br>HP reports the "recognize-then-insert" option is very inaccurate and <b>seems only usable for flowcharts</b>, while <b>single text</b> and <b>single math</b> recognize fine on their own.<br>This maps to the Release Note's <b>blue (middle) 〔😀〕 hybrid shape recognition</b> (recognizes shapes / math / text together); red (left) = single text, green (right) = single math.</li>
       </ul>
+      <div class="callout callout-ask">
+        <b>Need HP's details (hybrid recognition):</b> HP hasn't yet described what "inaccurate" means. Please provide - <b>what else was drawn beyond the flowchart and what content was mixed in</b> (e.g. writing math formulas on a flowchart), the steps, and a <b><code>.note</code> file</b>, so we can reproduce and report to the HWR PM / RD.
+      </div>
       <h3>Pending HP's confirmation</h3>
       <ul>
         <li><b>OCR language scope</b>: all or only a subset (see §3).</li>
