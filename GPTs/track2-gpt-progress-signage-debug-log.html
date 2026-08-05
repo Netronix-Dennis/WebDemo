@@ -368,9 +368,20 @@ Log：<span class="hl">/path/to/CaptureLog.zip</span></pre>
 
 <h2>九、大使該如何使用</h2>
 <div class="panel">
-  <div class="crit"><strong>先確認一件事：這個工具需要公司內網。</strong>
-  它要去內網的程式碼伺服器抓原始碼，所以<strong>必須在公司內網或連上 VPN，並且有對應的存取權限</strong>。
-  沒有權限的話工具跑不起來 —— 這種情況請找研發（SW）協助。</div>
+  <div class="crit"><strong>先確認兩件事</strong>
+    <ol style="margin:8px 0 0">
+      <li><strong>需要公司內網</strong> —— 它要去內網的程式碼伺服器抓原始碼，所以必須在公司內網
+        或連上 VPN，並且有對應的存取權限。沒有權限工具跑不起來 —— 請找研發（SW）協助。</li>
+      <li><strong>需要幾個基本工具</strong>（開發機通常都有）：
+        <code>gawk</code>、<code>python3</code>、<code>PyYAML</code>、<code>git</code>、<code>unzip</code>。</li>
+    </ol>
+  </div>
+  <div class="note"><strong>不用自己一項一項檢查。</strong>
+  工具每次執行都會先自動檢查環境，<b>缺什麼會直接擋下來並告訴你怎麼裝</b>，
+  一切正常時完全不出聲。也可以自己先跑一次：<code>scripts/check_env.sh</code>
+  <br><br><span class="mut">為什麼要特別檢查：其中 <code>PyYAML</code> 缺了會讓
+  「已知問題比對」<b>安靜地被跳過</b> —— 分析照樣產出報告，但少做了一半而你不會知道。
+  所以工具把它列為必要項，而不是提醒。</span></div>
 
   <h3>如果你是要「了解／介紹」這個工具</h3>
   <ol>
@@ -380,7 +391,8 @@ Log：<span class="hl">/path/to/CaptureLog.zip</span></pre>
 
   <h3>如果你是要「實際使用」</h3>
   <ol>
-    <li><strong>拿到交付包</strong>（一個 zip，約 120KB）並解開</li>
+    <li><strong>拿到交付包</strong>（一個 zip，約 300KB）並解開 →
+        先看裡面的 <code>快速上手.md</code>（一頁，會告訴你先做什麼）</li>
     <li><strong>第一次要初始化</strong>：執行 <code>scripts/bootstrap_repos.sh</code><br>
       <span style="color:var(--muted);font-size:13.5px">它會自動把需要的三個程式碼專案抓下來（約 200MB，只需做一次）</span></li>
     <li><strong>在 VS Code 打開這個專案資料夾，開啟 Codex</strong>，把下面那段 Prompt 貼給它（設定角色）</li>
