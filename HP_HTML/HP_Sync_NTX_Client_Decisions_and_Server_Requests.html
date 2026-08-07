@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-Hant" id="root">
+<html lang="en" id="root">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -63,10 +63,10 @@
 </head>
 <body>
 <div class="wrap">
-  <div class="lang-bar"><button class="lang-btn active" id="btn-zh" onclick="setLang('zh')">中文</button><button class="lang-btn" id="btn-en" onclick="setLang('en')">English</button></div>
+  <div class="lang-bar"><button class="lang-btn" id="btn-zh" onclick="setLang('zh')">中文</button><button class="lang-btn active" id="btn-en" onclick="setLang('en')">English</button></div>
 
   <!-- ================= 中文 ================= -->
-  <div data-lang="zh" class="show">
+  <div data-lang="zh">
     <header class="top">
       <h1>HP Sync：NTX 端通知事項與需 HP 留意的幾點</h1>
       <div class="meta">提出方：NTX（nNote Android client）　|　2026-08-07<br>回應對象：HP Notes Sync Service, NTX Follow-up Release <code>v1.0.20260702.2-ntx-followup</code>（2026-07-30）<br>整體功能已齊備、同步可運作；<br>本文大多為 NTX 端的通知，僅下列少數幾點需 HP 留意或回覆。</div>
@@ -172,7 +172,7 @@
   </div>
 
   <!-- ================= English ================= -->
-  <div data-lang="en">
+  <div data-lang="en" class="show">
     <header class="top">
       <h1>HP Sync: NTX Notifications &amp; A Few Points for HP</h1>
       <div class="meta">From: NTX (nNote Android client)　|　2026-08-07<br>Re: HP Notes Sync Service, NTX Follow-up Release <code>v1.0.20260702.2-ntx-followup</code> (2026-07-30)<br>Overall functionality is in place and sync works; this is mostly notifications from NTX, with only the few points below needing HP's attention or reply.</div>
