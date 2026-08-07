@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" id="root">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HP Sync - NTX Notifications &amp; Points for HP</title>
+<style>
+  :root{--bg:#eef1f6;--card:#fff;--ink:#1f2733;--muted:#5b6675;--line:#e1e6ec;--head:#0b2740;
+    --accent:#1f6feb;--accent-soft:#eaf2ff;--ok:#1f9d57;--ok-soft:#e9f8ef;--warn:#c77700;--warn-soft:#fff6e6;
+    --key:#0b66c3;--key-soft:#e9f3fc;--pend:#b03a4b;--pend-soft:#fdeef0;}
+  *{box-sizing:border-box}html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);line-height:1.72;
+    font-family:"Noto Sans CJK TC","PingFang TC","Microsoft JhengHei","Segoe UI",system-ui,sans-serif;}
+  .wrap{max-width:1000px;margin:0 auto;padding:24px 22px 90px}
+  .lang-bar{position:sticky;top:0;z-index:20;display:flex;justify-content:flex-end;
+    padding:10px 0 6px;background:linear-gradient(var(--bg),var(--bg) 70%,transparent)}
+  .lang-btn{border:1px solid var(--accent);background:#fff;color:var(--accent);cursor:pointer;
+    font-size:14px;padding:7px 16px;font-weight:600}
+  .lang-btn:first-child{border-radius:8px 0 0 8px}
+  .lang-btn:last-child{border-radius:0 8px 8px 0;border-left:none}
+  .lang-btn.active{background:var(--accent);color:#fff}
+  header.top{background:linear-gradient(120deg,#0b2740,#1f6feb);color:#fff;border-radius:16px;
+    padding:26px 30px;margin-bottom:4px;box-shadow:0 6px 24px rgba(11,39,64,.18)}
+  header.top h1{margin:0 0 8px;font-size:24px;line-height:1.25}
+  header.top .meta{font-size:14px;opacity:.92;line-height:1.7}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;background:var(--card);border:1px solid var(--line);
+    border-radius:12px;padding:13px 18px;margin:16px 0}
+  .lg{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--muted)}
+  .dot{width:11px;height:11px;border-radius:3px;flex:none}
+  section{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:22px 26px;margin:16px 0;box-shadow:0 1px 3px rgba(16,30,54,.05)}
+  h2{font-size:21px;color:var(--head);margin:.1em 0 .2em;padding-left:11px;border-left:5px solid var(--accent);display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+  h2 .n{font-size:13px;color:var(--muted);font-weight:600}
+  h3{font-size:16px;color:#20364e;margin:1em 0 .3em}
+  .lead{color:var(--muted);font-size:14px;margin:.3em 0 .9em}
+  p{margin:.5em 0}.muted{color:var(--muted)}
+  ul{margin:.4em 0 .3em 1.15em}li{margin:.5em 0}
+  code{font-family:Consolas,"Roboto Mono",monospace;font-size:.88em;background:#eef1f5;color:#0b3d66;padding:1px 6px;border-radius:5px;word-break:break-word}
+  .tag{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.02em;border-radius:6px;padding:3px 9px;white-space:nowrap}
+  .t-ask{color:var(--key);background:var(--key-soft)}
+  .t-fyi{color:#475569;background:#eef2f6}
+  .t-ntx{color:var(--ok);background:var(--ok-soft)}
+  .card{border:1px solid var(--line);border-radius:11px;padding:15px 18px;margin:12px 0;background:#fafbfd}
+  .card.ask{border-left:4px solid var(--key)}
+  .chead{display:flex;align-items:center;gap:10px;margin:0 0 6px;flex-wrap:wrap}
+  .ctitle{font-weight:700;font-size:15.5px;color:#20364e}
+  .note{color:var(--muted);font-size:13px}
+  .highlight{background:linear-gradient(180deg,#e9f8ef,#fff);border:1px solid #bfe6cf;
+    border-left:5px solid var(--ok);border-radius:12px;padding:16px 20px}
+  .highlight .big{font-size:16px;font-weight:600;color:#20364e}
+  .highlight .big b{color:var(--ok)}
+  .fyi-list li{margin:.6em 0}
+  .fyi-list .k{font-weight:700;color:#20364e}
+  .fyi-list li ul{margin:.4em 0 .2em 1.1em}
+  .fyi-list li ul li{margin:.3em 0}
+  .card ul{margin:.5em 0 .2em 1.2em}.card li{margin:.35em 0}
+  footer{text-align:center;color:var(--muted);font-size:13px;margin-top:26px}
+  [data-lang]{display:none}[data-lang].show{display:block}
+  @media print{body{background:#fff}.lang-bar{display:none}
+    section,header.top{box-shadow:none;break-inside:avoid}
+    [data-lang]{display:none!important}[data-lang].show{display:block!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="lang-bar"><button class="lang-btn active" id="btn-zh" onclick="setLang('zh')">中文</button><button class="lang-btn" id="btn-en" onclick="setLang('en')">English</button></div>
+
+  <!-- ================= 中文 ================= -->
+  <div data-lang="zh" class="show">
+    <header class="top">
+      <h1>HP Sync：NTX 端通知事項與需 HP 留意的幾點</h1>
+      <div class="meta">提出方：NTX（nNote Android client）　|　2026-08-07<br>回應對象：HP Notes Sync Service, NTX Follow-up Release <code>v1.0.20260702.2-ntx-followup</code>（2026-07-30）<br>整體功能已齊備、同步可運作；<br>本文大多為 NTX 端的通知，僅下列少數幾點需 HP 留意或回覆。</div>
+    </header>
+
+    <div class="legend">
+      <span class="lg"><span class="dot" style="background:var(--key)"></span>需 HP 留意 / 回覆</span>
+      <span class="lg"><span class="dot" style="background:#94a3b8"></span>NTX 端通知（FYI，不需 HP 動作）</span>
+    </div>
+
+    <section>
+      <h2>0. 整體狀態 <span class="n">Overall status</span></h2>
+      <div class="highlight">
+        <div class="big">目前<b>整體功能已齊備、同步可運作</b>。<br>NTX 端的 client 工作（含先前回報的記憶體問題）已完成。<br>本文大多是 NTX 端已定案行為的<b>通知</b>，只有下列三點希望 HP 留意或回覆。</div>
+      </div>
+      <p class="note">說明：規模／大檔案／傳輸中斷等議題屬 GA 之後的事，目前 POC 階段不討論，本文不涵蓋。</p>
+    </section>
+
+    <section>
+      <h2>1. 需 HP 留意 / 回覆的幾點 <span class="n">Points for HP</span></h2>
+
+      <div class="card ask"><div class="chead"><span class="tag t-ask">1.3 · 需回覆</span><span class="ctitle"><code>content</code> 欄位應該攜帶什麼？</span></div>
+        <p>我們仍不確定 <code>content</code> 這個字串欄位<b>預期要裝什麼</b>。<br>nNote 目前在 pull 時丟棄 <code>content</code>、上傳時送出 <code>content: ""</code>，因為 nNote 本身沒有可放入該欄位的純文字內容。<br>請 HP 說明 <code>content</code> 的預期用途與正式語意。</p>
+        <p class="note">附帶提醒：若上傳送 <code>""</code>，可能會覆蓋掉 Windows 端原本撰寫的描述文字；<br>釐清用途後，我們可據此決定是否需要保存並回送。</p>
+      </div>
+
+      <div class="card ask"><div class="chead"><span class="tag t-ask">1.5 · 請留意</span><span class="ctitle">「32 MiB」是編碼字元數，實際檔案是 24 MiB</span></div>
+        <p>Server 的 32 MiB 限制指的是 <b>Base64 編碼後的字元數</b>（33,554,432 字元），不是檔案大小。<br>Base64 會把 3 個位元組展開成 4 個字元，因此對應的<b>實際 <code>.ent</code> 檔上限是 24 MiB</b>：</p>
+        <p><code>33,554,432 × 3 / 4 = 25,165,824 bytes = 24 MiB</code></p>
+        <p>對使用者真正有意義的數字是 <b>24 MiB（實際檔案）</b>；<br>建議兩邊文件都標明「編碼 32 MiB 字元 = 實際 24 MiB 檔」，避免持有 30 MiB 檔的使用者誤以為在 32 MiB 上限內。</p>
+      </div>
+
+      <div class="card ask"><div class="chead"><span class="tag t-ask">1.9 · 請維持</span><span class="ctitle">Port 需維持可設定</span></div>
+        <p>我們測試筆電的 <b>8080 已被其他程式佔用</b>，因此透過 <code>config.ini</code> 的 <code>[server] port</code> 將服務設在 <b>8081</b>，運作正常。<br>請未來的套件<b>持續保留 <code>[server] port</code> 為可設定項</b>，勿將 8080 寫死或強制。<br>這是 NTX 測試環境的需求，實際部署的使用者仍在 HP 端。</p>
+      </div>
+
+      <div class="card ask"><div class="chead"><span class="tag t-ask">文件 · 希望提供</span><span class="ctitle">希望最終提供 Swagger / OpenAPI 規格文件</span></div>
+        <p>希望在專案後續，HP 能提供 Server API 的 <b>Swagger / OpenAPI 格式說明文件</b>。<br>NTX 對這種架構較熟悉，能更清楚掌握各欄位定義：</p>
+        <ul>
+          <li>每個端點的請求／回應結構；</li>
+          <li>各欄位的名稱、型別與是否必填；</li>
+          <li><code>content</code>／<code>inkContent</code> 等欄位的正式定義與語意；</li>
+          <li>錯誤碼與狀態碼的對應。</li>
+        </ul>
+        <p class="note">這也能一次解決本文多數欄位定義上的疑問（例如 §1.3 的 <code>content</code>）。</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>2. NTX 端通知事項 <span class="n">FYI - no action needed</span></h2>
+      <p class="lead">以下為 NTX 在 client 端已定案的行為，僅供 HP 知悉，不需要 HP 採取動作。</p>
+      <ul class="fyi-list">
+        <li><span class="k">1.1 靜默略過：</span>遇到驗證失敗的筆記，nNote 會略過該筆、批次繼續（避免單筆壞資料卡住此後所有 pull）。<br>被略過的筆記會在 Android 缺席，Server／Windows 端不會收到訊號。<br>共九種觸發條件：
+          <ul>
+            <li><code>id</code> 非標準 UUID 格式（invalid note id）</li>
+            <li>缺少 <code>deleted</code> 欄位（missing deleted flag）</li>
+            <li>活躍筆記缺少 <code>title</code> 或 <code>createdAt</code>，或 <code>createdAt &lt; 0</code>（incomplete live note）</li>
+            <li>活躍筆記的 <code>inkContent</code> 為 <code>null</code>（note has no ink content）</li>
+            <li>Base64 非正規化形式，或長度非 4 的倍數（Base64 is not canonical）</li>
+            <li>解碼後超過 25,165,824 bytes（超過 §1.5 的 24 MiB 上限）</li>
+            <li>解碼結果不是可讀取的 ZIP，或不含任何 entry（ENT ZIP is empty）</li>
+            <li>ENT 含多於一頁、含任何附件、或含 nNote 無法呈現的內容</li>
+            <li>超出 §1.6 的 ZIP 防護限制</li>
+          </ul>
+        </li>
+        <li><span class="k">1.4 單頁範圍：</span>目前上傳與下載均只接受單頁 ENT、不含附件（Stage 1 簡化）；<br>多頁支援待 GA 再排。</li>
+        <li><span class="k">1.6 ZIP 防護：</span>nNote 自訂三項壓縮檔防護：
+          <ul>
+            <li>解壓後總量上限 64 MiB</li>
+            <li>單一 entry 解壓後上限 64 MiB</li>
+            <li>每個套件的 entry 數上限 32</li>
+          </ul>
+        </li>
+        <li><span class="k">1.7 整批失敗條件：</span>下列三種情況會使整次 pull 失敗（而非略過單筆），一般 Server 不會產生：
+          <ul>
+            <li>changes 清單含 <code>null</code> 元素</li>
+            <li>任一筆 <code>updatedAt</code> 缺漏或為負值</li>
+            <li>同一批出現重複 UUID（同一主鍵兩列，代表資料完整性破損）</li>
+          </ul>
+        </li>
+        <li><span class="k">1.8 略過與重試：</span>被略過的筆記仍會推進 watermark。<br>
+          <ul>
+            <li>若 HP 日後修正某筆 payload，煩請一併指派新的、嚴格遞增的 <code>updatedAt</code>，nNote 才會重新抓取。</li>
+            <li>NTX 端也會加上「隔離重試清單」，讓壞筆記不致永久缺席。</li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>3. 小結 <span class="n">Summary</span></h2>
+      <p>整體功能已到位、同步可運作，NTX 端 client 工作已完成。<br>需要 HP 留意或回覆的重點：</p>
+      <ul>
+        <li><b>1.3</b> <code>content</code> 欄位應攜帶什麼；</li>
+        <li><b>1.5</b>「32 MiB」是編碼字元、實際檔案上限為 24 MiB；</li>
+        <li><b>1.9</b> 請維持 <code>[server] port</code> 可設定；</li>
+        <li><b>文件</b> 希望最終提供 Swagger / OpenAPI 規格。</li>
+      </ul>
+      <p>其餘皆為 NTX 端行為的通知，不需 HP 動作。</p>
+    </section>
+
+    <footer>NTX · nNote (Android)　|　HP Sync NTX Follow-up　|　2026-08-07</footer>
+  </div>
+
+  <!-- ================= English ================= -->
+  <div data-lang="en">
+    <header class="top">
+      <h1>HP Sync: NTX Notifications &amp; A Few Points for HP</h1>
+      <div class="meta">From: NTX (nNote Android client)　|　2026-08-07<br>Re: HP Notes Sync Service, NTX Follow-up Release <code>v1.0.20260702.2-ntx-followup</code> (2026-07-30)<br>Overall functionality is in place and sync works; this is mostly notifications from NTX, with only the few points below needing HP's attention or reply.</div>
+    </header>
+
+    <div class="legend">
+      <span class="lg"><span class="dot" style="background:var(--key)"></span>For HP's attention / reply</span>
+      <span class="lg"><span class="dot" style="background:#94a3b8"></span>NTX notification (FYI, no action)</span>
+    </div>
+
+    <section>
+      <h2>0. Overall Status</h2>
+      <div class="highlight">
+        <div class="big"><b>Functionality is in place and sync works</b>.<br>NTX's client-side work (including the previously reported memory issue) is complete.<br>This document is mostly a <b>notification</b> of decided client behavior; only the three points below need HP's attention or reply.</div>
+      </div>
+      <p class="note">Note: scale / large-file / transfer-interruption items are post-GA and out of scope for the current POC stage, so they are not covered here.</p>
+    </section>
+
+    <section>
+      <h2>1. Points for HP's Attention / Reply</h2>
+
+      <div class="card ask"><div class="chead"><span class="tag t-ask">1.3 · needs reply</span><span class="ctitle">What should the <code>content</code> field carry?</span></div>
+        <p>We are still unsure what the <code>content</code> string field is <b>expected to hold</b>.<br>nNote currently drops <code>content</code> on pull and sends <code>content: ""</code> on upload, because nNote itself has no plain-text content to put there.<br>Please clarify the intended use and formal semantics of <code>content</code>.</p>
+        <p class="note">Side note: sending <code>""</code> on upload may overwrite a description originally authored on the Windows side;<br>once the intended use is clear, we can decide whether to preserve and echo it back.</p>
+      </div>
+
+      <div class="card ask"><div class="chead"><span class="tag t-ask">1.5 · please note</span><span class="ctitle">"32 MiB" is encoded characters; the actual file is 24 MiB</span></div>
+        <p>The Server's 32 MiB limit is a count of <b>Base64-encoded characters</b> (33,554,432 chars), not a file size.<br>Base64 expands 3 bytes into 4 characters, so the corresponding <b>actual <code>.ent</code> file limit is 24 MiB</b>:</p>
+        <p><code>33,554,432 x 3 / 4 = 25,165,824 bytes = 24 MiB</code></p>
+        <p>The number that is meaningful to a user is <b>24 MiB (the actual file)</b>;<br>we suggest both sides' docs state "32 MiB encoded chars = 24 MiB actual file," so a user holding a 30 MiB file doesn't assume it is within a 32 MiB limit.</p>
+      </div>
+
+      <div class="card ask"><div class="chead"><span class="tag t-ask">1.9 · please keep</span><span class="ctitle">Keep the port configurable</span></div>
+        <p>On our test laptop, <b>8080 is already taken</b> by another process, so we set the service to <b>8081</b> via <code>[server] port</code> in <code>config.ini</code>, and it works.<br>Please <b>keep <code>[server] port</code> a supported setting</b> in future packages; don't hard-code or force 8080.<br>This is an NTX test-environment need; the actual deployed users remain on the HP side.</p>
+      </div>
+
+      <div class="card ask"><div class="chead"><span class="tag t-ask">docs · request</span><span class="ctitle">A Swagger / OpenAPI spec would help</span></div>
+        <p>Going forward, we'd appreciate a <b>Swagger / OpenAPI specification</b> for the Server API.<br>NTX is more familiar with that structure and can more clearly see each field's definition:</p>
+        <ul>
+          <li>the request/response shape of each endpoint;</li>
+          <li>each field's name, type, and whether it is required;</li>
+          <li>the formal definition and semantics of fields like <code>content</code> / <code>inkContent</code>;</li>
+          <li>the mapping of error and status codes.</li>
+        </ul>
+        <p class="note">This would also resolve most of the field-definition questions in this document at once (e.g. <code>content</code> in §1.3).</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>2. NTX Notifications (FYI - no action needed)</h2>
+      <p class="lead">The following are decided client-side behaviors, shared for HP's awareness; no action from HP is needed.</p>
+      <ul class="fyi-list">
+        <li><span class="k">1.1 Silent skip:</span> on a validation-failing note, nNote skips it and continues the batch (so one bad record doesn't block all future pulls).<br>A skipped note is absent on Android, with no signal to the Server/Windows side.<br>Nine conditions trigger a skip:
+          <ul>
+            <li><code>id</code> is not a standard UUID (invalid note id)</li>
+            <li>missing <code>deleted</code> field (missing deleted flag)</li>
+            <li>a live note missing <code>title</code> or <code>createdAt</code>, or <code>createdAt &lt; 0</code> (incomplete live note)</li>
+            <li>a live note's <code>inkContent</code> is <code>null</code> (note has no ink content)</li>
+            <li>non-canonical Base64, or length not a multiple of 4 (Base64 is not canonical)</li>
+            <li>decoded size over 25,165,824 bytes (over the §1.5 24 MiB limit)</li>
+            <li>decoded result is not a readable ZIP, or has no entries (ENT ZIP is empty)</li>
+            <li>ENT has more than one page, any attachment, or content nNote cannot render</li>
+            <li>exceeds the §1.6 ZIP guards</li>
+          </ul>
+        </li>
+        <li><span class="k">1.4 Single-page scope:</span> upload and download currently accept single-page ENT only, no attachments (a Stage 1 simplification); multi-page is deferred to GA.</li>
+        <li><span class="k">1.6 ZIP guards:</span> nNote applies three archive guards:
+          <ul>
+            <li>total inflated size limit 64 MiB</li>
+            <li>per-entry inflated size limit 64 MiB</li>
+            <li>up to 32 entries per package</li>
+          </ul>
+        </li>
+        <li><span class="k">1.7 Batch-fail conditions:</span> the three cases below fail the whole pull (rather than skipping one); a normal Server should not produce these:
+          <ul>
+            <li>a <code>null</code> element in the changes list</li>
+            <li>any note with a missing or negative <code>updatedAt</code></li>
+            <li>a duplicate UUID in one batch (two rows for one key = a data-integrity break)</li>
+          </ul>
+        </li>
+        <li><span class="k">1.8 Skip &amp; retry:</span> a skipped note still advances the watermark.
+          <ul>
+            <li>If HP later fixes a note's payload, please also assign a new, strictly-increasing <code>updatedAt</code> so nNote re-fetches it.</li>
+            <li>NTX will also add an "isolated retry list" so a bad note is not permanently absent.</li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>3. Summary</h2>
+      <p>Functionality is in place and sync works; NTX's client-side work is complete.<br>Points that need HP's attention or reply:</p>
+      <ul>
+        <li><b>1.3</b> what the <code>content</code> field should carry;</li>
+        <li><b>1.5</b> "32 MiB" is encoded characters, with a 24 MiB actual-file limit;</li>
+        <li><b>1.9</b> please keep <code>[server] port</code> configurable;</li>
+        <li><b>Docs</b> a Swagger / OpenAPI spec would be appreciated.</li>
+      </ul>
+      <p>Everything else is a notification of NTX behavior and needs no HP action.</p>
+    </section>
+
+    <footer>NTX · nNote (Android)　|　HP Sync NTX Follow-up　|　2026-08-07</footer>
+  </div>
+</div>
+
+<script>
+  function setLang(l){
+    document.querySelectorAll('[data-lang]').forEach(function(d){d.classList.toggle('show',d.getAttribute('data-lang')===l);});
+    document.getElementById('btn-zh').classList.toggle('active',l==='zh');
+    document.getElementById('btn-en').classList.toggle('active',l==='en');
+    document.getElementById('root').setAttribute('lang',l==='zh'?'zh-Hant':'en');
+    window.scrollTo(0,0);
+  }
+</script>
+</body>
+</html>
