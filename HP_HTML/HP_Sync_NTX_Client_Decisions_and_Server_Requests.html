@@ -147,10 +147,10 @@
             <li>同一批出現重複 UUID（同一主鍵兩列，代表資料完整性破損）</li>
           </ul>
         </li>
-        <li><span class="k">1.8 略過與重試：</span>被略過的筆記仍會推進 watermark。<br>
+        <li><span class="k">1.8 略過後不會重試：</span>被略過的筆記會<b>推進 watermark</b>，因此之後不會再被抓取 - 目前<b>沒有任何自動重試機制</b>，該筆會在 Android <b>永久缺席</b>。<br>
           <ul>
-            <li>若 HP 日後修正某筆 payload，煩請一併指派新的、嚴格遞增的 <code>updatedAt</code>，nNote 才會重新抓取。</li>
-            <li>NTX 端也會加上「隔離重試清單」，讓壞筆記不致永久缺席。</li>
+            <li>因此若 HP 日後修正某筆 payload，<b>必須一併指派新的、嚴格遞增的 <code>updatedAt</code></b>，nNote 才會再次看到它；<br>若只改內容、不動 <code>updatedAt</code>，nNote 將永遠不會重抓。</li>
+            <li>NTX 端後續會加上「隔離重試清單」來補上這個缺口（目前尚未實作）。</li>
           </ul>
         </li>
       </ul>
@@ -253,10 +253,10 @@
             <li>a duplicate UUID in one batch (two rows for one key = a data-integrity break)</li>
           </ul>
         </li>
-        <li><span class="k">1.8 Skip &amp; retry:</span> a skipped note still advances the watermark.
+        <li><span class="k">1.8 No retry after a skip:</span> a skipped note <b>advances the watermark</b>, so it is never fetched again - there is currently <b>no auto-retry</b>, and the note stays <b>permanently absent</b> on Android.
           <ul>
-            <li>If HP later fixes a note's payload, please also assign a new, strictly-increasing <code>updatedAt</code> so nNote re-fetches it.</li>
-            <li>NTX will also add an "isolated retry list" so a bad note is not permanently absent.</li>
+            <li>So if HP later fixes a note's payload, it <b>must also assign a new, strictly-increasing <code>updatedAt</code></b> for nNote to see it again; fixing only the content without changing <code>updatedAt</code> means nNote never re-fetches it.</li>
+            <li>NTX will later add an "isolated retry list" to close this gap (not yet implemented).</li>
           </ul>
         </li>
       </ul>
