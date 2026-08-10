@@ -28,7 +28,11 @@
   h2{font-size:20px;color:var(--head);margin:.1em 0 .4em;padding-left:11px;border-left:5px solid var(--accent);
     display:flex;align-items:center;gap:10px;flex-wrap:wrap}
   p{margin:.5em 0}.muted{color:var(--muted)}
+  h3{font-size:15px;color:#24405c;margin:.9em 0 .3em}
   ul{margin:.4em 0 .3em 1.15em}li{margin:.5em 0}
+  .btn{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-size:14.5px;font-weight:600;padding:10px 16px;border-radius:10px;border:1px solid var(--accent);color:var(--accent);background:#fff}
+  .btn:hover{background:var(--accent);color:#fff}
+  .btnrow{display:flex;flex-wrap:wrap;gap:11px;margin:.6em 0}
   .pill{font-size:12px;font-weight:700;padding:2px 10px;border-radius:999px;white-space:nowrap;margin-right:2px}
   .pill-plan{background:var(--accent-soft);color:var(--accent)}
   .pill-fix{background:var(--ok-soft);color:var(--ok)}
@@ -86,7 +90,7 @@
     <section>
       <h2>3. Calendar</h2>
       <ul>
-        <li><span class="pill pill-plan">決議變更</span> <b>Create Event</b>:原決議「連新增 Event 都不要」(HP 認為不能動到來自 Outlook 的 Data)→ 今日改為<b>不能編輯,但可主動新增</b>。<br>需確認<b>如何 Sync 回 Server</b>(未來使用 HP Server 時)。</li>
+        <li><span class="pill pill-plan">決議變更</span> <b>Create Event</b>:原決議「連新增 Event 都不要」(HP 認為不能動到來自 Outlook 的 Data)。<br>→ 今日改為<b>不能編輯,但可主動新增</b>。<br>需確認<b>如何 Sync 回 Server</b>(未來使用 HP Server 時)。</li>
       </ul>
     </section>
 
@@ -132,6 +136,32 @@
       </ul>
     </section>
 
+    <section>
+      <h2>9. Known Issue <span class="pill pill-fix">DQA 清單</span></h2>
+      <ul>
+        <li>Known Issue 依 <b>DQA 清單</b>持續追蹤;上週 <b>PD 充電</b> Known Issue 已於 <b>v1.0.3</b> 修正。✅</li>
+      </ul>
+      <div class="btnrow"><a class="btn" href="https://docs.google.com/spreadsheets/d/1GE6DmD7WhkliivO2_N5iBsR_iyIP7YTD/edit?usp=sharing&ouid=113113930444333014662&rtpof=true&sd=true" target="_blank" rel="noopener">📊 Known Issue 清單(Excel)</a></div>
+    </section>
+
+    <section>
+      <h2>10. 待追蹤項目(延續上週) <span class="pill pill-next">追蹤中</span></h2>
+      <h3>辨識議題(待 HP 提供 <code>.note</code> 分析)</h3>
+      <ul>
+        <li><b>Note App</b>:套索辨識與整頁辨識結果出入(套索準確度較整頁 OCR 低)。</li>
+        <li><b>字母大小寫</b>辨識不正確(併請提供操作說明)。</li>
+        <li><b>混合辨識(辨識完插入)不準</b>:對應 OCR 工具列<b>中間(藍框)圖形混合辨識</b>;需 HP 補充「不準」的具體內容與 <code>.note</code>(詳見 08/04 報告)。</li>
+      </ul>
+      <h3>待 HP 確認</h3>
+      <ul>
+        <li><b>OCR 語系納入範圍</b>:全部或僅部分。</li>
+      </ul>
+      <h3>會議提出、待評估</h3>
+      <ul>
+        <li><b>支援 Optimize Menu</b>。</li>
+      </ul>
+    </section>
+
     <footer>Netronix × HP　-　FluxInk e-ink Note Tablet 專案　|　2026-08-11</footer>
   </div>
 
@@ -172,7 +202,7 @@
     <section>
       <h2>3. Calendar</h2>
       <ul>
-        <li><span class="pill pill-plan">decision change</span> <b>Create Event</b>: the earlier decision "don't even allow adding Events" (HP felt Outlook-sourced Data must not be touched) → now changed to <b>cannot edit, but can actively add</b>.<br>Need to confirm <b>how to sync back to the server</b> (for future use of the HP Server).</li>
+        <li><span class="pill pill-plan">decision change</span> <b>Create Event</b>: the earlier decision was "don't even allow adding Events" (HP felt Outlook-sourced Data must not be touched).<br>→ Now changed to <b>cannot edit, but can actively add</b>.<br>Need to confirm <b>how to sync back to the server</b> (for future use of the HP Server).</li>
       </ul>
     </section>
 
@@ -215,6 +245,32 @@
         <li><span class="pill pill-plan">request</span> <b>Remove the Feedback page</b>.</li>
         <li><span class="pill pill-ask">issue</span> <b>aDraw range is wrong when rotating</b>.</li>
         <li><span class="pill pill-plan">request</span> <b>Import Google Play</b>.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>9. Known Issue <span class="pill pill-fix">DQA list</span></h2>
+      <ul>
+        <li>Known issues are tracked on the <b>DQA list</b>; last week's <b>PD charging</b> known issue was fixed in <b>v1.0.3</b>. ✅</li>
+      </ul>
+      <div class="btnrow"><a class="btn" href="https://docs.google.com/spreadsheets/d/1GE6DmD7WhkliivO2_N5iBsR_iyIP7YTD/edit?usp=sharing&ouid=113113930444333014662&rtpof=true&sd=true" target="_blank" rel="noopener">📊 Known Issue list (Excel)</a></div>
+    </section>
+
+    <section>
+      <h2>10. Items to Track (carried over) <span class="pill pill-next">tracking</span></h2>
+      <h3>Recognition issues (pending HP's <code>.note</code>)</h3>
+      <ul>
+        <li><b>Note App</b>: lasso vs full-page recognition results differ (lasso is less accurate than full-page OCR).</li>
+        <li><b>Upper / lower case</b> recognition is incorrect (please also provide the operation steps).</li>
+        <li><b>Hybrid recognition ("recognize then insert") is inaccurate</b>: maps to the <b>middle (blue) hybrid shape recognition</b> in the OCR toolbar; HP to describe what "inaccurate" means, plus a <code>.note</code> (see the 08/04 report).</li>
+      </ul>
+      <h3>Pending HP's confirmation</h3>
+      <ul>
+        <li><b>OCR language scope</b>: all or only a subset.</li>
+      </ul>
+      <h3>Raised in meetings, to evaluate</h3>
+      <ul>
+        <li><b>Optimize Menu support</b>.</li>
       </ul>
     </section>
 
