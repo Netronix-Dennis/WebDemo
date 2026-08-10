@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" id="root">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HP 本日報告 2026-08-11</title>
+<style>
+  :root{--bg:#eef1f6;--card:#fff;--ink:#1f2733;--muted:#5b6675;--line:#e1e6ec;--head:#0b2740;
+    --accent:#1f6feb;--accent-soft:#eaf2ff;--ok:#1f9d57;--ok-soft:#e9f8ef;--warn:#c77700;--warn-soft:#fff6e6;
+    --key:#0b66c3;--key-soft:#e9f3fc;--pend:#b03a4b;--pend-soft:#fdeef0;}
+  *{box-sizing:border-box}html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);line-height:1.74;
+    font-family:"Noto Sans CJK TC","PingFang TC","Microsoft JhengHei","Segoe UI",system-ui,sans-serif;}
+  .wrap{max-width:1000px;margin:0 auto;padding:24px 22px 90px}
+  .lang-bar{position:sticky;top:0;z-index:20;display:flex;justify-content:flex-end;
+    padding:10px 0 6px;background:linear-gradient(var(--bg),var(--bg) 70%,transparent)}
+  .lang-btn{border:1px solid var(--accent);background:#fff;color:var(--accent);cursor:pointer;
+    font-size:14px;padding:7px 16px;font-weight:600}
+  .lang-btn:first-child{border-radius:8px 0 0 8px}
+  .lang-btn:last-child{border-radius:0 8px 8px 0;border-left:none}
+  .lang-btn.active{background:var(--accent);color:#fff}
+  header.top{background:linear-gradient(120deg,#0b2740,#1f6feb);color:#fff;border-radius:16px;
+    padding:26px 30px;margin-bottom:4px;box-shadow:0 6px 24px rgba(11,39,64,.18)}
+  header.top h1{margin:0 0 8px;font-size:28px}
+  header.top .meta{font-size:14.5px;opacity:.92}
+  section{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:20px 26px;margin:14px 0;box-shadow:0 1px 3px rgba(16,30,54,.05)}
+  h2{font-size:20px;color:var(--head);margin:.1em 0 .4em;padding-left:11px;border-left:5px solid var(--accent);
+    display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  p{margin:.5em 0}.muted{color:var(--muted)}
+  ul{margin:.4em 0 .3em 1.15em}li{margin:.5em 0}
+  .pill{font-size:12px;font-weight:700;padding:2px 10px;border-radius:999px;white-space:nowrap;margin-right:2px}
+  .pill-plan{background:var(--accent-soft);color:var(--accent)}
+  .pill-fix{background:var(--ok-soft);color:var(--ok)}
+  .pill-ask{background:var(--pend-soft);color:var(--pend)}
+  .pill-next{background:#eef1f5;color:var(--muted)}
+  code{font-family:Consolas,"Roboto Mono",monospace;font-size:.9em;background:#eef1f5;color:#0b3d66;padding:1px 6px;border-radius:5px}
+  .callout{border:1px solid var(--line);border-left:5px solid var(--accent);background:var(--accent-soft);
+    padding:13px 17px;border-radius:9px;margin:.9em 0}
+  .callout-key{border-left-color:var(--key);background:var(--key-soft)}
+  .legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  footer{text-align:center;color:var(--muted);font-size:13px;margin-top:26px}
+  [data-lang]{display:none}[data-lang].show{display:block}
+  @media print{body{background:#fff}.lang-bar{display:none}section,header.top{box-shadow:none;break-inside:avoid}
+    [data-lang]{display:none!important}[data-lang].show{display:block!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="lang-bar"><button class="lang-btn active" id="btn-zh" onclick="setLang('zh')">中文</button><button class="lang-btn" id="btn-en" onclick="setLang('en')">English</button></div>
+
+  <!-- ===== 中文 ===== -->
+  <div data-lang="zh" class="show">
+    <header class="top">
+      <h1>HP 本日報告</h1>
+      <div class="meta">2026-08-11　|　週會討論項目　|　Netronix</div>
+    </header>
+
+    <div class="callout callout-key">
+      本週週會討論項目彙整(依模組),各項附狀態標記。
+      <div class="legend">
+        <span class="pill pill-fix">已完成 / 導入</span>
+        <span class="pill pill-plan">需求 / 修正中</span>
+        <span class="pill pill-ask">問題</span>
+        <span class="pill pill-next">待查證 / Survey / 無法複現</span>
+      </div>
+    </div>
+
+    <section>
+      <h2>1. 快速手寫層(延續追蹤)</h2>
+      <ul>
+        <li><span class="pill pill-next">Survey 中</span> <b>非純色 Pattern</b>:仍持續 Survey(此項未列於本次會議清單,延續追蹤)。</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>2. nNote / aDraw</h2>
+      <ul>
+        <li><span class="pill pill-next">待查證</span> <b>連續書寫斷水 + 變慢</b>:寫正常大小的字、連續寫一整行時,後段字會<b>斷水</b>(有幾撇出不來),且<b>顯示速度越來越慢</b>。</li>
+        <li><span class="pill pill-fix">已導入</span> <b>中文直式書寫辨識</b>:替換文字模型(FluxInk 已提供並導入)。</li>
+        <li><span class="pill pill-fix">已導入</span> <b>圖形辨識優化</b>(FluxInk 已提供並導入)。</li>
+        <li><span class="pill pill-fix">已導入</span> <b>主動筆側鍵</b>:側鍵<b>切換筆種</b>、<b>長按側鍵切成橡皮擦</b>。</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>3. Calendar</h2>
+      <ul>
+        <li><span class="pill pill-plan">決議變更</span> <b>Create Event</b>:原決議「連新增 Event 都不要」(HP 認為不能動到來自 Outlook 的 Data)→ 今日改為<b>不能編輯,但可主動新增</b>。<br>需確認<b>如何 Sync 回 Server</b>(未來使用 HP Server 時)。</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>4. Camera</h2>
+      <ul>
+        <li><span class="pill pill-next">目前無法複現</span> <b>部分機器拍攝模糊、色溫完全不同</b>:底層工程師目前尚無法複現。</li>
+        <li><span class="pill pill-ask">問題</span> <b>Gallery 點擊小圖</b>看照片時,顯示的<b>不是最新拍的那一張</b>。</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>5. Books</h2>
+      <ul>
+        <li><span class="pill pill-fix">已移除</span> <b>Dropbox / Evernote</b> 已移除。</li>
+        <li><span class="pill pill-plan">需求</span> 主頁 <b>All Books 改名為 Recents Books</b>。</li>
+        <li><span class="pill pill-plan">需求</span> <b>移除 user_manual 與「How to Set Up Play Store」pdf 的邏輯</b>。</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>6. nImage</h2>
+      <ul>
+        <li><span class="pill pill-plan">修正中</span> <b>切換圖片會花掉</b>:實測研判為 <b>Gallery</b> 的問題,已有<b>修正 Gallery 的計畫</b>。</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>7. nTools</h2>
+      <ul>
+        <li><span class="pill pill-plan">需求</span> <b>應用程式改成分頁顯示</b>。</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>8. Settings &amp; BSP</h2>
+      <ul>
+        <li><span class="pill pill-plan">需求</span> <b>Stylus Calibration</b> 功能導入。</li>
+        <li><span class="pill pill-plan">需求</span> <b>Stylus Battery</b>:顯示在<b>狀態列</b>、<b>低電 Warning 通知</b>、Setting Page <b>點擊 Refresh 時抓取更新</b>。</li>
+        <li><span class="pill pill-plan">需求</span> <b>Feedback 頁面移除</b>。</li>
+        <li><span class="pill pill-ask">問題</span> <b>旋轉時 aDraw 的範圍錯誤</b>。</li>
+        <li><span class="pill pill-plan">需求</span> <b>Google Play 匯入</b>。</li>
+      </ul>
+    </section>
+
+    <footer>Netronix × HP　-　FluxInk e-ink Note Tablet 專案　|　2026-08-11</footer>
+  </div>
+
+  <!-- ===== English ===== -->
+  <div data-lang="en">
+    <header class="top">
+      <h1>HP Daily Report</h1>
+      <div class="meta">2026-08-11　|　Weekly sync: discussion items　|　Netronix</div>
+    </header>
+
+    <div class="callout callout-key">
+      Discussion items from this week's weekly sync (grouped by module), each with a status tag.
+      <div class="legend">
+        <span class="pill pill-fix">Done / Integrated</span>
+        <span class="pill pill-plan">Request / Fix planned</span>
+        <span class="pill pill-ask">Issue</span>
+        <span class="pill pill-next">Investigating / Survey / Not reproduced</span>
+      </div>
+    </div>
+
+    <section>
+      <h2>1. Fast Handwriting Layer (ongoing)</h2>
+      <ul>
+        <li><span class="pill pill-next">surveying</span> <b>Non-pure-color pattern</b>: still under survey (not on this meeting's list; ongoing tracking).</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>2. nNote / aDraw</h2>
+      <ul>
+        <li><span class="pill pill-next">investigating</span> <b>Ink starvation + slowdown on continuous writing</b>: when writing normal-size characters across a full line, later strokes <b>drop out</b> and rendering <b>gets slower and slower</b>.</li>
+        <li><span class="pill pill-fix">integrated</span> <b>Vertical Chinese writing recognition</b>: text model replaced (provided by FluxInk and integrated).</li>
+        <li><span class="pill pill-fix">integrated</span> <b>Shape recognition optimization</b> (provided by FluxInk and integrated).</li>
+        <li><span class="pill pill-fix">integrated</span> <b>Active-pen side button</b>: side button <b>switches pen type</b>; <b>long-press switches to eraser</b>.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>3. Calendar</h2>
+      <ul>
+        <li><span class="pill pill-plan">decision change</span> <b>Create Event</b>: the earlier decision "don't even allow adding Events" (HP felt Outlook-sourced Data must not be touched) → now changed to <b>cannot edit, but can actively add</b>.<br>Need to confirm <b>how to sync back to the server</b> (for future use of the HP Server).</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>4. Camera</h2>
+      <ul>
+        <li><span class="pill pill-next">not reproduced</span> <b>Some units capture blurry photos with a completely different color temperature</b>: the low-level engineer cannot reproduce it so far.</li>
+        <li><span class="pill pill-ask">issue</span> <b>Gallery thumbnail tap</b>: opening a photo shows <b>not the most recently captured one</b>.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>5. Books</h2>
+      <ul>
+        <li><span class="pill pill-fix">removed</span> <b>Dropbox / Evernote</b> removed.</li>
+        <li><span class="pill pill-plan">request</span> Rename home <b>All Books to Recents Books</b>.</li>
+        <li><span class="pill pill-plan">request</span> <b>Remove the user_manual and "How to Set Up Play Store" pdf logic</b>.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>6. nImage</h2>
+      <ul>
+        <li><span class="pill pill-plan">fix planned</span> <b>Image switching gets garbled</b>: testing suggests this is a <b>Gallery</b> issue; a <b>Gallery fix is planned</b>.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>7. nTools</h2>
+      <ul>
+        <li><span class="pill pill-plan">request</span> <b>Switch the app list to a tabbed view</b>.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>8. Settings &amp; BSP</h2>
+      <ul>
+        <li><span class="pill pill-plan">request</span> Add <b>Stylus Calibration</b>.</li>
+        <li><span class="pill pill-plan">request</span> <b>Stylus Battery</b>: show in the <b>status bar</b>, <b>low-battery warning</b>, and <b>fetch on Refresh</b> on the Settings page.</li>
+        <li><span class="pill pill-plan">request</span> <b>Remove the Feedback page</b>.</li>
+        <li><span class="pill pill-ask">issue</span> <b>aDraw range is wrong when rotating</b>.</li>
+        <li><span class="pill pill-plan">request</span> <b>Import Google Play</b>.</li>
+      </ul>
+    </section>
+
+    <footer>Netronix × HP　-　FluxInk e-ink Note Tablet project　|　2026-08-11</footer>
+  </div>
+</div>
+<script>
+  function setLang(l){
+    document.querySelectorAll('[data-lang]').forEach(function(d){d.classList.toggle('show',d.getAttribute('data-lang')===l);});
+    document.getElementById('btn-zh').classList.toggle('active',l==='zh');
+    document.getElementById('btn-en').classList.toggle('active',l==='en');
+    document.getElementById('root').setAttribute('lang',l==='zh'?'zh-Hant':'en');
+    window.scrollTo(0,0);
+  }
+</script>
+</body>
+</html>
