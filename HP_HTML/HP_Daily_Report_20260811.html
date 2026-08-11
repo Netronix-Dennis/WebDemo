@@ -27,12 +27,10 @@
     padding:20px 26px;margin:14px 0;box-shadow:0 1px 3px rgba(16,30,54,.05)}
   h2{font-size:20px;color:var(--head);margin:.1em 0 .4em;padding-left:11px;border-left:5px solid var(--accent);
     display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  h3{font-size:15.5px;color:#24405c;margin:1.2em 0 .3em;padding-bottom:.25em;border-bottom:1px solid var(--line)}
+  section > h3:first-of-type{margin-top:.5em}
   p{margin:.5em 0}.muted{color:var(--muted)}
-  h3{font-size:15px;color:#24405c;margin:.9em 0 .3em}
   ul{margin:.4em 0 .3em 1.15em}li{margin:.5em 0}
-  .btn{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-size:14.5px;font-weight:600;padding:10px 16px;border-radius:10px;border:1px solid var(--accent);color:var(--accent);background:#fff}
-  .btn:hover{background:var(--accent);color:#fff}
-  .btnrow{display:flex;flex-wrap:wrap;gap:11px;margin:.6em 0}
   .pill{font-size:12px;font-weight:700;padding:2px 10px;border-radius:999px;white-space:nowrap;margin-right:2px}
   .pill-plan{background:var(--accent-soft);color:var(--accent)}
   .pill-fix{background:var(--ok-soft);color:var(--ok)}
@@ -43,6 +41,20 @@
     padding:13px 17px;border-radius:9px;margin:.9em 0}
   .callout-key{border-left-color:var(--key);background:var(--key-soft)}
   .legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .btn{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-size:14.5px;font-weight:600;padding:10px 16px;border-radius:10px;border:1px solid var(--accent);color:var(--accent);background:#fff}
+  .btn:hover{background:var(--accent);color:#fff}
+  .btnrow{display:flex;flex-wrap:wrap;gap:11px;margin:.6em 0}
+  .vplayer{position:relative;border:1px solid var(--line);border-radius:12px;background:linear-gradient(120deg,#0b2740,#1f6feb);
+    min-height:240px;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;margin:.6em 0}
+  .vplayer .face{display:flex;flex-direction:column;align-items:center;gap:12px;color:#fff;padding:26px;text-align:center}
+  .vplayer .pbtn{width:66px;height:66px;border-radius:50%;background:rgba(255,255,255,.16);border:2px solid #fff;
+    display:flex;align-items:center;justify-content:center;transition:background .12s}
+  .vplayer:hover .pbtn{background:rgba(255,255,255,.30)}
+  .vplayer .pbtn::before{content:"\25B6";font-size:26px;color:#fff;margin-left:5px}
+  .vplayer .lbl{font-size:16px;font-weight:700}
+  .vplayer .sub{font-size:12.5px;color:#dce8f8;word-break:break-all}
+  .vplayer video{width:100%;display:block;background:#000}
+  .vnote{font-size:12.5px;color:var(--muted);margin-top:.3em}
   footer{text-align:center;color:var(--muted);font-size:13px;margin-top:26px}
   [data-lang]{display:none}[data-lang].show{display:block}
   @media print{body{background:#fff}.lang-bar{display:none}section,header.top{box-shadow:none;break-inside:avoid}
@@ -61,7 +73,7 @@
     </header>
 
     <div class="callout callout-key">
-      本週週會討論項目彙整(依模組),各項附狀態標記。
+      本週週會項目彙整。第一章為各模組的 <b>HP 反饋 / Bug / Issue</b>(附狀態標記),其後為 Known Issue、使用者體驗反饋與 Demo 影片。
       <div class="legend">
         <span class="pill pill-fix">已完成 / 導入</span>
         <span class="pill pill-plan">需求 / 修正中</span>
@@ -71,62 +83,54 @@
     </div>
 
     <section>
-      <h2>1. 快速手寫層(延續追蹤)</h2>
-      <ul>
-        <li><span class="pill pill-next">Survey 中</span> <b>非純色 Pattern</b>:仍持續 Survey(此項未列於本次會議清單,延續追蹤)。</li>
-      </ul>
-    </section>
+      <h2>1. HP 反饋 / Bug / Issue(依模組)</h2>
 
-    <section>
-      <h2>2. nNote / aDraw</h2>
+      <h3>快速手寫層(延續追蹤)</h3>
+      <ul>
+        <li><span class="pill pill-next">Survey 中</span> <b>非純色 Pattern</b>:仍持續 Survey(未列於本次會議清單,延續追蹤)。</li>
+      </ul>
+
+      <h3>nNote / aDraw</h3>
       <ul>
         <li><span class="pill pill-next">待查證</span> <b>連續書寫斷水 + 變慢</b>:寫正常大小的字、連續寫一整行時,後段字會<b>斷水</b>(有幾撇出不來),且<b>顯示速度越來越慢</b>。</li>
         <li><span class="pill pill-fix">已導入</span> <b>中文直式書寫辨識</b>:替換文字模型(FluxInk 已提供並導入)。</li>
         <li><span class="pill pill-fix">已導入</span> <b>圖形辨識優化</b>(FluxInk 已提供並導入)。</li>
         <li><span class="pill pill-fix">已導入</span> <b>主動筆側鍵</b>:側鍵<b>切換筆種</b>、<b>長按側鍵切成橡皮擦</b>。</li>
       </ul>
-    </section>
 
-    <section>
-      <h2>3. Calendar</h2>
+      <h3>Calendar</h3>
       <ul>
         <li><span class="pill pill-plan">決議變更</span> <b>Create Event</b>:原決議「連新增 Event 都不要」(HP 認為不能動到來自 Outlook 的 Data)。<br>→ 今日改為<b>不能編輯,但可主動新增</b>。<br>需確認<b>如何 Sync 回 Server</b>(未來使用 HP Server 時)。</li>
       </ul>
-    </section>
+      <div class="callout callout-key">
+        <b>後續方向 / 需向 HP 補充確認:</b>HP 後續可能走向<b>自行開發 APP、由我方提供 SDK</b>;因此如 <b>Calendar</b> 等項目,<b>當前 POC 階段是否仍要執行</b>,需再與 HP 確認。
+      </div>
 
-    <section>
-      <h2>4. Camera</h2>
+      <h3>Camera</h3>
       <ul>
         <li><span class="pill pill-next">目前無法複現</span> <b>部分機器拍攝模糊、色溫完全不同</b>:底層工程師目前尚無法複現。</li>
         <li><span class="pill pill-ask">問題</span> <b>Gallery 點擊小圖</b>看照片時,顯示的<b>不是最新拍的那一張</b>。</li>
       </ul>
-    </section>
 
-    <section>
-      <h2>5. Books</h2>
+      <h3>Books</h3>
       <ul>
         <li><span class="pill pill-fix">已移除</span> <b>Dropbox / Evernote</b> 已移除。</li>
         <li><span class="pill pill-plan">需求</span> 主頁 <b>All Books 改名為 Recents Books</b>。</li>
         <li><span class="pill pill-plan">需求</span> <b>移除 user_manual 與「How to Set Up Play Store」pdf 的邏輯</b>。</li>
       </ul>
-    </section>
 
-    <section>
-      <h2>6. nImage</h2>
+      <h3>nImage</h3>
       <ul>
         <li><span class="pill pill-plan">修正中</span> <b>切換圖片會花掉</b>:實測研判為 <b>Gallery</b> 的問題,已有<b>修正 Gallery 的計畫</b>。</li>
       </ul>
-    </section>
 
-    <section>
-      <h2>7. nTools</h2>
+      <h3>nTools</h3>
       <ul>
         <li><span class="pill pill-plan">需求</span> <b>應用程式改成分頁顯示</b>。</li>
+        <li><span class="pill pill-plan">需求</span> <b>支援 Optimize Menu</b>。</li>
       </ul>
-    </section>
 
-    <section>
-      <h2>8. Settings &amp; BSP</h2>
+      <h3>Settings &amp; BSP</h3>
       <ul>
         <li><span class="pill pill-plan">需求</span> <b>Stylus Calibration</b> 功能導入。</li>
         <li><span class="pill pill-plan">需求</span> <b>Stylus Battery</b>:顯示在<b>狀態列</b>、<b>低電 Warning 通知</b>、Setting Page <b>點擊 Refresh 時抓取更新</b>。</li>
@@ -137,7 +141,7 @@
     </section>
 
     <section>
-      <h2>9. Known Issue <span class="pill pill-fix">DQA 清單</span></h2>
+      <h2>2. Known Issue <span class="pill pill-fix">DQA 清單</span></h2>
       <ul>
         <li>Known Issue 依 <b>DQA 清單</b>持續追蹤;上週 <b>PD 充電</b> Known Issue 已於 <b>v1.0.3</b> 修正。✅</li>
       </ul>
@@ -145,25 +149,7 @@
     </section>
 
     <section>
-      <h2>10. 待追蹤項目(延續上週) <span class="pill pill-next">追蹤中</span></h2>
-      <h3>辨識議題(待 HP 提供 <code>.note</code> 分析)</h3>
-      <ul>
-        <li><b>Note App</b>:套索辨識與整頁辨識結果出入(套索準確度較整頁 OCR 低)。</li>
-        <li><b>字母大小寫</b>辨識不正確(併請提供操作說明)。</li>
-        <li><b>混合辨識(辨識完插入)不準</b>:對應 OCR 工具列<b>中間(藍框)圖形混合辨識</b>;需 HP 補充「不準」的具體內容與 <code>.note</code>(詳見 08/04 報告)。</li>
-      </ul>
-      <h3>待 HP 確認</h3>
-      <ul>
-        <li><b>OCR 語系納入範圍</b>:全部或僅部分。</li>
-      </ul>
-      <h3>會議提出、待評估</h3>
-      <ul>
-        <li><b>支援 Optimize Menu</b>。</li>
-      </ul>
-    </section>
-
-    <section>
-      <h2>11. HP 反饋:使用者體驗(先評估是否要改) <span class="pill pill-next">待評估</span></h2>
+      <h2>3. HP 反饋:使用者體驗(先評估是否要改) <span class="pill pill-next">待評估</span></h2>
       <p class="muted">以下為 HP 針對體驗較差處提供的反饋;目前<b>均為待評估</b>。</p>
       <ul>
         <li><span class="pill pill-next">待評估</span> <b>[BSP] 手掌影響觸控筆</b>:手掌常影響觸控筆,寫字體驗較差;第一筆手<b>懸空</b>比較不會觸發此問題。</li>
@@ -172,6 +158,19 @@
         <li><span class="pill pill-next">待評估</span> <b>[nNote] 多選 notes → move to folder</b>:HP 希望多選筆記能 move to folder 以利整理。</li>
         <li><span class="pill pill-next">待評估</span> <b>[nNote] 工具列 show / hide</b>:展開功能後,工具列後方仍有空間可書寫,但要切換其他工具編輯時會被工具列擋住。</li>
       </ul>
+    </section>
+
+    <section>
+      <h2>4. Demo 影片(HP 提供)</h2>
+      <p class="muted">以下為 HP 提供的 Demo 影片展示。點擊下方播放。</p>
+      <div class="vplayer" data-src="./31B9CA79-CE66-4DEA-BC60-4A41CF028403_7689.mp4" onclick="playVid(this)">
+        <div class="face">
+          <div class="pbtn"></div>
+          <div class="lbl">播放 Demo 影片</div>
+          <div class="sub">31B9CA79-CE66-4DEA-BC60-4A41CF028403_7689.mp4</div>
+        </div>
+      </div>
+      <div class="vnote">※ 影片檔需與本 HTML 放在<b>同一階層</b>;若無法內嵌播放,可<a href="./31B9CA79-CE66-4DEA-BC60-4A41CF028403_7689.mp4">點此開啟影片</a>。</div>
     </section>
 
     <footer>Netronix × HP　-　FluxInk e-ink Note Tablet 專案　|　2026-08-11</footer>
@@ -185,7 +184,7 @@
     </header>
 
     <div class="callout callout-key">
-      Discussion items from this week's weekly sync (grouped by module), each with a status tag.
+      Summary of this week's weekly-sync items. Chapter 1 lists <b>HP feedback / bugs / issues</b> by module (with status tags), followed by Known Issue, UX feedback, and Demo videos.
       <div class="legend">
         <span class="pill pill-fix">Done / Integrated</span>
         <span class="pill pill-plan">Request / Fix planned</span>
@@ -195,62 +194,54 @@
     </div>
 
     <section>
-      <h2>1. Fast Handwriting Layer (ongoing)</h2>
+      <h2>1. HP Feedback / Bugs / Issues (by module)</h2>
+
+      <h3>Fast handwriting layer (ongoing)</h3>
       <ul>
         <li><span class="pill pill-next">surveying</span> <b>Non-pure-color pattern</b>: still under survey (not on this meeting's list; ongoing tracking).</li>
       </ul>
-    </section>
 
-    <section>
-      <h2>2. nNote / aDraw</h2>
+      <h3>nNote / aDraw</h3>
       <ul>
         <li><span class="pill pill-next">investigating</span> <b>Ink starvation + slowdown on continuous writing</b>: when writing normal-size characters across a full line, later strokes <b>drop out</b> and rendering <b>gets slower and slower</b>.</li>
         <li><span class="pill pill-fix">integrated</span> <b>Vertical Chinese writing recognition</b>: text model replaced (provided by FluxInk and integrated).</li>
         <li><span class="pill pill-fix">integrated</span> <b>Shape recognition optimization</b> (provided by FluxInk and integrated).</li>
         <li><span class="pill pill-fix">integrated</span> <b>Active-pen side button</b>: side button <b>switches pen type</b>; <b>long-press switches to eraser</b>.</li>
       </ul>
-    </section>
 
-    <section>
-      <h2>3. Calendar</h2>
+      <h3>Calendar</h3>
       <ul>
         <li><span class="pill pill-plan">decision change</span> <b>Create Event</b>: the earlier decision was "don't even allow adding Events" (HP felt Outlook-sourced Data must not be touched).<br>→ Now changed to <b>cannot edit, but can actively add</b>.<br>Need to confirm <b>how to sync back to the server</b> (for future use of the HP Server).</li>
       </ul>
-    </section>
+      <div class="callout callout-key">
+        <b>Direction / to confirm with HP:</b> HP may move toward <b>building their own app with our SDK</b>; so for items like <b>Calendar</b>, we need to confirm with HP <b>whether they still need to be executed in the current POC stage</b>.
+      </div>
 
-    <section>
-      <h2>4. Camera</h2>
+      <h3>Camera</h3>
       <ul>
         <li><span class="pill pill-next">not reproduced</span> <b>Some units capture blurry photos with a completely different color temperature</b>: the low-level engineer cannot reproduce it so far.</li>
         <li><span class="pill pill-ask">issue</span> <b>Gallery thumbnail tap</b>: opening a photo shows <b>not the most recently captured one</b>.</li>
       </ul>
-    </section>
 
-    <section>
-      <h2>5. Books</h2>
+      <h3>Books</h3>
       <ul>
         <li><span class="pill pill-fix">removed</span> <b>Dropbox / Evernote</b> removed.</li>
         <li><span class="pill pill-plan">request</span> Rename home <b>All Books to Recents Books</b>.</li>
         <li><span class="pill pill-plan">request</span> <b>Remove the user_manual and "How to Set Up Play Store" pdf logic</b>.</li>
       </ul>
-    </section>
 
-    <section>
-      <h2>6. nImage</h2>
+      <h3>nImage</h3>
       <ul>
         <li><span class="pill pill-plan">fix planned</span> <b>Image switching gets garbled</b>: testing suggests this is a <b>Gallery</b> issue; a <b>Gallery fix is planned</b>.</li>
       </ul>
-    </section>
 
-    <section>
-      <h2>7. nTools</h2>
+      <h3>nTools</h3>
       <ul>
         <li><span class="pill pill-plan">request</span> <b>Switch the app list to a tabbed view</b>.</li>
+        <li><span class="pill pill-plan">request</span> <b>Optimize Menu support</b>.</li>
       </ul>
-    </section>
 
-    <section>
-      <h2>8. Settings &amp; BSP</h2>
+      <h3>Settings &amp; BSP</h3>
       <ul>
         <li><span class="pill pill-plan">request</span> Add <b>Stylus Calibration</b>.</li>
         <li><span class="pill pill-plan">request</span> <b>Stylus Battery</b>: show in the <b>status bar</b>, <b>low-battery warning</b>, and <b>fetch on Refresh</b> on the Settings page.</li>
@@ -261,7 +252,7 @@
     </section>
 
     <section>
-      <h2>9. Known Issue <span class="pill pill-fix">DQA list</span></h2>
+      <h2>2. Known Issue <span class="pill pill-fix">DQA list</span></h2>
       <ul>
         <li>Known issues are tracked on the <b>DQA list</b>; last week's <b>PD charging</b> known issue was fixed in <b>v1.0.3</b>. ✅</li>
       </ul>
@@ -269,25 +260,7 @@
     </section>
 
     <section>
-      <h2>10. Items to Track (carried over) <span class="pill pill-next">tracking</span></h2>
-      <h3>Recognition issues (pending HP's <code>.note</code>)</h3>
-      <ul>
-        <li><b>Note App</b>: lasso vs full-page recognition results differ (lasso is less accurate than full-page OCR).</li>
-        <li><b>Upper / lower case</b> recognition is incorrect (please also provide the operation steps).</li>
-        <li><b>Hybrid recognition ("recognize then insert") is inaccurate</b>: maps to the <b>middle (blue) hybrid shape recognition</b> in the OCR toolbar; HP to describe what "inaccurate" means, plus a <code>.note</code> (see the 08/04 report).</li>
-      </ul>
-      <h3>Pending HP's confirmation</h3>
-      <ul>
-        <li><b>OCR language scope</b>: all or only a subset.</li>
-      </ul>
-      <h3>Raised in meetings, to evaluate</h3>
-      <ul>
-        <li><b>Optimize Menu support</b>.</li>
-      </ul>
-    </section>
-
-    <section>
-      <h2>11. HP Feedback: User Experience (evaluate whether to change) <span class="pill pill-next">to evaluate</span></h2>
+      <h2>3. HP Feedback: User Experience (evaluate whether to change) <span class="pill pill-next">to evaluate</span></h2>
       <p class="muted">HP's feedback on points with a poorer experience; all are <b>pending evaluation</b>.</p>
       <ul>
         <li><span class="pill pill-next">to evaluate</span> <b>[BSP] Palm affects the stylus</b>: the palm often interferes with the stylus, worsening the writing experience; keeping the hand <b>hovering</b> for the first stroke avoids triggering it.</li>
@@ -296,6 +269,19 @@
         <li><span class="pill pill-next">to evaluate</span> <b>[nNote] Multi-select notes → move to folder</b>: HP wants multi-selected notes to move to a folder for easier organization.</li>
         <li><span class="pill pill-next">to evaluate</span> <b>[nNote] Toolbar show / hide</b>: after expanding, there is still writable space behind the toolbar, but switching to another tool gets blocked by the toolbar.</li>
       </ul>
+    </section>
+
+    <section>
+      <h2>4. Demo Videos (provided by HP)</h2>
+      <p class="muted">Demo videos provided by HP. Click below to play.</p>
+      <div class="vplayer" data-src="./31B9CA79-CE66-4DEA-BC60-4A41CF028403_7689.mp4" onclick="playVid(this)">
+        <div class="face">
+          <div class="pbtn"></div>
+          <div class="lbl">Play demo video</div>
+          <div class="sub">31B9CA79-CE66-4DEA-BC60-4A41CF028403_7689.mp4</div>
+        </div>
+      </div>
+      <div class="vnote">※ The video file must sit in the <b>same folder</b> as this HTML; if it can't play inline, <a href="./31B9CA79-CE66-4DEA-BC60-4A41CF028403_7689.mp4">open the video here</a>.</div>
     </section>
 
     <footer>Netronix × HP　-　FluxInk e-ink Note Tablet project　|　2026-08-11</footer>
@@ -308,6 +294,11 @@
     document.getElementById('btn-en').classList.toggle('active',l==='en');
     document.getElementById('root').setAttribute('lang',l==='zh'?'zh-Hant':'en');
     window.scrollTo(0,0);
+  }
+  function playVid(el){
+    var s=el.getAttribute('data-src');
+    el.innerHTML='<video controls autoplay playsinline preload="metadata"><source src="'+s+'" type="video/mp4"></video>';
+    el.style.cursor='default';el.onclick=null;
   }
 </script>
 </body>
