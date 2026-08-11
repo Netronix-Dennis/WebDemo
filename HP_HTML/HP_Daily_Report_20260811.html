@@ -55,6 +55,9 @@
   .vplayer .sub{font-size:12.5px;color:#dce8f8;word-break:break-all}
   .vplayer video{width:100%;display:block;background:#000}
   .vnote{font-size:12.5px;color:var(--muted);margin-top:.3em}
+  .vsrc{font-size:13.5px;color:var(--muted);margin:.5em 0;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .srcbtn{border:1px solid var(--accent);background:#fff;color:var(--accent);cursor:pointer;font-size:13px;font-weight:600;padding:5px 13px;border-radius:8px}
+  .srcbtn.active{background:var(--accent);color:#fff}
   footer{text-align:center;color:var(--muted);font-size:13px;margin-top:26px}
   [data-lang]{display:none}[data-lang].show{display:block}
   @media print{body{background:#fff}.lang-bar{display:none}section,header.top{box-shadow:none;break-inside:avoid}
@@ -162,15 +165,23 @@
 
     <section>
       <h2>4. Demo 影片(HP 提供)</h2>
-      <p class="muted">以下為 HP 提供的 Demo 影片展示。點擊下方播放。</p>
-      <div class="vplayer" data-src="./31B9CA79-CE66-4DEA-BC60-4A41CF028403_7689.mp4" onclick="playVid(this)">
+      <p class="muted">以下為 HP 提供的 Demo 影片展示。選擇來源後點擊播放。</p>
+      <div class="vsrc">影片來源:
+        <button class="srcbtn active" data-mode="sftp" onclick="setSrc('sftp')">sFTP 串流</button>
+        <button class="srcbtn" data-mode="local" onclick="setSrc('local')">本機檔</button>
+      </div>
+      <div class="vplayer" onclick="playVid(this)">
         <div class="face">
           <div class="pbtn"></div>
           <div class="lbl">播放 Demo 影片</div>
           <div class="sub">31B9CA79-CE66-4DEA-BC60-4A41CF028403_7689.mp4</div>
         </div>
       </div>
-      <div class="vnote">※ 影片檔需與本 HTML 放在<b>同一階層</b>;<br>若無法內嵌播放,可<a href="./31B9CA79-CE66-4DEA-BC60-4A41CF028403_7689.mp4">點此開啟影片</a>。</div>
+      <div class="vnote">
+        ※ <b>sFTP 串流</b>:讀取 <code>upload/HP upload/Demo/</code>(需掛載 sFTP 後開啟本頁);<br>
+        ※ <b>本機檔</b>:讀取與本 HTML <b>同層</b>的影片(demo 前把影片複製到同資料夾)。<br>
+        載入失敗時請<b>切換另一個來源</b>。
+      </div>
     </section>
 
     <footer>Netronix × HP　-　FluxInk e-ink Note Tablet 專案　|　2026-08-11</footer>
@@ -273,15 +284,23 @@
 
     <section>
       <h2>4. Demo Videos (provided by HP)</h2>
-      <p class="muted">Demo videos provided by HP. Click below to play.</p>
-      <div class="vplayer" data-src="./31B9CA79-CE66-4DEA-BC60-4A41CF028403_7689.mp4" onclick="playVid(this)">
+      <p class="muted">Demo videos provided by HP. Pick a source, then click to play.</p>
+      <div class="vsrc">Source:
+        <button class="srcbtn active" data-mode="sftp" onclick="setSrc('sftp')">sFTP stream</button>
+        <button class="srcbtn" data-mode="local" onclick="setSrc('local')">Local file</button>
+      </div>
+      <div class="vplayer" onclick="playVid(this)">
         <div class="face">
           <div class="pbtn"></div>
           <div class="lbl">Play demo video</div>
           <div class="sub">31B9CA79-CE66-4DEA-BC60-4A41CF028403_7689.mp4</div>
         </div>
       </div>
-      <div class="vnote">※ The video file must sit in the <b>same folder</b> as this HTML; if it can't play inline, <a href="./31B9CA79-CE66-4DEA-BC60-4A41CF028403_7689.mp4">open the video here</a>.</div>
+      <div class="vnote">
+        ※ <b>sFTP stream</b>: reads <code>upload/HP upload/Demo/</code> (open this page from the mounted sFTP);<br>
+        ※ <b>Local file</b>: reads the video in the <b>same folder</b> as this HTML (copy it next to the HTML before the demo).<br>
+        If loading fails, <b>switch to the other source</b>.
+      </div>
     </section>
 
     <footer>Netronix × HP　-　FluxInk e-ink Note Tablet project　|　2026-08-11</footer>
@@ -295,10 +314,23 @@
     document.getElementById('root').setAttribute('lang',l==='zh'?'zh-Hant':'en');
     window.scrollTo(0,0);
   }
-  function playVid(el){
-    var s=el.getAttribute('data-src');
-    el.innerHTML='<video controls autoplay playsinline preload="metadata"><source src="'+s+'" type="video/mp4"></video>';
+  var VMP4="31B9CA79-CE66-4DEA-BC60-4A41CF028403_7689.mp4";
+  var VSRC={ sftp:"../../HP%20upload/Demo/"+VMP4, local:"./"+VMP4 };
+  var curMode="sftp";
+  function setSrc(m){
+    curMode=m;
+    document.querySelectorAll('.srcbtn').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-mode')===m);});
+    document.querySelectorAll('.vplayer').forEach(function(vp){ if(vp.querySelector('video')) loadVid(vp); });
+  }
+  function playVid(el){ loadVid(el); }
+  function loadVid(el){
+    var s=VSRC[curMode];
+    el.innerHTML='<video controls autoplay playsinline preload="metadata" src="'+s+'"></video>'
+      +'<div class="verr" style="display:none;color:#ffd7d2;font-size:13px;padding:10px;text-align:center">'
+      +'此來源載入失敗,請切換另一個來源 / failed to load, switch source</div>';
     el.style.cursor='default';el.onclick=null;
+    var v=el.querySelector('video'), er=el.querySelector('.verr');
+    v.addEventListener('error',function(){er.style.display='block';});
   }
 </script>
 </body>
