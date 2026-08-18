@@ -58,14 +58,21 @@
     </header>
 
     <div class="callout callout-key">
-      本週分為兩大部份:<br>
+      本週分為三大部份:<br>
       ① <b>Release 資訊</b> - 預計本週釋出一版<b>新 FW</b>,依先前提出的需求進行改善;<br>
-      ② <b>NtxUtilSDK</b> - Eink Stroke 快速手寫與相關基本工具的 <b>SDK &amp; Demo App</b>(交付 Source Code)。
+      ② <b>NtxUtilSDK</b> - Eink Stroke 快速手寫與相關基本工具的 <b>SDK &amp; Demo App</b>(交付 Source Code);<br>
+      ③ <b>後續需求 / 功能追蹤</b>。
     </div>
 
     <section>
       <h2>1. Release 資訊 <span class="pill pill-plan">預計本週新 FW</span></h2>
       <p class="muted">依先前提出的需求,本週改善項目如下(依模組):</p>
+
+      <h3>Pre-Install</h3>
+      <ul>
+        <li>Pre-Install <b>HP 提供的 15 個 APK</b>。</li>
+        <li>配合 <b>Gourav</b> 提供的需求,將 <b>15 個 APK 預設導入</b>,並<b>替換 nHome 為 Gourav 指定的 APP</b>。</li>
+      </ul>
 
       <h3>All Apps</h3>
       <ul>
@@ -121,13 +128,25 @@
       </ul>
 
       <h3>Demo App</h3>
-      <p>Demo App 會展示<b>如何使用上述 SDK API</b>;<br>此處著重列出 <b>SDK 以外</b>的功能示範(已在 SDK API 的項目不再重複條列)。本版 SDK 以外的展示:</p>
+      <p>Demo App 會展示<b>如何使用上述 SDK API</b>;<br>此處著重列出 <b>SDK 以外</b>的功能示範(已在 SDK API 的項目不再重複條列)。<br>本版 SDK 以外的展示:</p>
       <ul>
         <li><b>刷新殘影</b> 呼叫示範。</li>
       </ul>
       <div class="callout callout-warn">
         <b>預計後續版本納入:</b>如 <b>OCR 辨識</b>、<b>圖層功能</b> 等。
       </div>
+    </section>
+
+    <section>
+      <h2>3. 後續需求 / 功能追蹤 <span class="pill pill-plan">追蹤中</span></h2>
+      <ul>
+        <li><b>[BSP]</b> HP 主動筆的<b>電量取得</b>。</li>
+        <li><b>[BSP]</b> 旋轉時 <b>aDraw 的 Region</b> Bug Issue。</li>
+        <li><b>[BSP]</b> 寫正常大小的字、連續寫一整行時,後面的字會<b>斷水</b>(有幾撇出不來),且<b>顯示速度越來越慢</b>(aDraw)- 持續追蹤。</li>
+        <li><b>[nOCR]</b> 圖形辨識:FluxInk 的辨識包含<b>圖形 / 文字 / 數學公式</b>,須<b>一同介接</b>。</li>
+        <li><b>[Settings]</b> <b>Stylus Calibration</b> 功能導入。</li>
+        <li><b>[Settings]</b> <b>Stylus Battery</b>:顯示在<b>狀態列</b>、<b>低電 Warning 通知</b>、Setting Page <b>點擊 Refresh 時抓取更新</b>。</li>
+      </ul>
     </section>
 
     <footer>Netronix × HP　-　FluxInk e-ink Note Tablet 專案　|　2026-08-18</footer>
@@ -141,14 +160,21 @@
     </header>
 
     <div class="callout callout-key">
-      This week has two main parts:<br>
+      This week has three main parts:<br>
       ① <b>Release info</b> - a <b>new FW</b> is planned this week, improving on previously raised requirements;<br>
-      ② <b>NtxUtilSDK</b> - an <b>SDK &amp; Demo App</b> for Eink-Stroke fast handwriting and related basic tools (source code delivered).
+      ② <b>NtxUtilSDK</b> - an <b>SDK &amp; Demo App</b> for Eink-Stroke fast handwriting and related basic tools (source code delivered);<br>
+      ③ <b>Follow-up requirements / feature tracking</b>.
     </div>
 
     <section>
       <h2>1. Release Info <span class="pill pill-plan">new FW this week</span></h2>
       <p class="muted">Based on previously raised requirements, this week's improvements (by module):</p>
+
+      <h3>Pre-Install</h3>
+      <ul>
+        <li>Pre-install the <b>15 APKs provided by HP</b>.</li>
+        <li>Per <b>Gourav</b>'s requirement, <b>pre-install the 15 APKs by default</b> and <b>replace nHome with the app designated by Gourav</b>.</li>
+      </ul>
 
       <h3>All Apps</h3>
       <ul>
@@ -211,6 +237,18 @@
       <div class="callout callout-warn">
         <b>Planned for a later version:</b> e.g. <b>OCR recognition</b>, <b>layers</b>, etc.
       </div>
+    </section>
+
+    <section>
+      <h2>3. Follow-up Requirements / Feature Tracking <span class="pill pill-plan">tracking</span></h2>
+      <ul>
+        <li><b>[BSP]</b> Get the <b>battery level</b> of the HP active pen.</li>
+        <li><b>[BSP]</b> <b>aDraw region</b> bug when rotating.</li>
+        <li><b>[BSP]</b> When writing normal-size characters across a full line, later strokes <b>drop out</b> and rendering <b>gets slower and slower</b> (aDraw) - ongoing tracking.</li>
+        <li><b>[nOCR]</b> Shape recognition: FluxInk's recognition covers <b>shapes / text / math formulas</b>, which must be <b>integrated together</b>.</li>
+        <li><b>[Settings]</b> Add <b>Stylus Calibration</b>.</li>
+        <li><b>[Settings]</b> <b>Stylus Battery</b>: show in the <b>status bar</b>, <b>low-battery warning</b>, and <b>fetch on Refresh</b> on the Settings page.</li>
+      </ul>
     </section>
 
     <footer>Netronix × HP　-　FluxInk e-ink Note Tablet project　|　2026-08-18</footer>
