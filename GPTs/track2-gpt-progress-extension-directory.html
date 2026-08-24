@@ -102,7 +102,26 @@ ul.clean li::before{content:"\2713";position:absolute;left:0;top:8px;color:var(-
 
 </style></head>
 <body>
-<div class="pagehead"><h1>📇 分機查詢助手 · 每週進度更新</h1><div class="sub"><span class="tagn">進度日誌</span>依<b>日期</b>記錄每週進度。最新一週預設展開，其餘收合。廠務工程部 · 振曜 AI 推動小組。</div><div style="margin-top:14px"><a href="https://chatgpt.com/g/g-6a476f6761748191bdbb0a219a547b9d" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#10a37f,#0d8a6b);color:#fff;font-size:14.5px;font-weight:700;text-decoration:none;padding:10px 20px;border-radius:10px;box-shadow:0 4px 14px rgba(16,163,127,.35)">💬 在 ChatGPT 開啟此助手 →</a><div style="font-size:11.5px;color:#94a3b8;margin-top:6px">需為受邀成員；未受邀請洽振曜 AI 專案小組。</div></div></div><div class="seclabel">每週進度（最新在上）</div><div class="wrap"><details class="wk" open><summary><span class="date">2026 / 07 / 22</span><span class="hl">升級即時查詢 · 每日自動同步</span><span class="stage">階段：已上線（即時版）</span><span class="cv">▶</span></summary><div class="wkb"><div class="bh">◆ 本期進度階段</div><div class="wkcallout">助手升級為「即時查詢」版：改為即時向公司內部通訊錄查詢最新分機，並<b>每日自動同步</b>；資料一更新、下次查詢就是最新，無需人工重傳名單。</div>
+<div class="pagehead"><h1>📇 分機查詢助手 · 每週進度更新</h1><div class="sub"><span class="tagn">進度日誌</span>依<b>日期</b>記錄每週進度。最新一週預設展開，其餘收合。廠務工程部 · 振曜 AI 推動小組。</div><div style="margin-top:14px"><a href="https://chatgpt.com/g/g-6a476f6761748191bdbb0a219a547b9d" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#10a37f,#0d8a6b);color:#fff;font-size:14.5px;font-weight:700;text-decoration:none;padding:10px 20px;border-radius:10px;box-shadow:0 4px 14px rgba(16,163,127,.35)">💬 在 ChatGPT 開啟此助手 →</a><div style="font-size:11.5px;color:#94a3b8;margin-top:6px">需為受邀成員；未受邀請洽振曜 AI 專案小組。</div></div></div><div class="seclabel">每週進度（最新在上）</div><div class="wrap"><details class="wk" open><summary><span class="date">2026 / 08 / 26</span><span class="hl">與 MIS 資料介接 · 雙來源交叉比對</span><span class="stage">階段：已上線（資料源升級）</span><span class="cv">▶</span></summary><div class="wkb"><div class="bh">◆ 本期進度階段</div><div class="wkcallout">本期與<b>資訊部（MIS）</b>合作，將分機資料改由 MIS 內部系統的 <b>WebService API 直接介接</b>，並與<b>公司入口網站的官方分機表</b>交叉比對；兩邊<b>「有缺互補、以 MIS 資料為主」</b>，讓資料更即時、更完整、更不易漏查。</div>
+ <section><h2><span class="n">1</span>本期重點升級</h2>
+  <div class="grid">
+   <div class="fcard"><div class="spi">🔗</div><h3>與 MIS API 介接</h3><p>分機資料改由 MIS 內部系統的 WebService API 直接取得（振曜／西伯／代工），資料由來源系統直供，準確度與時效再提升。</p></div>
+   <div class="fcard"><div class="spi">🔁</div><h3>雙來源交叉比對</h3><p>MIS WebService 與 公司入口網站的官方分機表 每日自動交叉比對，兩份資料互相校驗。</p></div>
+   <div class="fcard"><div class="spi">🧩</div><h3>有缺互補・以 MIS 為主</h3><p>重疊資料一律以 MIS 為準；當 MIS 尚未建檔或欄位為空（例如分機為空）時，自動改用官方分機表補齊，避免查詢落空。</p></div>
+   <div class="fcard"><div class="spi">🔎</div><h3>分機號碼反查</h3><p>新增以分機號碼反查同仁的能力：輸入分機即可帶出對應姓名／部門。</p></div>
+  </div>
+ </section>
+ <section><h2><span class="n">2</span>資料整合規則與實測</h2>
+  <div class="panelbox"><div class="badges">
+   <span class="tag g">✅ MIS WebService API 已介接</span>
+   <span class="tag g">✅ 每日雙來源自動交叉比對</span>
+   <span class="tag g">✅ 有缺互補（以 MIS 資料為主）</span>
+   <span class="tag g">✅ 分機號碼反查已上線</span>
+  </div>
+  <p class="ld" style="margin-top:12px">整合規則：<b>重疊以 MIS 為準、缺漏用官方分機表補齊</b>。<br>實例：某同仁在 MIS 系統的分機欄位尚為空、但官方分機表已登錄其分機，系統會自動補上該分機，查詢不再回「查無」；<br>反查分機號碼可直接帶出對應同仁；高階主管保護與離題／整份名單索取婉拒等既有機制均維持。</p>
+  </div>
+ </section>
+</div></details><details class="wk"><summary><span class="date">2026 / 07 / 22</span><span class="hl">升級即時查詢 · 每日自動同步</span><span class="stage">階段：已上線（即時版）</span><span class="cv">▶</span></summary><div class="wkb"><div class="bh">◆ 本期進度階段</div><div class="wkcallout">助手升級為「即時查詢」版：改為即時向公司內部通訊錄查詢最新分機，並<b>每日自動同步</b>；資料一更新、下次查詢就是最新，無需人工重傳名單。</div>
  <section><h2><span class="n">1</span>本期重點升級</h2>
   <div class="grid">
    <div class="fcard"><div class="spi">⚡</div><h3>即時查詢</h3><p>改為即時向公司內部系統查詢最新分機，取代原本的靜態名單；資料更新後查詢立即反映。</p></div>
