@@ -160,7 +160,7 @@
       <ul>
         <li>直接渲染當前筆記畫面,不再先顯示前一畫面;<br>需測試 MTK 裝置速度是否足夠快。</li>
         <li><b>Loading Notes 變慢</b>,疑與筆種渲染有關。</li>
-        <li>辨識大小字時<b>只顯示大字,小字會被忽略</b>。</li>
+        <li>辨識大小字:<b>不支援大小字在同一行辨識</b>。<br><span class="muted">FluxInk 回覆 - 正常書寫時,只有標點符號較小;小字容易被當成標點符號或干擾項,故此功能無法支援。</span></li>
         <li>展開工具列時<b>畫布會被擋住</b>,評估更好做法(UX,暫不更改)。</li>
         <li><b>Pencil / Highlighter</b> 與相關<b>非純色 Pattern</b> 導入。</li>
         <li>連續書寫<b>斷水</b> + <b>顯示變慢</b>(aDraw)- 持續追蹤。</li>
@@ -298,7 +298,7 @@
       <ul>
         <li>Render the current note screen directly, no longer showing the previous screen first;<br>need to test whether MTK device speed is fast enough.</li>
         <li><b>Loading Notes is slower</b>, suspected to be related to pen-type rendering.</li>
-        <li>When recognizing mixed sizes, <b>only large characters show; small ones are ignored</b>.</li>
+        <li>Mixed-size recognition: <b>recognizing large and small characters on the same line is not supported</b>.<br><span class="muted">FluxInk's reply - in normal writing only punctuation is small; small characters are easily mistaken as punctuation or noise, so this cannot be supported.</span></li>
         <li>When the toolbar expands, the <b>canvas gets blocked</b>; evaluate a better approach (UX, not changed for now).</li>
         <li>Introduce <b>Pencil / Highlighter</b> and their related <b>non-pure-color patterns</b>.</li>
         <li>Stroke <b>drop-out</b> on continuous writing + <b>rendering slowdown</b> (aDraw) - ongoing tracking.</li>
