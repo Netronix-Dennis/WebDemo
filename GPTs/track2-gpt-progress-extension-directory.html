@@ -100,6 +100,8 @@ ul.clean li::before{content:"\2713";position:absolute;left:0;top:8px;color:var(-
 .wkb>.wkcallout{background:#ecfdf5;border:1px solid #a7f3d0;border-left:4px solid var(--primary,#10a37f);color:#065f46;border-radius:11px;padding:14px 17px;font-size:13.5px;line-height:1.65;margin:14px 0 2px}
 .wkb .bh{font-size:12px;letter-spacing:.03em;color:var(--primary-d,#0d8a6b);font-weight:800;margin:14px 0 4px}
 
+
+figure img{cursor:zoom-in;transition:opacity .12s}figure img:hover{opacity:.92}.lb-overlay{position:fixed;inset:0;background:rgba(2,6,23,.88);display:none;align-items:center;justify-content:center;z-index:99999;cursor:zoom-out;padding:24px}.lb-overlay.on{display:flex}.lb-overlay img{max-width:96vw;max-height:94vh;object-fit:contain;border-radius:10px;box-shadow:0 10px 40px rgba(0,0,0,.5)}.lb-close{position:fixed;top:14px;right:22px;color:#fff;font-size:32px;line-height:1;cursor:pointer;opacity:.85;font-family:system-ui,sans-serif}
 </style></head>
 <body>
 <div class="pagehead"><h1>📇 分機查詢助手 · 每週進度更新</h1><div class="sub"><span class="tagn">進度日誌</span>依<b>日期</b>記錄每週進度。最新一週預設展開，其餘收合。廠務工程部 · 振曜 AI 推動小組。</div><div style="margin-top:14px"><a href="https://chatgpt.com/g/g-6a476f6761748191bdbb0a219a547b9d" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#10a37f,#0d8a6b);color:#fff;font-size:14.5px;font-weight:700;text-decoration:none;padding:10px 20px;border-radius:10px;box-shadow:0 4px 14px rgba(16,163,127,.35)">💬 在 ChatGPT 開啟此助手 →</a><div style="font-size:11.5px;color:#94a3b8;margin-top:6px">需為受邀成員；未受邀請洽振曜 AI 專案小組。</div></div></div><div class="seclabel">每週進度（最新在上）</div><div class="wrap"><details class="wk" open><summary><span class="date">2026 / 09 / 09</span><span class="hl">遷移到公司內網平台 · 對外 API 上線</span><span class="stage">階段：已上線（平台版）</span><span class="cv">▶</span></summary><div class="wkb"><div class="bh">◆ 本期進度階段</div><div class="wkcallout">本期與<b>資訊部（MIS）</b>合作，把分機查詢的對外 API <b>直接建置在公司內網既有的「BPM 人事資料查詢平台」</b>裡，不另建雲端服務。助手改由該平台<b>即時取得 BPM 人事資料</b>、合併分機表後對外查詢；<b>ChatGPT 已切換到新平台並實測成功</b>。</div>
@@ -276,4 +278,6 @@ ul.clean li::before{content:"\2713";position:absolute;left:0;top:8px;color:var(-
  document.addEventListener('keydown',function(e){if(e.key==='Escape'){lb.classList.remove('on');lbimg.src='';}});
 })();
 </script>
+<div class="lb-overlay" id="lightbox"><span class="lb-close">&times;</span><img alt="放大檢視"></div>
+<script>(function(){var ov=document.getElementById("lightbox"),im=ov.querySelector("img");document.querySelectorAll("figure img").forEach(function(g){g.addEventListener("click",function(){im.src=g.src;ov.classList.add("on");});});function c(){ov.classList.remove("on");}ov.addEventListener("click",c);document.addEventListener("keydown",function(e){if(e.key==="Escape")c();});})();</script>
 </body></html>
